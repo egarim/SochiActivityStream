@@ -1,0 +1,72 @@
+@page "/products"
+@inherits MvvmComponentBase<ProductListViewModel>
+@rendermode InteractiveServer
+
+<PageTitle>@VM.Title</PageTitle>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>@VM.Title</h3>
+        <CommandButton Command="@VM.RefreshCommand" CssClass="btn btn-secondary">
+            Refresh
+        </CommandButton>
+    </div>
+
+    @if (VM.IsBusy)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading products...</p>
+        </div>
+    }
+    else if (VM.Products?.Any() == true)
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in VM.Products)
+                    {
+                        <tr class="@(VM.SelectedProduct == product ? "table-active" : "")"
+                            @onclick="() => VM.SelectedProduct = product">
+                            <td>@product.Id</td>
+                            <td>@product.Name</td>
+                            <td>@product.Category</td>
+                            <td>@product.Price.ToString("C")</td>
+                            <td>@product.Stock</td>
+                            <td>
+                                <CommandButton Command="@VM.NavigateToDetailCommand"
+                                               CommandParameter="@product"
+                                               CssClass="btn btn-sm btn-primary me-1">
+                                    View
+                                </CommandButton>
+                                <CommandButton Command="@VM.DeleteProductCommand"
+                                               CommandParameter="@product"
+                                               CssClass="btn btn-sm btn-danger">
+                                    Delete
+                                </CommandButton>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            No products found.
+        </div>
+    }
+</div>

@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>SocialKit.Components</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Blazor" Version="24.2.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- MVVM Framework -->
+    <ProjectReference Include="..\Sochi.Navigation\Sochi.Navigation.csproj" />
+    
+    <!-- Service Abstractions -->
+    <ProjectReference Include="..\Identity.Abstractions\Identity.Abstractions.csproj" />
+    <ProjectReference Include="..\Content.Abstractions\Content.Abstractions.csproj" />
+    <ProjectReference Include="..\Chat.Abstractions\Chat.Abstractions.csproj" />
+    <ProjectReference Include="..\RelationshipService.Abstractions\RelationshipService.Abstractions.csproj" />
+    <ProjectReference Include="..\ActivityStream.Abstractions\ActivityStream.Abstractions.csproj" />
+    <ProjectReference Include="..\Search.Abstractions\Search.Abstractions.csproj" />
+    <ProjectReference Include="..\Media.Abstractions\Media.Abstractions.csproj" />
+    <ProjectReference Include="..\Inbox.Abstractions\Inbox.Abstractions.csproj" />
+    <ProjectReference Include="..\Realtime.Abstractions\Realtime.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,61 @@
+@* Skeleton loading placeholder component using DevExpress *@
+
+@if (Type == SkeletonType.PostCard)
+{
+    <DxCard CssClass="sk-skeleton-card mb-3">
+        <HeaderTemplate>
+            <div class="d-flex align-items-center gap-2 p-3">
+                <div class="sk-skeleton sk-skeleton-circle" style="width:40px;height:40px;"></div>
+                <div class="flex-grow-1">
+                    <div class="sk-skeleton sk-skeleton-line" style="width:40%;height:14px;"></div>
+                    <div class="sk-skeleton sk-skeleton-line mt-1" style="width:25%;height:12px;"></div>
+                </div>
+            </div>
+        </HeaderTemplate>
+        <BodyTemplate>
+            <div class="p-3">
+                <div class="sk-skeleton sk-skeleton-line" style="width:100%;height:14px;"></div>
+                <div class="sk-skeleton sk-skeleton-line mt-2" style="width:90%;height:14px;"></div>
+                <div class="sk-skeleton sk-skeleton-line mt-2" style="width:75%;height:14px;"></div>
+            </div>
+        </BodyTemplate>
+    </DxCard>
+}
+else if (Type == SkeletonType.Avatar)
+{
+    <div class="sk-skeleton sk-skeleton-circle @SizeClass"></div>
+}
+else if (Type == SkeletonType.Text)
+{
+    <div class="sk-skeleton sk-skeleton-line" style="width:@(Width ?? "100%");height:14px;"></div>
+}
+else if (Type == SkeletonType.Card)
+{
+    <DxCard CssClass="sk-skeleton-card mb-3">
+        <BodyTemplate>
+            <div class="sk-skeleton" style="width:100%;height:200px;"></div>
+            <div class="p-3">
+                <div class="sk-skeleton sk-skeleton-line" style="width:60%;height:14px;"></div>
+                <div class="sk-skeleton sk-skeleton-line mt-2" style="width:40%;height:12px;"></div>
+            </div>
+        </BodyTemplate>
+    </DxCard>
+}
+else if (Type == SkeletonType.ConversationItem)
+{
+    <div class="d-flex align-items-center gap-2 p-2">
+        <div class="sk-skeleton sk-skeleton-circle" style="width:40px;height:40px;"></div>
+        <div class="flex-grow-1">
+            <div class="sk-skeleton sk-skeleton-line" style="width:50%;height:14px;"></div>
+            <div class="sk-skeleton sk-skeleton-line mt-1" style="width:75%;height:12px;"></div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public SkeletonType Type { get; set; } = SkeletonType.Text;
+    [Parameter] public string? Width { get; set; }
+    [Parameter] public int Count { get; set; } = 1;
+    
+    private string SizeClass => Type == SkeletonType.Avatar ? "sk-avatar-md" : "";
+}

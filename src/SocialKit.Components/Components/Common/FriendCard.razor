@@ -1,0 +1,70 @@
+@* Friend Card Component using DevExpress DxCard *@
+@using SocialKit.Components.ViewModels
+
+<DxCard CssClass="sk-friend-card" @onclick="HandleClick">
+    <BodyTemplate>
+        <div class="d-flex flex-column align-items-center p-3">
+            <Avatar ImageUrl="@User?.AvatarUrl"
+                    Name="@User?.DisplayName"
+                    Size="AvatarSize.Large"
+                    CustomSize="80" />
+            <h6 class="mt-2 mb-1">@(User?.DisplayName ?? "Unknown")</h6>
+            @if (!string.IsNullOrEmpty(Subtitle))
+            {
+                <p class="text-muted small mb-2">@Subtitle</p>
+            }
+            @if (ShowActions)
+            {
+                <div class="d-flex flex-column w-100 gap-1">
+                    @if (ShowAddFriend)
+                    {
+                        <DxButton Text="Add Friend"
+                                  IconCssClass="fas fa-user-plus"
+                                  RenderStyle="ButtonRenderStyle.Primary"
+                                  SizeMode="SizeMode.Small"
+                                  CssClass="w-100"
+                                  Click="HandleAddFriend" />
+                    }
+                    @if (ShowRemove)
+                    {
+                        <DxButton Text="Remove"
+                                  IconCssClass="fas fa-user-times"
+                                  RenderStyle="ButtonRenderStyle.Secondary"
+                                  SizeMode="SizeMode.Small"
+                                  CssClass="w-100"
+                                  Click="HandleRemove" />
+                    }
+                </div>
+            }
+        </div>
+    </BodyTemplate>
+</DxCard>
+
+@code {
+    [Parameter] public FriendInfo? User { get; set; }
+    [Parameter] public string? Subtitle { get; set; }
+    [Parameter] public bool ShowActions { get; set; } = false;
+    [Parameter] public bool ShowAddFriend { get; set; } = false;
+    [Parameter] public bool ShowRemove { get; set; } = false;
+    [Parameter] public EventCallback<FriendInfo?> OnClick { get; set; }
+    [Parameter] public EventCallback<FriendInfo?> OnAddFriend { get; set; }
+    [Parameter] public EventCallback<FriendInfo?> OnRemove { get; set; }
+    
+    private async Task HandleClick()
+    {
+        if (OnClick.HasDelegate)
+            await OnClick.InvokeAsync(User);
+    }
+    
+    private async Task HandleAddFriend()
+    {
+        if (OnAddFriend.HasDelegate)
+            await OnAddFriend.InvokeAsync(User);
+    }
+    
+    private async Task HandleRemove()
+    {
+        if (OnRemove.HasDelegate)
+            await OnRemove.InvokeAsync(User);
+    }
+}

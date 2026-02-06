@@ -1,0 +1,113 @@
+@* Post Card Component using DevExpress DxCard + DxButton *@
+@using Content.Abstractions
+
+<DxCard CssClass="sk-post-card mb-3">
+    <HeaderTemplate>
+        <div class="d-flex align-items-center gap-2 p-3 pb-0">
+            <a href="/profile/@Post.Author?.Id" class="text-decoration-none">
+                <Avatar ImageUrl="@Post.Author?.ImageUrl" 
+                        Name="@Post.Author?.DisplayName" 
+                        Size="AvatarSize.Medium" />
+            </a>
+            <div class="flex-grow-1">
+                <a href="/profile/@Post.Author?.Id" class="fw-semibold text-decoration-none text-body">
+                    @(Post.Author?.DisplayName ?? "Unknown User")
+                </a>
+                <div class="text-muted small">@FormatTime(Post.CreatedAt)</div>
+            </div>
+            <DxButton RenderStyle="ButtonRenderStyle.Link"
+                      IconCssClass="fas fa-ellipsis-h"
+                      RenderStyleMode="ButtonRenderStyleMode.Outline"
+                      SizeMode="SizeMode.Small" />
+        </div>
+    </HeaderTemplate>
+    <BodyTemplate>
+        <div class="p-3">
+            <p class="mb-2">@Post.Body</p>
+        </div>
+        
+        @if (HasReactions || Post.CommentCount > 0)
+        {
+            <div class="d-flex justify-content-between px-3 pb-2 text-muted small">
+                @if (HasReactions)
+                {
+                    <span>
+                        <i class="fas fa-thumbs-up text-primary"></i>
+                        @TotalReactions
+                    </span>
+                }
+                @if (Post.CommentCount > 0)
+                {
+                    <span>@Post.CommentCount comments</span>
+                }
+            </div>
+        }
+        
+        <hr class="my-0" />
+        
+        <div class="d-flex justify-content-around p-1">
+            <DxButton Text="Like"
+                      IconCssClass="@(IsLiked ? "fas fa-thumbs-up" : "far fa-thumbs-up")"
+                      RenderStyle="@(IsLiked ? ButtonRenderStyle.Primary : ButtonRenderStyle.Link)"
+                      RenderStyleMode="ButtonRenderStyleMode.Text"
+                      SizeMode="SizeMode.Small"
+                      CssClass="flex-grow-1"
+                      Enabled="!IsLoading"
+                      Click="OnLikeClick" />
+            <DxButton Text="Comment"
+                      IconCssClass="far fa-comment"
+                      RenderStyle="ButtonRenderStyle.Link"
+                      RenderStyleMode="ButtonRenderStyleMode.Text"
+                      SizeMode="SizeMode.Small"
+                      CssClass="flex-grow-1"
+                      Click="OnCommentClick" />
+            <DxButton Text="Share"
+                      IconCssClass="far fa-share-square"
+                      RenderStyle="ButtonRenderStyle.Link"
+                      RenderStyleMode="ButtonRenderStyleMode.Text"
+                      SizeMode="SizeMode.Small"
+                      CssClass="flex-grow-1" />
+        </div>
+    </BodyTemplate>
+</DxCard>
+
+@code {
+    [Parameter, EditorRequired] public PostDto Post { get; set; } = null!;
+    [Parameter] public string? CurrentUserAvatar { get; set; }
+    [Parameter] public string? CurrentUserName { get; set; }
+    [Parameter] public EventCallback<PostDto> OnLike { get; set; }
+    [Parameter] public EventCallback<PostDto> OnComment { get; set; }
+    [Parameter] public EventCallback<PostDto> OnShare { get; set; }
+    [Parameter] public bool IsLoading { get; set; }
+    
+    private bool ShowComments { get; set; }
+    
+    private bool IsLiked => Post.ViewerReaction == ReactionType.Like;
+    private int LikeCount => Post.ReactionCounts.TryGetValue(ReactionType.Like, out var count) ? count : 0;
+    private int TotalReactions => Post.ReactionCounts.Values.Sum();
+    private bool HasReactions => TotalReactions > 0;
+    
+    private async Task OnLikeClick()
+    {
+        if (OnLike.HasDelegate)
+            await OnLike.InvokeAsync(Post);
+    }
+    
+    private void OnCommentClick()
+    {
+        ShowComments = !ShowComments;
+    }
+    
+    private string FormatTime(DateTimeOffset dateTime)
+    {
+        var diff = DateTimeOffset.UtcNow - dateTime;
+        
+        if (diff.TotalSeconds < 60) return "Just now";
+        if (diff.TotalMinutes < 60) return $"{(int)diff.TotalMinutes}m";
+        if (diff.TotalHours < 24) return $"{(int)diff.TotalHours}h";
+        if (diff.TotalDays < 7) return $"{(int)diff.TotalDays}d";
+        if (diff.TotalDays < 365) return dateTime.ToString("MMM d");
+        
+        return dateTime.ToString("MMM d, yyyy");
+    }
+}

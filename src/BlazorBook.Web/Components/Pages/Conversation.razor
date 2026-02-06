@@ -1,0 +1,11 @@
+@page "/messages/{conversationId}"
+@inherits MvvmComponentBase<ConversationViewModel>
+@rendermode InteractiveServer
+
+<PageTitle>@VM.Title - BlazorBook</PageTitle>
+
+<ConversationContent ViewModel="@VM" />
+
+@code {
+    [Parameter] public string? conversationId { get; set; }
+}

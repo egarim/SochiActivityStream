@@ -1,0 +1,13 @@
+@page "/login"
+@inherits MvvmComponentBase<LoginViewModel>
+@rendermode InteractiveServer
+
+<PageTitle>Log In - BlazorBook</PageTitle>
+
+<LoginContent ViewModel="@VM">
+    <LogoContent>
+        <h1 class="auth-logo">
+            <i class="fas fa-book-open me-2"></i>BlazorBook
+        </h1>
+    </LogoContent>
+</LoginContent>

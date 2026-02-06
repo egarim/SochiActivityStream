@@ -1,0 +1,65 @@
+@* Create Post Component using DevExpress DxCard + DxMemo *@
+
+<DxCard CssClass="sk-create-post mb-3">
+    <BodyTemplate>
+        <div class="d-flex align-items-start gap-2 p-3">
+            <Avatar ImageUrl="@UserAvatar" 
+                    Name="@UserName" 
+                    Size="AvatarSize.Medium" />
+            <DxMemo @bind-Text="@Text"
+                    Rows="2"
+                    CssClass="flex-grow-1"
+                    NullText="@($"What's on your mind, {FirstName}?")"
+                    Enabled="!IsPosting" />
+        </div>
+        
+        <hr class="my-0" />
+        
+        <div class="d-flex justify-content-between align-items-center p-2 px-3">
+            <div class="d-flex gap-2">
+                <DxButton Text="Photo/Video"
+                          IconCssClass="fas fa-images"
+                          RenderStyle="ButtonRenderStyle.Link"
+                          RenderStyleMode="ButtonRenderStyleMode.Text"
+                          SizeMode="SizeMode.Small"
+                          Enabled="false" />
+                <DxButton Text="Tag"
+                          IconCssClass="fas fa-user-tag"
+                          RenderStyle="ButtonRenderStyle.Link"
+                          RenderStyleMode="ButtonRenderStyleMode.Text"
+                          SizeMode="SizeMode.Small"
+                          Enabled="false" />
+            </div>
+            <DxButton Text="Post"
+                      IconCssClass="fas fa-paper-plane"
+                      RenderStyle="ButtonRenderStyle.Primary"
+                      SizeMode="SizeMode.Small"
+                      Enabled="@CanPost"
+                      Click="HandlePost" />
+        </div>
+    </BodyTemplate>
+</DxCard>
+
+@code {
+    [Parameter] public string? UserAvatar { get; set; }
+    [Parameter] public string? UserName { get; set; }
+    [Parameter] public EventCallback<string> OnPost { get; set; }
+    [Parameter] public bool IsPosting { get; set; }
+    
+    private string Text { get; set; } = "";
+    
+    private string FirstName => UserName?.Split(' ').FirstOrDefault() ?? "friend";
+    
+    private bool CanPost => !string.IsNullOrWhiteSpace(Text) && !IsPosting;
+    
+    private async Task HandlePost()
+    {
+        if (!CanPost) return;
+        
+        var text = Text;
+        Text = "";
+        
+        if (OnPost.HasDelegate)
+            await OnPost.InvokeAsync(text);
+    }
+}

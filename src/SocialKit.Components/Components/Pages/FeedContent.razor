@@ -1,0 +1,50 @@
+@* Feed Content Component - Reusable feed UI, used by page shells *@
+@using SocialKit.Components.ViewModels
+
+<div class="sk-feed" style="max-width: 680px; margin: 0 auto;">
+    <!-- Create Post Box -->
+    <CreatePost 
+        UserName="@ViewModel.CurrentUserName"
+        UserAvatar="@ViewModel.CurrentUserAvatar"
+        OnPost="@HandleCreatePost"
+        IsPosting="@ViewModel.CreatePostCommand.IsExecuting" />
+    
+    <!-- Posts -->
+    @if (ViewModel.IsLoading)
+    {
+        <Skeleton Type="SkeletonType.PostCard" />
+        <Skeleton Type="SkeletonType.PostCard" />
+        <Skeleton Type="SkeletonType.PostCard" />
+    }
+    else if (ViewModel.Posts.Count == 0)
+    {
+        <DxCard CssClass="text-center p-5">
+            <BodyTemplate>
+                <i class="fas fa-newspaper" style="font-size:48px;color:var(--sk-text-muted,#6c757d);"></i>
+                <h5 class="mt-3">No posts yet</h5>
+                <p class="text-muted">Be the first to share something with your friends!</p>
+            </BodyTemplate>
+        </DxCard>
+    }
+    else
+    {
+        @foreach (var post in ViewModel.Posts)
+        {
+            <PostCard 
+                Post="@post"
+                OnLike="@(async (p) => await ViewModel.LikePostCommand.ExecuteAsync(p))"
+                OnComment="@(p => {})"
+                OnShare="@(p => {})" />
+        }
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public FeedViewModel ViewModel { get; set; } = null!;
+    
+    private async Task HandleCreatePost(string text)
+    {
+        ViewModel.NewPostText = text;
+        await ViewModel.CreatePostCommand.ExecuteAsync(null);
+    }
+}

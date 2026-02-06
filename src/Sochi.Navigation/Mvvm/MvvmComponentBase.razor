@@ -1,0 +1,108 @@
+@using System.ComponentModel
+@using System.Reflection
+@using Microsoft.AspNetCore.Components
+@using Sochi.Navigation.Navigation
+@typeparam TViewModel where TViewModel : class, INotifyPropertyChanged
+@inject NavigationManager NavigationManager
+@inject INavigationService NavigationService
+@implements IDisposable
+
+@code {
+    private ParameterView _routeParameters;
+    private bool _isInitialized;
+
+    /// <summary>
+    /// Gets the ViewModel instance. Injected via DI.
+    /// </summary>
+    [Inject]
+    protected TViewModel ViewModel { get; set; } = default!;
+
+    /// <summary>
+    /// Gets the ViewModel instance (alias).
+    /// </summary>
+    protected TViewModel VM => ViewModel;
+
+    /// <inheritdoc />
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        // Store route parameters before base call
+        _routeParameters = parameters;
+        await base.SetParametersAsync(parameters);
+    }
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        // Subscribe to ViewModel property changes
+        if (ViewModel != null)
+        {
+            ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        }
+
+        // Set current ViewModel in NavigationService
+        if (NavigationService is NavigationService navService)
+        {
+            navService.SetCurrentViewModel(ViewModel);
+        }
+
+        // Handle navigation awareness
+        if (ViewModel is INavigationAware navigationAware)
+        {
+            var parameters = BuildNavigationParameters();
+            navigationAware.OnNavigatedTo(parameters);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (_isInitialized) return;
+        _isInitialized = true;
+
+        // Handle async initialization
+        if (ViewModel is IInitialize initialize)
+        {
+            var parameters = BuildNavigationParameters();
+            await initialize.InitializeAsync(parameters);
+        }
+    }
+
+    private NavigationParameters BuildNavigationParameters()
+    {
+        var uri = new Uri(NavigationManager.Uri);
+        var parameters = new NavigationParameters(uri.Query);
+
+        // Add route parameters from Blazor component parameters
+        foreach (var param in _routeParameters)
+        {
+            // Skip internal Blazor parameters and already-injected properties
+            if (param.Name == "ViewModel" || param.Name == "VM")
+                continue;
+
+            if (param.Value != null)
+            {
+                parameters.Add(param.Name, param.Value);
+            }
+        }
+
+        return parameters;
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    /// <inheritdoc />
+    public virtual void Dispose()
+    {
+        if (ViewModel != null)
+        {
+            ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+        }
+    }
+}

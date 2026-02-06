@@ -1,0 +1,72 @@
+@page "/customer-detail"
+@inherits MvvmComponentBase<CustomerDetailViewModel>
+@rendermode InteractiveServer
+
+<PageTitle>@VM.Title</PageTitle>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>@VM.Title</h3>
+        <CommandButton Command="@VM.GoBackCommand" CssClass="btn btn-secondary">
+            Back to List
+        </CommandButton>
+    </div>
+
+    @if (VM.IsBusy)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else if (VM.Customer != null)
+    {
+        <div class="card">
+            <div class="card-header">
+                <h5>Customer Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">First Name</label>
+                        <p class="form-control-plaintext">@VM.Customer.FirstName</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Last Name</label>
+                        <p class="form-control-plaintext">@VM.Customer.LastName</p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Email</label>
+                        <p class="form-control-plaintext">@VM.Customer.Email</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Phone</label>
+                        <p class="form-control-plaintext">@VM.Customer.Phone</p>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Address</label>
+                        <p class="form-control-plaintext">@VM.Customer.Address</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">City</label>
+                        <p class="form-control-plaintext">@VM.Customer.City</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                Created: @VM.Customer.CreatedDate.ToString("g")
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">
+            Customer not found
+        </div>
+    }
+</div>

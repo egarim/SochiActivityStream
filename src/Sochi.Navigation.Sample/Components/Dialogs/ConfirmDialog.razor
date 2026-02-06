@@ -1,0 +1,35 @@
+@using Sochi.Navigation.Dialogs
+
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">@Title</h5>
+    </div>
+    <div class="card-body">
+        <p>@Message</p>
+    </div>
+    <div class="card-footer d-flex justify-content-end gap-2">
+        <button class="btn btn-secondary" @onclick="OnCancel">Cancel</button>
+        <button class="btn btn-primary" @onclick="OnConfirm">Confirm</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public IDialogParameters? Parameters { get; set; }
+
+    [Parameter]
+    public EventCallback<IDialogResult> OnClose { get; set; }
+
+    private string Title => Parameters?.GetValue<string>("Title") ?? "Confirm";
+    private string Message => Parameters?.GetValue<string>("Message") ?? "Are you sure?";
+
+    private async Task OnConfirm()
+    {
+        await OnClose.InvokeAsync(DialogResult.Ok());
+    }
+
+    private async Task OnCancel()
+    {
+        await OnClose.InvokeAsync(DialogResult.Cancel());
+    }
+}

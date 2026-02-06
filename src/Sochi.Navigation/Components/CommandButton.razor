@@ -1,0 +1,118 @@
+@using System.Windows.Input
+@using Sochi.Navigation.Commands
+@implements IDisposable
+
+<button type="button"
+        class="@CssClass"
+        disabled="@(!CanExecute)"
+        @onclick="OnClickAsync"
+        @attributes="AdditionalAttributes">
+    @if (IsExecuting)
+    {
+        @if (LoadingContent != null)
+        {
+            @LoadingContent
+        }
+        else
+        {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            @LoadingText
+        }
+    }
+    else
+    {
+        @ChildContent
+    }
+</button>
+
+@code {
+    /// <summary>
+    /// The command to execute when the button is clicked.
+    /// </summary>
+    [Parameter]
+    public ICommand? Command { get; set; }
+
+    /// <summary>
+    /// The parameter to pass to the command.
+    /// </summary>
+    [Parameter]
+    public object? CommandParameter { get; set; }
+
+    /// <summary>
+    /// The content to display in the button.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Optional content to display while the command is executing.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? LoadingContent { get; set; }
+
+    /// <summary>
+    /// Text to display while executing if LoadingContent is not provided.
+    /// </summary>
+    [Parameter]
+    public string LoadingText { get; set; } = "Processing...";
+
+    /// <summary>
+    /// CSS class for the button.
+    /// </summary>
+    [Parameter]
+    public string CssClass { get; set; } = "btn btn-primary";
+
+    /// <summary>
+    /// Additional HTML attributes to apply to the button.
+    /// </summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool CanExecute => Command?.CanExecute(CommandParameter) ?? false;
+    private bool IsExecuting => Command is IAsyncCommand asyncCmd && asyncCmd.IsExecuting;
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        if (Command != null)
+        {
+            Command.CanExecuteChanged += OnCanExecuteChanged;
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void OnParametersSet()
+    {
+        // Re-subscribe if command changed
+        base.OnParametersSet();
+    }
+
+    private async Task OnClickAsync()
+    {
+        if (Command == null)
+            return;
+
+        if (Command is IAsyncCommand asyncCommand)
+        {
+            await asyncCommand.ExecuteAsync(CommandParameter);
+        }
+        else
+        {
+            Command.Execute(CommandParameter);
+        }
+    }
+
+    private void OnCanExecuteChanged(object? sender, EventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        if (Command != null)
+        {
+            Command.CanExecuteChanged -= OnCanExecuteChanged;
+        }
+    }
+}

@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="NUnit" Version="4.1.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- SocialKit shared RCL (brings Sochi.Navigation + all Abstractions transitively) -->
+    <ProjectReference Include="..\..\src\SocialKit.Components\SocialKit.Components.csproj" />
+    <ProjectReference Include="..\..\src\Sochi.Navigation\Sochi.Navigation.csproj" />
+    
+    <!-- Core + InMemory stores (for DI registration in TestFixture) -->
+    <ProjectReference Include="..\..\src\Identity.Core\Identity.Core.csproj" />
+    <ProjectReference Include="..\..\src\Identity.Store.InMemory\Identity.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Content.Core\Content.Core.csproj" />
+    <ProjectReference Include="..\..\src\Content.Store.InMemory\Content.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Chat.Core\Chat.Core.csproj" />
+    <ProjectReference Include="..\..\src\Chat.Store.InMemory\Chat.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\RelationshipService.Core\RelationshipService.Core.csproj" />
+    <ProjectReference Include="..\..\src\RelationshipService.Store.InMemory\RelationshipService.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\ActivityStream.Core\ActivityStream.Core.csproj" />
+    <ProjectReference Include="..\..\src\ActivityStream.Store.InMemory\ActivityStream.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Search.Core\Search.Core.csproj" />
+    <ProjectReference Include="..\..\src\Search.Index.InMemory\Search.Index.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Media.Core\Media.Core.csproj" />
+    <ProjectReference Include="..\..\src\Media.Store.InMemory\Media.Store.InMemory.csproj" />
+  </ItemGroup>
+
+</Project>

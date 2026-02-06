@@ -1,0 +1,66 @@
+@* Messages Content Component - Conversation list UI *@
+@using SocialKit.Components.ViewModels
+
+<div class="sk-messages" style="max-width: 1200px; margin: 0 auto;">
+    <div class="d-flex" style="min-height:70vh;">
+        <!-- Conversation List -->
+        <div class="sk-conversation-list" style="width:350px;border-right:1px solid var(--sk-border,#dee2e6);">
+            <div class="p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Messages</h5>
+                    <div class="d-flex gap-1">
+                        <DxButton IconCssClass="fas fa-edit"
+                                  RenderStyle="ButtonRenderStyle.Link"
+                                  RenderStyleMode="ButtonRenderStyleMode.Text"
+                                  SizeMode="SizeMode.Small" />
+                        <CommandButton Command="@ViewModel.RefreshCommand" CssClass="btn btn-link btn-sm p-1">
+                            <i class="fas fa-sync-alt @(ViewModel.RefreshCommand.IsExecuting ? "fa-spin" : "")"></i>
+                        </CommandButton>
+                    </div>
+                </div>
+                <DxTextBox NullText="Search messages..." CssClass="mb-2" />
+            </div>
+            
+            <div style="overflow-y:auto;">
+                @if (ViewModel.IsBusy)
+                {
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        <Skeleton Type="SkeletonType.ConversationItem" />
+                    }
+                }
+                else if (ViewModel.Conversations.Count == 0)
+                {
+                    <div class="text-center p-5">
+                        <i class="fas fa-comments" style="font-size:48px;color:var(--sk-text-muted,#6c757d);"></i>
+                        <h6 class="mt-3">No messages yet</h6>
+                        <p class="text-muted small">Start a conversation!</p>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var conv in ViewModel.Conversations)
+                    {
+                        <ConversationItem 
+                            Conversation="@conv"
+                            CurrentUserId="@ViewModel.CurrentUserId"
+                            OnClick="@(async (c) => await ViewModel.OpenConversationCommand.ExecuteAsync(c))" />
+                    }
+                }
+            </div>
+        </div>
+        
+        <!-- Chat Area Placeholder -->
+        <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+            <div class="text-center text-muted">
+                <i class="fas fa-comments" style="font-size:64px;"></i>
+                <h5 class="mt-3">Select a conversation</h5>
+                <p>Choose from your existing conversations or start a new one.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public MessagesViewModel ViewModel { get; set; } = null!;
+}

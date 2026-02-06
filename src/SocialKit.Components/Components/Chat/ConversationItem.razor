@@ -1,0 +1,97 @@
+@* Conversation Item Component using DevExpress *@
+@using global::Chat.Abstractions
+
+<div class="sk-conversation-item @(IsActive ? "active" : "")" @onclick="HandleClick" role="button">
+    <div class="position-relative">
+        <Avatar ImageUrl="@GetAvatarUrl()"
+                Name="@GetDisplayName()"
+                Size="AvatarSize.Medium"
+                ShowOnlineStatus="true"
+                IsOnline="@IsOnline" />
+    </div>
+    <div class="flex-grow-1 overflow-hidden">
+        <div class="d-flex justify-content-between">
+            <span class="fw-semibold text-truncate @(HasUnread ? "fw-bold" : "")">
+                @GetDisplayName()
+            </span>
+            <span class="text-muted small flex-shrink-0">@FormatTime(Conversation?.UpdatedAt ?? DateTimeOffset.Now)</span>
+        </div>
+        <div class="text-muted small text-truncate @(HasUnread ? "fw-semibold text-body" : "")">
+            @GetPreviewText()
+        </div>
+    </div>
+    @if (Conversation?.UnreadCount > 0)
+    {
+        <DxBadge Text="@Conversation.UnreadCount.ToString()" 
+                 CssClass="sk-unread-badge" />
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public ConversationDto? Conversation { get; set; }
+    [Parameter] public bool IsActive { get; set; }
+    [Parameter] public bool IsOnline { get; set; }
+    [Parameter] public string? CurrentUserId { get; set; }
+    [Parameter] public EventCallback<ConversationDto?> OnClick { get; set; }
+    
+    private bool HasUnread => (Conversation?.UnreadCount ?? 0) > 0;
+    
+    private string GetDisplayName()
+    {
+        if (Conversation == null) return "Unknown";
+        
+        if (!string.IsNullOrEmpty(Conversation.Title))
+            return Conversation.Title;
+        
+        var names = Conversation.Participants
+            .Where(p => p.Profile.Id != CurrentUserId)
+            .Select(p => p.Profile.DisplayName ?? p.Profile.Id)
+            .Where(n => !string.IsNullOrEmpty(n))
+            .Take(2);
+        
+        var result = string.Join(", ", names);
+        return !string.IsNullOrEmpty(result) ? result : "Conversation";
+    }
+    
+    private string? GetAvatarUrl()
+    {
+        if (Conversation == null) return null;
+        
+        var participant = Conversation.Participants
+            .FirstOrDefault(p => p.Profile.Id != CurrentUserId);
+        
+        return participant?.Profile.AvatarUrl;
+    }
+    
+    private string GetPreviewText()
+    {
+        if (Conversation?.LastMessage == null)
+            return "No messages yet";
+        
+        var prefix = Conversation.LastMessage.Sender.Id == CurrentUserId ? "You: " : "";
+        var body = Conversation.LastMessage.Body ?? "";
+        
+        if (body.Length > 40)
+            body = body[..40] + "...";
+        
+        return prefix + body;
+    }
+    
+    private string FormatTime(DateTimeOffset dateTime)
+    {
+        var diff = DateTimeOffset.UtcNow - dateTime;
+        
+        if (diff.TotalMinutes < 1) return "Now";
+        if (diff.TotalMinutes < 60) return $"{(int)diff.TotalMinutes}m";
+        if (diff.TotalHours < 24) return $"{(int)diff.TotalHours}h";
+        if (diff.TotalDays < 7) return dateTime.ToString("ddd");
+        
+        return dateTime.ToString("MMM d");
+    }
+    
+    private async Task HandleClick()
+    {
+        if (OnClick.HasDelegate)
+            await OnClick.InvokeAsync(Conversation);
+    }
+}

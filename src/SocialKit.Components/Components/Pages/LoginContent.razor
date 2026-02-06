@@ -1,0 +1,60 @@
+@* Login Content Component - Reusable login form UI *@
+@using SocialKit.Components.ViewModels
+
+<div class="sk-auth-container d-flex justify-content-center align-items-center" style="min-height:80vh;">
+    <DxCard CssClass="sk-auth-card" style="max-width:420px;width:100%;">
+        <BodyTemplate>
+            <div class="p-4">
+                <div class="text-center mb-4">
+                    @if (LogoContent != null)
+                    {
+                        @LogoContent
+                    }
+                    else
+                    {
+                        <h2>Welcome</h2>
+                    }
+                </div>
+                
+                <EditForm Model="@ViewModel" OnValidSubmit="@(() => ViewModel.LoginCommand.ExecuteAsync(null))">
+                    @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>@ViewModel.ErrorMessage
+                        </div>
+                    }
+                    
+                    <DxTextBox @bind-Text="@ViewModel.Email"
+                               NullText="Email address"
+                               CssClass="mb-3" />
+                    
+                    <DxTextBox @bind-Text="@ViewModel.Password"
+                               NullText="Password"
+                               Password="true"
+                               CssClass="mb-3" />
+                    
+                    <DxButton Text="@(ViewModel.IsBusy ? "Logging in..." : "Log In")"
+                              RenderStyle="ButtonRenderStyle.Primary"
+                              CssClass="w-100 mb-3"
+                              SizeMode="SizeMode.Large"
+                              SubmitFormOnClick="true"
+                              Enabled="@(!ViewModel.IsBusy)" />
+                </EditForm>
+                
+                <hr />
+                
+                <div class="text-center">
+                    <p class="text-muted mb-2">Don't have an account?</p>
+                    <DxButton Text="Create New Account"
+                              RenderStyle="ButtonRenderStyle.Success"
+                              Click="@(() => ViewModel.NavigateToSignUpCommand.ExecuteAsync(null))" />
+                </div>
+            </div>
+        </BodyTemplate>
+    </DxCard>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public LoginViewModel ViewModel { get; set; } = null!;
+    [Parameter] public RenderFragment? LogoContent { get; set; }
+}

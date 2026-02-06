@@ -1,0 +1,106 @@
+﻿@page "/"
+@using Sochi.Navigation.Mvvm
+@using Sochi.Navigation.Sample.ViewModels
+@rendermode InteractiveServer
+@inject IDialogService DialogService
+@inherits MvvmComponentBase<HomeViewModel>
+
+<PageTitle>@ViewModel.Title - Sochi.Navigation Sample</PageTitle>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Welcome to Sochi.Navigation</h1>
+        <p class="lead">A complete MVVM navigation library for Blazor</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Products</h5>
+                    <p class="card-text">Browse and manage products with full MVVM pattern support.</p>
+                    <CommandButton Command="@ViewModel.NavigateToProductsCommand" CssClass="btn btn-primary">
+                        View Products
+                    </CommandButton>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Customers</h5>
+                    <p class="card-text">View customer list with navigation parameters demo.</p>
+                    <CommandButton Command="@ViewModel.NavigateToCustomersCommand" CssClass="btn btn-primary">
+                        View Customers
+                    </CommandButton>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Dialog Demo</h5>
+        </div>
+        <div class="card-body">
+            <p>Test the confirmation dialog service:</p>
+            <button class="btn btn-warning me-2" @onclick="ShowConfirmationDialog">Show Confirmation Dialog</button>
+            <button class="btn btn-info" @onclick="ShowInfoDialog">Show Info Dialog</button>
+            @if (!string.IsNullOrEmpty(_dialogResult))
+            {
+                <div class="alert @(_dialogConfirmed ? "alert-success" : "alert-secondary") mt-3">
+                    @_dialogResult
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Features Demonstrated</h5>
+        </div>
+        <div class="card-body">
+            <ul>
+                <li><strong>DelegateCommand / AsyncDelegateCommand</strong> - ICommand pattern with async support</li>
+                <li><strong>INavigationService</strong> - ViewModel-first navigation with parameters</li>
+                <li><strong>IInitialize</strong> - Async initialization with navigation parameters</li>
+                <li><strong>IConfirmNavigation</strong> - Block navigation for unsaved changes</li>
+                <li><strong>IDialogService</strong> - Show confirmation dialogs with async results</li>
+                <li><strong>CommandButton</strong> - Automatic loading states and disabled management</li>
+                <li><strong>ViewModelBase</strong> - IsBusy, Title, and command registration</li>
+                <li><strong>MvvmComponentBase</strong> - Automatic ViewModel wiring and property change handling</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? _dialogResult;
+    private bool _dialogConfirmed;
+
+    private async Task ShowConfirmationDialog()
+    {
+        var result = await DialogService.ShowConfirmationAsync(
+            "Confirm Action",
+            "Are you sure you want to proceed with this action? This is just a demo.");
+        
+        _dialogConfirmed = result;
+        _dialogResult = result 
+            ? "You clicked Confirm!" 
+            : "You clicked Cancel.";
+    }
+
+    private async Task ShowInfoDialog()
+    {
+        var result = await DialogService.ShowConfirmationAsync(
+            "Information",
+            "This dialog service can be used from any component or ViewModel. " +
+            "Check the Products page to see it used for delete confirmation.");
+        
+        _dialogConfirmed = result;
+        _dialogResult = result 
+            ? "Dialog confirmed" 
+            : "Dialog dismissed";
+    }
+}

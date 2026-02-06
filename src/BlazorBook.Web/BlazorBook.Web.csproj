@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- SocialKit shared RCL (brings Sochi.Navigation + all Abstractions transitively) -->
+    <ProjectReference Include="..\SocialKit.Components\SocialKit.Components.csproj" />
+    
+    <!-- Core + InMemory stores (for DI registration in Program.cs) -->
+    <ProjectReference Include="..\Identity.Core\Identity.Core.csproj" />
+    <ProjectReference Include="..\Identity.Store.InMemory\Identity.Store.InMemory.csproj" />
+    <ProjectReference Include="..\Content.Core\Content.Core.csproj" />
+    <ProjectReference Include="..\Content.Store.InMemory\Content.Store.InMemory.csproj" />
+    <ProjectReference Include="..\Chat.Core\Chat.Core.csproj" />
+    <ProjectReference Include="..\Chat.Store.InMemory\Chat.Store.InMemory.csproj" />
+    <ProjectReference Include="..\RelationshipService.Core\RelationshipService.Core.csproj" />
+    <ProjectReference Include="..\RelationshipService.Store.InMemory\RelationshipService.Store.InMemory.csproj" />
+    <ProjectReference Include="..\ActivityStream.Core\ActivityStream.Core.csproj" />
+    <ProjectReference Include="..\ActivityStream.Store.InMemory\ActivityStream.Store.InMemory.csproj" />
+    <ProjectReference Include="..\Inbox.Core\Inbox.Core.csproj" />
+    <ProjectReference Include="..\Inbox.Store.InMemory\Inbox.Store.InMemory.csproj" />
+    <ProjectReference Include="..\Search.Core\Search.Core.csproj" />
+    <ProjectReference Include="..\Search.Index.InMemory\Search.Index.InMemory.csproj" />
+    <ProjectReference Include="..\Media.Core\Media.Core.csproj" />
+    <ProjectReference Include="..\Media.Store.InMemory\Media.Store.InMemory.csproj" />
+    <ProjectReference Include="..\Realtime.Core\Realtime.Core.csproj" />
+    <ProjectReference Include="..\Realtime.Transport.InMemory\Realtime.Transport.InMemory.csproj" />
+  </ItemGroup>
+
+</Project>

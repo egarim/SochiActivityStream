@@ -1,0 +1,49 @@
+@* Message Bubble Component *@
+@using global::Chat.Abstractions
+
+<div class="sk-message-group @(IsSent ? "sent" : "received")">
+    @if (!IsSent && ShowAvatar)
+    {
+        <div class="sk-message-avatar">
+            <Avatar ImageUrl="@SenderAvatarUrl"
+                    Name="@SenderName"
+                    Size="AvatarSize.Small" />
+        </div>
+    }
+    <div class="sk-message-content">
+        @if (!IsSent && ShowSenderName)
+        {
+            <span class="sk-message-sender text-muted small">@SenderName</span>
+        }
+        <div class="sk-message-bubble @(IsSent ? "sent" : "received")">
+            @Message?.Body
+        </div>
+        @if (ShowTimestamp)
+        {
+            <span class="sk-message-timestamp text-muted small">@FormatTime(Message?.CreatedAt ?? DateTimeOffset.Now)</span>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public MessageDto? Message { get; set; }
+    [Parameter] public bool IsSent { get; set; }
+    [Parameter] public bool ShowAvatar { get; set; } = true;
+    [Parameter] public bool ShowSenderName { get; set; } = false;
+    [Parameter] public bool ShowTimestamp { get; set; } = false;
+    [Parameter] public string? SenderName { get; set; }
+    [Parameter] public string? SenderAvatarUrl { get; set; }
+    
+    private string FormatTime(DateTimeOffset dateTime)
+    {
+        var now = DateTimeOffset.UtcNow;
+        
+        if (dateTime.Date == now.Date)
+            return dateTime.ToString("h:mm tt");
+        
+        if ((now - dateTime).TotalDays < 7)
+            return dateTime.ToString("ddd h:mm tt");
+        
+        return dateTime.ToString("MMM d, h:mm tt");
+    }
+}

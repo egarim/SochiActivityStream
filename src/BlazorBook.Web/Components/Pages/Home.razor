@@ -1,0 +1,49 @@
+@page "/"
+@inherits MvvmComponentBase<HomeViewModel>
+@inject ICurrentUserService CurrentUser
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>BlazorBook - Where Friends Connect</PageTitle>
+
+@if (CurrentUser.IsAuthenticated)
+{
+    <Feed />
+}
+else
+{
+    <div class="sk-auth-container">
+        <div class="text-center mb-5">
+            <h1 class="auth-logo">
+                <i class="fas fa-book-open me-2"></i>BlazorBook
+            </h1>
+            <p class="lead text-muted">Connect with friends and the world around you.</p>
+        </div>
+        
+        <DxCard CssClass="mx-auto" style="max-width: 420px;">
+            <BodyTemplate>
+                <div class="p-4">
+                    <h4 class="text-center mb-4">Welcome Back</h4>
+                    
+                    <div class="d-grid gap-3">
+                        <CommandButton Command="@VM.NavigateToLoginCommand" CssClass="btn btn-primary btn-lg">
+                            Log In
+                        </CommandButton>
+                        
+                        <hr />
+                        
+                        <CommandButton Command="@VM.NavigateToSignUpCommand" CssClass="btn btn-success btn-lg">
+                            Create New Account
+                        </CommandButton>
+                    </div>
+                </div>
+            </BodyTemplate>
+        </DxCard>
+        
+        <div class="text-center mt-4">
+            <small class="text-muted">
+                Demo social network powered by Sochi.Navigation MVVM
+            </small>
+        </div>
+    </div>
+}

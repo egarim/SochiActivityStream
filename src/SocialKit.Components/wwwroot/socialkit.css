@@ -1,0 +1,173 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   SocialKit.Components — Shared CSS (minimal, works with DevExpress themes)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Avatar */
+.sk-avatar {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.sk-avatar-xs { width: 24px; height: 24px; font-size: 10px; }
+.sk-avatar-sm { width: 32px; height: 32px; font-size: 12px; }
+.sk-avatar-md { width: 40px; height: 40px; font-size: 14px; }
+.sk-avatar-lg { width: 56px; height: 56px; font-size: 18px; }
+.sk-avatar-xl { width: 96px; height: 96px; font-size: 32px; }
+
+.sk-avatar[style*="--sk-avatar-size"] {
+    width: var(--sk-avatar-size);
+    height: var(--sk-avatar-size);
+}
+
+.sk-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.sk-avatar-initials {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    border-radius: 50%;
+}
+
+.sk-avatar-status {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.sk-avatar-status.online {
+    background-color: #42b72a;
+}
+
+/* Skeleton */
+.sk-skeleton {
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: sk-shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.sk-skeleton-circle {
+    border-radius: 50%;
+}
+
+.sk-skeleton-line {
+    height: 14px;
+}
+
+@keyframes sk-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Conversation Item */
+.sk-conversation-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.sk-conversation-item:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.sk-conversation-item.active {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Message Bubble */
+.sk-message-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.sk-message-group.sent {
+    justify-content: flex-end;
+}
+
+.sk-message-group.received {
+    justify-content: flex-start;
+}
+
+.sk-message-content {
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.sk-message-bubble {
+    padding: 8px 14px;
+    border-radius: 18px;
+    word-wrap: break-word;
+    font-size: 14px;
+}
+
+.sk-message-bubble.sent {
+    background-color: #0084ff;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.sk-message-bubble.received {
+    background-color: #e4e6eb;
+    color: #050505;
+    border-bottom-left-radius: 4px;
+}
+
+.sk-message-sender {
+    margin-bottom: 2px;
+    font-size: 12px;
+}
+
+.sk-message-timestamp {
+    margin-top: 2px;
+    font-size: 11px;
+}
+
+/* Friend Card */
+.sk-friend-card {
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+}
+
+.sk-friend-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Post Card */
+.sk-post-card {
+    transition: none;
+}
+
+/* Auth Container */
+.sk-auth-container {
+    padding: 24px 16px;
+}
+
+/* Profile */
+.sk-profile-cover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}

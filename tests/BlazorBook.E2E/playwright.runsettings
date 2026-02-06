@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <TestRunParameters>
+    <!-- BlazorBook.Web URL - expects server to be running -->
+    <Parameter name="BlazorBookUrl" value="http://localhost:5555" />
+    <!-- Set to true to auto-start the server -->
+    <Parameter name="StartServer" value="false" />
+  </TestRunParameters>
+  <Playwright>
+    <!-- Browser settings -->
+    <BrowserName>chromium</BrowserName>
+    <LaunchOptions>
+      <Headless>true</Headless>
+    </LaunchOptions>
+  </Playwright>
+</RunSettings>

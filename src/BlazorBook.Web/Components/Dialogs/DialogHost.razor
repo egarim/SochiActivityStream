@@ -1,0 +1,89 @@
+@using Sochi.Navigation.Dialogs
+@rendermode InteractiveServer
+@inject DialogService DialogService
+@implements IDisposable
+
+@if (_isVisible)
+{
+    <div class="dialog-overlay" @onclick="OnOverlayClick">
+        <div class="dialog-container" @onclick:stopPropagation="true">
+            @if (_currentDialogName == "ConfirmDialog")
+            {
+                <ConfirmDialog Parameters="_currentParameters" OnClose="OnDialogClose" />
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-body">
+                        <p>Unknown dialog: @_currentDialogName</p>
+                        <button class="btn btn-secondary" @onclick="() => OnDialogClose(DialogResult.Cancel())">Close</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<style>
+    .dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1050;
+    }
+
+    .dialog-container {
+        max-width: 500px;
+        width: 90%;
+    }
+</style>
+
+@code {
+    private bool _isVisible;
+    private string? _currentDialogName;
+    private IDialogParameters? _currentParameters;
+
+    protected override void OnInitialized()
+    {
+        DialogService.ShowDialogRequested += OnShowDialogRequested;
+        DialogService.HideDialogRequested += OnHideDialogRequested;
+    }
+
+    private void OnShowDialogRequested(string dialogName, IDialogParameters? parameters)
+    {
+        _currentDialogName = dialogName;
+        _currentParameters = parameters;
+        _isVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnHideDialogRequested()
+    {
+        _isVisible = false;
+        _currentDialogName = null;
+        _currentParameters = null;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnDialogClose(IDialogResult result)
+    {
+        DialogService.CloseDialog(result);
+    }
+
+    private void OnOverlayClick()
+    {
+        DialogService.CloseDialog(DialogResult.Cancel());
+    }
+
+    public void Dispose()
+    {
+        DialogService.ShowDialogRequested -= OnShowDialogRequested;
+        DialogService.HideDialogRequested -= OnHideDialogRequested;
+    }
+}

@@ -1,0 +1,33 @@
+@inject ICurrentUserService CurrentUser
+
+<div class="left-sidebar-content p-3">
+    <nav class="nav flex-column">
+        <a class="nav-link sidebar-link" href="/profile/@CurrentUser.ProfileId">
+            <img src="@(CurrentUser.AvatarUrl ?? "/img/default-avatar.png")" 
+                 alt="@CurrentUser.DisplayName" 
+                 class="rounded-circle me-2" width="24" height="24" />
+            @CurrentUser.DisplayName
+        </a>
+        <a class="nav-link sidebar-link" href="/friends">
+            <i class="fas fa-user-friends me-2 text-primary"></i> Friends
+        </a>
+        <a class="nav-link sidebar-link" href="/messages">
+            <i class="fas fa-comment-dots me-2 text-info"></i> Messages
+        </a>
+        <a class="nav-link sidebar-link" href="/">
+            <i class="fas fa-newspaper me-2 text-warning"></i> News Feed
+        </a>
+    </nav>
+    
+    <hr class="my-3" />
+    
+    <h6 class="text-muted px-3 mb-2">Shortcuts</h6>
+    <nav class="nav flex-column">
+        <a class="nav-link sidebar-link" href="#">
+            <i class="fas fa-bookmark me-2"></i> Saved
+        </a>
+        <a class="nav-link sidebar-link" href="#">
+            <i class="fas fa-calendar me-2"></i> Events
+        </a>
+    </nav>
+</div>

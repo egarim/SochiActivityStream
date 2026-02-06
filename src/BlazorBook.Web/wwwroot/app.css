@@ -1,0 +1,346 @@
+/* BlazorBook - Facebook-like Social Network UI */
+
+:root {
+    --blazorbook-blue: #1877f2;
+    --blazorbook-blue-hover: #166fe5;
+    --bg-primary: #f0f2f5;
+    --bg-secondary: #ffffff;
+    --text-primary: #050505;
+    --text-secondary: #65676b;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background-color: var(--bg-primary);
+}
+
+/* Top Navigation */
+.top-nav {
+    background-color: var(--bg-secondary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 56px;
+}
+
+.top-nav .navbar-brand {
+    color: var(--blazorbook-blue);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.top-nav .nav-link {
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.top-nav .nav-link:hover {
+    background-color: var(--bg-primary);
+    color: var(--blazorbook-blue);
+}
+
+.search-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+.search-container .form-control {
+    border-radius: 20px;
+}
+
+.search-container .input-group-text {
+    border-radius: 20px 0 0 20px;
+}
+
+/* Layout */
+.blazorbook-layout {
+    min-height: 100vh;
+}
+
+.main-container {
+    display: flex;
+    padding-top: 56px;
+    min-height: 100vh;
+}
+
+.left-sidebar {
+    width: 280px;
+    min-width: 280px;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    background-color: var(--bg-primary);
+}
+
+.right-sidebar {
+    width: 280px;
+    min-width: 280px;
+    position: fixed;
+    top: 56px;
+    right: 0;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    background-color: var(--bg-primary);
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 280px;
+    margin-right: 280px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+@media (max-width: 1200px) {
+    .main-content {
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+}
+
+/* Sidebar Links */
+.sidebar-link {
+    color: var(--text-primary);
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.sidebar-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Cards */
+.post-card, .card {
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    border: none;
+}
+
+.card-body {
+    padding: 16px;
+}
+
+/* Create Post Box */
+.create-post-box {
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.create-post-box .form-control {
+    border-radius: 20px;
+    background-color: var(--bg-primary);
+    border: none;
+    padding: 12px 16px;
+}
+
+.create-post-box .form-control:focus {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--blazorbook-blue);
+    box-shadow: none;
+}
+
+/* Post */
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.post-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.post-author {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.post-time {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.post-body {
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.post-actions {
+    display: flex;
+    border-top: 1px solid var(--bg-primary);
+    padding-top: 8px;
+}
+
+.post-action-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 8px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.post-action-btn:hover {
+    background-color: var(--bg-primary);
+}
+
+.post-action-btn.liked {
+    color: var(--blazorbook-blue);
+}
+
+/* Buttons */
+.btn-blazorbook {
+    background-color: var(--blazorbook-blue);
+    border-color: var(--blazorbook-blue);
+    color: white;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 6px;
+}
+
+.btn-blazorbook:hover {
+    background-color: var(--blazorbook-blue-hover);
+    border-color: var(--blazorbook-blue-hover);
+    color: white;
+}
+
+/* Login/Signup Pages */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom, var(--bg-primary) 0%, white 100%);
+}
+
+.auth-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.auth-logo {
+    color: var(--blazorbook-blue);
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+/* Messages */
+.conversation-list {
+    border-right: 1px solid var(--bg-primary);
+}
+
+.conversation-item {
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.conversation-item:hover,
+.conversation-item.active {
+    background-color: var(--bg-primary);
+}
+
+.message-bubble {
+    max-width: 70%;
+    padding: 10px 14px;
+    border-radius: 18px;
+    margin-bottom: 4px;
+}
+
+.message-bubble.sent {
+    background-color: var(--blazorbook-blue);
+    color: white;
+    margin-left: auto;
+}
+
+.message-bubble.received {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Profile */
+.profile-cover {
+    height: 300px;
+    background: linear-gradient(135deg, var(--blazorbook-blue) 0%, #4a90d9 100%);
+    border-radius: 0 0 8px 8px;
+    position: relative;
+}
+
+.profile-avatar-container {
+    position: absolute;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.profile-avatar-large {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.profile-info {
+    text-align: center;
+    padding-top: 90px;
+    padding-bottom: 20px;
+}
+
+.profile-name {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.profile-handle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Friends */
+.friend-card {
+    text-align: center;
+    padding: 16px;
+}
+
+.friend-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 12px;
+}

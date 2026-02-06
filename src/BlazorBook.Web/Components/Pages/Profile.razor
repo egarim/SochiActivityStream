@@ -1,0 +1,11 @@
+@page "/profile/{profileId?}"
+@inherits MvvmComponentBase<ProfileViewModel>
+@rendermode InteractiveServer
+
+<PageTitle>@VM.Title - BlazorBook</PageTitle>
+
+<ProfileContent ViewModel="@VM" />
+
+@code {
+    [Parameter] public string? profileId { get; set; }
+}

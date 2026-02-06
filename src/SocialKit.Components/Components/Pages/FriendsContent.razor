@@ -1,0 +1,81 @@
+@* Friends Content Component - Reusable friends list UI *@
+@using SocialKit.Components.ViewModels
+
+<div class="sk-friends" style="max-width: 1200px; margin: 0 auto;">
+    <DxCard>
+        <HeaderTemplate>
+            <div class="p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fas fa-user-friends me-2"></i>Friends</h5>
+                    <DxTextBox NullText="Search friends..." style="max-width:300px;" />
+                </div>
+                <DxTabs>
+                    <DxTab Text="@($"All Friends ({ViewModel.Friends.Count})")"
+                           Active="@(ViewModel.SelectedTab == "friends")"
+                           Click="@(() => SetTab("friends"))" />
+                    <DxTab Text="@($"Followers ({ViewModel.Followers.Count})")"
+                           Active="@(ViewModel.SelectedTab == "followers")"
+                           Click="@(() => SetTab("followers"))" />
+                    <DxTab Text="@($"Following ({ViewModel.Following.Count})")"
+                           Active="@(ViewModel.SelectedTab == "following")"
+                           Click="@(() => SetTab("following"))" />
+                </DxTabs>
+            </div>
+        </HeaderTemplate>
+        <BodyTemplate>
+            <div class="p-3">
+                @if (ViewModel.IsBusy)
+                {
+                    <div class="text-center p-5">
+                        <DxLoadingPanel Visible="true" />
+                    </div>
+                }
+                else
+                {
+                    var displayList = ViewModel.SelectedTab switch
+                    {
+                        "followers" => ViewModel.Followers,
+                        "following" => ViewModel.Following,
+                        _ => ViewModel.Friends
+                    };
+                    
+                    if (displayList.Count == 0)
+                    {
+                        <div class="text-center p-5">
+                            <i class="fas fa-users" style="font-size:48px;color:var(--sk-text-muted,#6c757d);"></i>
+                            <h5 class="mt-3">
+                                @(ViewModel.SelectedTab == "friends" ? "No friends yet" : 
+                                  ViewModel.SelectedTab == "followers" ? "No followers yet" : "Not following anyone")
+                            </h5>
+                            <p class="text-muted">
+                                @(ViewModel.SelectedTab == "friends" ? "Connect with people to build your network!" :
+                                  ViewModel.SelectedTab == "followers" ? "Share great content to attract followers!" : "Follow people whose content you enjoy!")
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row g-3">
+                            @foreach (var friend in displayList)
+                            {
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <FriendCard User="@friend"
+                                               OnClick="@(async (u) => await ViewModel.ViewProfileCommand.ExecuteAsync(u))" />
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </BodyTemplate>
+    </DxCard>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public FriendsViewModel ViewModel { get; set; } = null!;
+    
+    private void SetTab(string tab)
+    {
+        ViewModel.SelectedTab = tab;
+    }
+}

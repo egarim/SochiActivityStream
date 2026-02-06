@@ -1,0 +1,14 @@
+@page "/signup"
+@inherits MvvmComponentBase<SignUpViewModel>
+@rendermode InteractiveServer
+
+<PageTitle>Sign Up - BlazorBook</PageTitle>
+
+<SignUpContent ViewModel="@VM">
+    <LogoContent>
+        <h1 class="auth-logo">
+            <i class="fas fa-book-open me-2"></i>BlazorBook
+        </h1>
+        <p class="text-center text-muted mb-4">It's quick and easy.</p>
+    </LogoContent>
+</SignUpContent>

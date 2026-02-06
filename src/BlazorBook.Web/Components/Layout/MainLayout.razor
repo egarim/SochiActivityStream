@@ -1,0 +1,36 @@
+@using BlazorBook.Web.Components.Dialogs
+@using SocialKit.Components.Abstractions
+@inherits LayoutComponentBase
+@inject ICurrentUserService CurrentUser
+
+<div class="blazorbook-layout">
+    <TopNav />
+    
+    <div class="main-container">
+        @if (CurrentUser.IsAuthenticated)
+        {
+            <aside class="left-sidebar d-none d-lg-block">
+                <LeftSidebar />
+            </aside>
+        }
+        
+        <main class="main-content">
+            @Body
+        </main>
+        
+        @if (CurrentUser.IsAuthenticated)
+        {
+            <aside class="right-sidebar d-none d-xl-block">
+                <RightSidebar />
+            </aside>
+        }
+    </div>
+</div>
+
+<DialogHost />
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
