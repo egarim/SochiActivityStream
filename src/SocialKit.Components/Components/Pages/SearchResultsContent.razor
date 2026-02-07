@@ -1,0 +1,64 @@
+@* Search Results Content Component *@
+@using SocialKit.Components.ViewModels
+
+<div class="sk-search" style="max-width: 760px; margin: 0 auto;">
+    <header class="mb-4">
+        <MudText Typo="Typo.h5" Class="mb-3">Search</MudText>
+        <div class="d-flex gap-2">
+            <MudTextField T="string" @bind-Value="ViewModel.Query"
+                          id="search-input"
+                          Placeholder="Search people, posts, and more..."
+                          Variant="Variant.Outlined"
+                          Immediate="true"
+                          Class="flex-grow-1" />
+            <MudButton id="search-button"
+                       StartIcon="@Icons.Material.Filled.Search"
+                       Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       Disabled="@(!ViewModel.PerformSearchCommand.CanExecute(null))"
+                       OnClick="@HandleSubmit">Search</MudButton>
+        </div>
+    </header>
+
+    @if (ViewModel.IsLoading)
+    {
+        <Skeleton Type="SocialKit.Components.Components.Common.SkeletonType.PostCard" />
+    }
+    else if (ViewModel.Results.Count == 0)
+    {
+        <MudCard Class="text-center p-5" Elevation="2">
+            <MudCardContent>
+                <MudIcon Icon="@Icons.Material.Filled.Search" Style="font-size:48px;" Color="Color.Default" />
+                <MudText Typo="Typo.h6" Class="mt-3">Find something great</MudText>
+                <MudText Typo="Typo.body2" Class="mud-text-secondary">Use the search box above to explore profiles, posts, and conversations.</MudText>
+            </MudCardContent>
+        </MudCard>
+    }
+    else
+    {
+        <MudList T="object">
+            @foreach (var item in ViewModel.Results)
+            {
+                <MudListItem T="object" Href="@item.Route">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <MudText Typo="Typo.subtitle1">@item.Title</MudText>
+                        <MudChip T="string" Size="Size.Small" Color="Color.Default">Result</MudChip>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(item.Description))
+                    {
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@item.Description</MudText>
+                    }
+                </MudListItem>
+            }
+        </MudList>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public SearchViewModel ViewModel { get; set; } = null!;
+
+    private async Task HandleSubmit()
+    {
+        await ViewModel.PerformSearchCommand.ExecuteAsync(null);
+    }
+}

@@ -1,28 +1,25 @@
-@* Confirm Dialog using DevExpress DxPopup *@
+@* Confirm Dialog using MudBlazor *@
 @using Sochi.Navigation.Dialogs
 
-<DxCard>
-    <HeaderTemplate>
-        <div class="p-3 pb-0">
-            <h5 class="mb-0">@Title</h5>
-        </div>
-    </HeaderTemplate>
-    <BodyTemplate>
-        <div class="p-3">
-            <p>@Message</p>
-        </div>
-    </BodyTemplate>
-    <FooterTemplate>
-        <div class="d-flex justify-content-end gap-2 p-3 pt-0">
-            <DxButton Text="Cancel"
-                      RenderStyle="ButtonRenderStyle.Secondary"
-                      Click="Cancel" />
-            <DxButton Text="Confirm"
-                      RenderStyle="ButtonRenderStyle.Primary"
-                      Click="Confirm" />
-        </div>
-    </FooterTemplate>
-</DxCard>
+<MudCard Elevation="2">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">@Title</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText>@Message</MudText>
+    </MudCardContent>
+    <MudCardActions Class="d-flex justify-content-end gap-2">
+        <MudButton id="confirm-no"
+                   Variant="Variant.Outlined"
+                   OnClick="Cancel">Cancel</MudButton>
+        <MudButton id="confirm-yes"
+                   Color="Color.Primary"
+                   Variant="Variant.Filled"
+                   OnClick="Confirm">Confirm</MudButton>
+    </MudCardActions>
+</MudCard>
 
 @code {
     [Parameter] public IDialogParameters? Parameters { get; set; }
@@ -33,13 +30,13 @@
     
     private async Task Confirm()
     {
-        var result = DialogResult.Ok();
+        var result = Sochi.Navigation.Dialogs.DialogResult.Ok();
         await OnClose.InvokeAsync(result);
     }
     
     private async Task Cancel()
     {
-        var result = DialogResult.Cancel();
+        var result = Sochi.Navigation.Dialogs.DialogResult.Cancel();
         await OnClose.InvokeAsync(result);
     }
 }

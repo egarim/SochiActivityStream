@@ -80,6 +80,12 @@ public class FeedViewModel : ViewModelBase, IInitialize
 
     public async Task InitializeAsync(INavigationParameters parameters)
     {
+        if (!_currentUser.IsAuthenticated || _currentUser.ProfileId == null)
+        {
+            await _navigationService.NavigateAsync("/login");
+            return;
+        }
+
         await LoadPostsAsync();
     }
 

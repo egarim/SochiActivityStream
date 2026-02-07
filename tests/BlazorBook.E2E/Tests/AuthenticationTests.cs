@@ -35,9 +35,9 @@ public class AuthenticationTests : BlazorBookPageTest
         await SignUpAsync(displayName, username, email, password);
         
         // Assert - should be on feed page
-        await Expect(Page).ToHaveURLAsync($"{BaseUrl}/");
-        await Expect(Page.GetByRole(AriaRole.Textbox, new() { NameRegex = new System.Text.RegularExpressions.Regex("What's on your mind") }))
-            .ToBeVisibleAsync();
+        await Expect(Page).ToHaveURLAsync($"{BaseUrl}/feed");
+        // MudBlazor text field with ID selector
+        await Expect(Page.Locator("#post-content")).ToBeVisibleAsync();
     }
 
     [Test]
@@ -46,8 +46,8 @@ public class AuthenticationTests : BlazorBookPageTest
         // Arrange
         await NavigateToAsync("/signup");
         
-        // Act - click sign up without filling fields
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Sign Up" }).ClickAsync();
+        // Act - click sign up without filling fields (using ID selector)
+        await Page.Locator("#signup-button").ClickAsync();
         await WaitForBlazorAsync();
         
         // Assert - should stay on sign up page (form doesn't submit with empty fields)
@@ -73,7 +73,7 @@ public class AuthenticationTests : BlazorBookPageTest
         await LoginAsync(email, password);
         
         // Assert - should be on feed page
-        await Expect(Page).ToHaveURLAsync($"{BaseUrl}/");
+        await Expect(Page).ToHaveURLAsync($"{BaseUrl}/feed");
     }
 
     [Test]
@@ -83,8 +83,8 @@ public class AuthenticationTests : BlazorBookPageTest
         await NavigateToAsync("/login");
         
         // Act
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email address" }).FillAsync("nonexistent@example.com");
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync("wrongpassword");
+        await Page.GetByPlaceholder("Email address").FillAsync("nonexistent@example.com");
+        await Page.GetByPlaceholder("Password").FillAsync("wrongpassword");
         await Page.GetByRole(AriaRole.Button, new() { Name = "Log In" }).ClickAsync();
         await WaitForBlazorAsync();
         

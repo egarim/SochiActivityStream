@@ -80,8 +80,8 @@ public class AuthFlowTests
         Assert.That(_fixture.CurrentUser.DisplayName, Is.EqualTo("Alice Smith"));
         Assert.That(_fixture.CurrentUser.Handle, Is.EqualTo("alice"));
         
-        // Should navigate to home
-        Assert.That(_fixture.Navigation.LastNavigatedUri, Is.EqualTo("/"));
+        // Should navigate to feed after signup
+        Assert.That(_fixture.Navigation.LastNavigatedUri, Is.EqualTo("/feed"));
     }
 
     [Test]
@@ -173,7 +173,7 @@ public class AuthFlowTests
         // Should be signed in again
         Assert.That(_fixture.CurrentUser.IsAuthenticated, Is.True);
         Assert.That(_fixture.CurrentUser.DisplayName, Is.EqualTo("Bob Wilson"));
-        Assert.That(_fixture.Navigation.LastNavigatedUri, Is.EqualTo("/"));
+        Assert.That(_fixture.Navigation.LastNavigatedUri, Is.EqualTo("/feed"));
     }
 
     [Test]

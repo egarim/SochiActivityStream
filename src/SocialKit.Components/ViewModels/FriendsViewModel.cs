@@ -71,6 +71,12 @@ public class FriendsViewModel : ViewModelBase, IInitialize
 
     public async Task InitializeAsync(INavigationParameters parameters)
     {
+        if (!_currentUser.IsAuthenticated)
+        {
+            await _navigationService.NavigateAsync("/login");
+            return;
+        }
+
         await LoadFriendsAsync();
     }
 

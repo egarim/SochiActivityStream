@@ -22,7 +22,7 @@ public class InteractionTests : BlazorBookPageTest
     /// Gets a locator scoped to a specific post card containing the given text.
     /// </summary>
     private ILocator GetPostCard(string postContent) =>
-        Page.Locator("dxcard").Filter(new() { HasText = postContent }).First;
+        Page.Locator(".mud-card").Filter(new() { HasText = postContent }).First;
 
     [Test]
     public async Task Like_ClickLikeButton_ShowsLikeCount()

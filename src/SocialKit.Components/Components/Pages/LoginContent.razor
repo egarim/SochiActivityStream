@@ -2,8 +2,8 @@
 @using SocialKit.Components.ViewModels
 
 <div class="sk-auth-container d-flex justify-content-center align-items-center" style="min-height:80vh;">
-    <DxCard CssClass="sk-auth-card" style="max-width:420px;width:100%;">
-        <BodyTemplate>
+    <MudCard Class="sk-auth-card" Style="max-width:420px;width:100%;" Elevation="2">
+        <MudCardContent>
             <div class="p-4">
                 <div class="text-center mb-4">
                     @if (LogoContent != null)
@@ -12,46 +12,59 @@
                     }
                     else
                     {
-                        <h2>Welcome</h2>
+                        <MudText Typo="Typo.h4">Welcome</MudText>
                     }
                 </div>
                 
                 <EditForm Model="@ViewModel" OnValidSubmit="@(() => ViewModel.LoginCommand.ExecuteAsync(null))">
                     @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
                     {
-                        <div class="alert alert-danger" role="alert">
-                            <i class="fas fa-exclamation-circle me-2"></i>@ViewModel.ErrorMessage
-                        </div>
+                        <MudAlert Severity="Severity.Error" Class="mb-3">
+                            @ViewModel.ErrorMessage
+                        </MudAlert>
                     }
                     
-                    <DxTextBox @bind-Text="@ViewModel.Email"
-                               NullText="Email address"
-                               CssClass="mb-3" />
+                    <MudTextField @bind-Value="@ViewModel.Email"
+                                  id="login-email"
+                                  Placeholder="Email address"
+                                  Variant="Variant.Outlined"
+                                  Class="mb-3"
+                                  FullWidth="true" />
                     
-                    <DxTextBox @bind-Text="@ViewModel.Password"
-                               NullText="Password"
-                               Password="true"
-                               CssClass="mb-3" />
+                    <MudTextField @bind-Value="@ViewModel.Password"
+                                  id="login-password"
+                                  Placeholder="Password"
+                                  InputType="InputType.Password"
+                                  Variant="Variant.Outlined"
+                                  Class="mb-3"
+                                  FullWidth="true" />
                     
-                    <DxButton Text="@(ViewModel.IsBusy ? "Logging in..." : "Log In")"
-                              RenderStyle="ButtonRenderStyle.Primary"
-                              CssClass="w-100 mb-3"
-                              SizeMode="SizeMode.Large"
-                              SubmitFormOnClick="true"
-                              Enabled="@(!ViewModel.IsBusy)" />
+                    <MudButton id="login-button"
+                               ButtonType="ButtonType.Submit"
+                               Color="Color.Primary"
+                               Variant="Variant.Filled"
+                               FullWidth="true"
+                               Size="Size.Large"
+                               Class="mb-3"
+                               Disabled="@ViewModel.IsBusy">
+                        @(ViewModel.IsBusy ? "Logging in..." : "Log In")
+                    </MudButton>
                 </EditForm>
                 
-                <hr />
+                <MudDivider Class="my-3" />
                 
                 <div class="text-center">
-                    <p class="text-muted mb-2">Don't have an account?</p>
-                    <DxButton Text="Create New Account"
-                              RenderStyle="ButtonRenderStyle.Success"
-                              Click="@(() => ViewModel.NavigateToSignUpCommand.ExecuteAsync(null))" />
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary mb-2">Don't have an account?</MudText>
+                    <MudButton id="create-account-button"
+                               Color="Color.Success"
+                               Variant="Variant.Filled"
+                               OnClick="@(() => ViewModel.NavigateToSignUpCommand.ExecuteAsync(null))">
+                        Create New Account
+                    </MudButton>
                 </div>
             </div>
-        </BodyTemplate>
-    </DxCard>
+        </MudCardContent>
+    </MudCard>
 </div>
 
 @code {

@@ -14,36 +14,58 @@ else
 {
     <div class="sk-auth-container">
         <div class="text-center mb-5">
-            <h1 class="auth-logo">
-                <i class="fas fa-book-open me-2"></i>BlazorBook
-            </h1>
-            <p class="lead text-muted">Connect with friends and the world around you.</p>
+            <MudText Typo="Typo.h3" Class="auth-logo">
+                <MudIcon Icon="@Icons.Material.Filled.MenuBook" Class="me-2" />BlazorBook
+            </MudText>
+            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary">Connect with friends and the world around you.</MudText>
         </div>
         
-        <DxCard CssClass="mx-auto" style="max-width: 420px;">
-            <BodyTemplate>
+        <MudCard Class="mx-auto" Style="max-width: 420px;" Elevation="2">
+            <MudCardContent>
                 <div class="p-4">
-                    <h4 class="text-center mb-4">Welcome Back</h4>
+                    <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-4">Welcome Back</MudText>
                     
                     <div class="d-grid gap-3">
-                        <CommandButton Command="@VM.NavigateToLoginCommand" CssClass="btn btn-primary btn-lg">
+                        <MudButton id="home-login-button"
+                                   Color="Color.Primary"
+                                   Variant="Variant.Filled"
+                                   Size="Size.Large"
+                                   FullWidth="true"
+                                   OnClick="@(() => VM.NavigateToLoginCommand.ExecuteAsync(null))">
                             Log In
-                        </CommandButton>
+                        </MudButton>
                         
-                        <hr />
+                        <MudDivider />
                         
-                        <CommandButton Command="@VM.NavigateToSignUpCommand" CssClass="btn btn-success btn-lg">
+                        <MudButton id="home-signup-button"
+                                   Color="Color.Success"
+                                   Variant="Variant.Filled"
+                                   Size="Size.Large"
+                                   FullWidth="true"
+                                   OnClick="@(() => VM.NavigateToSignUpCommand.ExecuteAsync(null))">
                             Create New Account
-                        </CommandButton>
+                        </MudButton>
                     </div>
                 </div>
-            </BodyTemplate>
-        </DxCard>
+            </MudCardContent>
+        </MudCard>
         
         <div class="text-center mt-4">
-            <small class="text-muted">
+            <MudText Typo="Typo.caption" Class="mud-text-secondary">
                 Demo social network powered by Sochi.Navigation MVVM
-            </small>
+            </MudText>
         </div>
     </div>
+}
+
+@code {
+    protected override Task OnInitializedAsync()
+    {
+        if (CurrentUser.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/feed", replace: true);
+        }
+
+        return base.OnInitializedAsync();
+    }
 }

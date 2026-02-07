@@ -2,8 +2,8 @@
 @using SocialKit.Components.ViewModels
 
 <div class="sk-auth-container d-flex justify-content-center align-items-center" style="min-height:80vh;">
-    <DxCard CssClass="sk-auth-card" style="max-width:420px;width:100%;">
-        <BodyTemplate>
+    <MudCard Class="sk-auth-card" Style="max-width:420px;width:100%;" Elevation="2">
+        <MudCardContent>
             <div class="p-4">
                 <div class="text-center mb-4">
                     @if (LogoContent != null)
@@ -12,54 +12,71 @@
                     }
                     else
                     {
-                        <h2>Create Account</h2>
-                        <p class="text-muted">It's quick and easy.</p>
+                        <MudText Typo="Typo.h4">Create Account</MudText>
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">It's quick and easy.</MudText>
                     }
                 </div>
                 
                 <EditForm Model="@ViewModel" OnValidSubmit="@(() => ViewModel.SignUpCommand.ExecuteAsync(null))">
                     @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
                     {
-                        <div class="alert alert-danger" role="alert">
-                            <i class="fas fa-exclamation-circle me-2"></i>@ViewModel.ErrorMessage
-                        </div>
+                        <MudAlert Severity="Severity.Error" Class="mb-3">
+                            @ViewModel.ErrorMessage
+                        </MudAlert>
                     }
                     
-                    <DxTextBox @bind-Text="@ViewModel.DisplayName"
-                               NullText="Display Name"
-                               CssClass="mb-3" />
+                    <MudTextField @bind-Value="@ViewModel.DisplayName"
+                                  id="signup-displayname"
+                                  Placeholder="Display Name"
+                                  Variant="Variant.Outlined"
+                                  Class="mb-3"
+                                  FullWidth="true" />
                     
-                    <DxTextBox @bind-Text="@ViewModel.Handle"
-                               NullText="Username"
-                               CssClass="mb-3" />
+                    <MudTextField @bind-Value="@ViewModel.Handle"
+                                  id="signup-username"
+                                  Placeholder="Username"
+                                  Variant="Variant.Outlined"
+                                  Class="mb-3"
+                                  FullWidth="true" />
                     
-                    <DxTextBox @bind-Text="@ViewModel.Email"
-                               NullText="Email address"
-                               CssClass="mb-3" />
+                    <MudTextField @bind-Value="@ViewModel.Email"
+                                  id="signup-email"
+                                  Placeholder="Email address"
+                                  Variant="Variant.Outlined"
+                                  Class="mb-3"
+                                  FullWidth="true" />
                     
-                    <DxTextBox @bind-Text="@ViewModel.Password"
-                               NullText="Password (min 6 characters)"
-                               Password="true"
-                               CssClass="mb-3" />
+                    <MudTextField @bind-Value="@ViewModel.Password"
+                                  id="signup-password"
+                                  Placeholder="Password (min 6 characters)"
+                                  InputType="InputType.Password"
+                                  Variant="Variant.Outlined"
+                                  Class="mb-3"
+                                  FullWidth="true" />
                     
-                    <DxButton Text="@(ViewModel.IsBusy ? "Signing up..." : "Sign Up")"
-                              RenderStyle="ButtonRenderStyle.Success"
-                              CssClass="w-100 mb-3"
-                              SizeMode="SizeMode.Large"
-                              SubmitFormOnClick="true"
-                              Enabled="@(!ViewModel.IsBusy)" />
+                    <MudButton id="signup-button"
+                               ButtonType="ButtonType.Submit"
+                               Color="Color.Success"
+                               Variant="Variant.Filled"
+                               FullWidth="true"
+                               Size="Size.Large"
+                               Class="mb-3"
+                               Disabled="@ViewModel.IsBusy">
+                        @(ViewModel.IsBusy ? "Signing up..." : "Sign Up")
+                    </MudButton>
                 </EditForm>
                 
-                <hr />
+                <MudDivider Class="my-3" />
                 
                 <div class="text-center">
-                    <DxButton Text="Already have an account?"
-                              RenderStyle="ButtonRenderStyle.Link"
-                              Click="@(() => ViewModel.NavigateToLoginCommand.ExecuteAsync(null))" />
+                    <MudButton Variant="Variant.Text"
+                               OnClick="@(() => ViewModel.NavigateToLoginCommand.ExecuteAsync(null))">
+                        Already have an account?
+                    </MudButton>
                 </div>
             </div>
-        </BodyTemplate>
-    </DxCard>
+        </MudCardContent>
+    </MudCard>
 </div>
 
 @code {

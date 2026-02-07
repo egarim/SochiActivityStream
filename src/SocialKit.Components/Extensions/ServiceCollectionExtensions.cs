@@ -31,6 +31,8 @@ public static class ServiceCollectionExtensions
         services.AddViewModel<MessagesViewModel>();
         services.AddViewModel<ConversationViewModel>();
         services.AddViewModel<FriendsViewModel>();
+        services.AddViewModel<NotificationsViewModel>();
+        services.AddViewModel<SearchViewModel>();
         
         return services;
     }

@@ -1,4 +1,4 @@
-@* Conversation Item Component using DevExpress *@
+@* Conversation Item Component using MudBlazor *@
 @using global::Chat.Abstractions
 
 <div class="sk-conversation-item @(IsActive ? "active" : "")" @onclick="HandleClick" role="button">
@@ -14,16 +14,15 @@
             <span class="fw-semibold text-truncate @(HasUnread ? "fw-bold" : "")">
                 @GetDisplayName()
             </span>
-            <span class="text-muted small flex-shrink-0">@FormatTime(Conversation?.UpdatedAt ?? DateTimeOffset.Now)</span>
+            <span class="mud-text-secondary small flex-shrink-0">@FormatTime(Conversation?.UpdatedAt ?? DateTimeOffset.Now)</span>
         </div>
-        <div class="text-muted small text-truncate @(HasUnread ? "fw-semibold text-body" : "")">
+        <div class="mud-text-secondary small text-truncate @(HasUnread ? "fw-semibold" : "")">
             @GetPreviewText()
         </div>
     </div>
     @if (Conversation?.UnreadCount > 0)
     {
-        <DxBadge Text="@Conversation.UnreadCount.ToString()" 
-                 CssClass="sk-unread-badge" />
+        <MudBadge Content="@Conversation.UnreadCount" Color="Color.Primary" Overlap="false" />
     }
 </div>
 

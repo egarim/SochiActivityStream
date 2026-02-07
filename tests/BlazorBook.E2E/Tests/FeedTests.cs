@@ -22,16 +22,14 @@ public class FeedTests : BlazorBookPageTest
     /// Gets a locator scoped to a specific post card containing the given text.
     /// </summary>
     private ILocator GetPostCard(string postContent) =>
-        Page.Locator("dxcard").Filter(new() { HasText = postContent }).First;
+        Page.Locator(".mud-card").Filter(new() { HasText = postContent }).First;
 
     [Test]
     public async Task Feed_ShowsPostComposer()
     {
-        // Assert
-        var postBox = Page.GetByRole(AriaRole.Textbox, new() { NameRegex = new System.Text.RegularExpressions.Regex("What's on your mind") });
-        await Expect(postBox).ToBeVisibleAsync();
-        
-        await Expect(Page.GetByRole(AriaRole.Button, new() { Name = "Post" })).ToBeVisibleAsync();
+        // Assert - MudBlazor text field with ID selector
+        await Expect(Page.Locator("#post-content")).ToBeVisibleAsync();
+        await Expect(Page.Locator("#post-button")).ToBeVisibleAsync();
     }
 
     [Test]
@@ -126,9 +124,8 @@ public class FeedTests : BlazorBookPageTest
         // Act
         await CreatePostAsync(postContent);
         
-        // Assert - composer should be empty
-        var postBox = Page.GetByRole(AriaRole.Textbox, new() { NameRegex = new System.Text.RegularExpressions.Regex("What's on your mind") });
-        await Expect(postBox).ToHaveValueAsync("");
+        // Assert - composer should be empty (MudBlazor text field)
+        await Expect(Page.Locator("#post-content")).ToHaveValueAsync("");
     }
 
     [Test]

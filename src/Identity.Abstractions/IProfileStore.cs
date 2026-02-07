@@ -27,4 +27,11 @@ public interface IProfileStore
     /// <param name="record">The profile record to create.</param>
     /// <param name="ct">Cancellation token.</param>
     Task CreateAsync(ProfileRecord record, CancellationToken ct = default);
+
+    /// <summary>
+    /// Updates an existing profile record.
+    /// </summary>
+    /// <param name="record">The profile record with updated values.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task UpdateAsync(ProfileRecord record, CancellationToken ct = default);
 }

@@ -127,7 +127,7 @@ public class SignUpViewModel : ViewModelBase
             });
             
             await _currentUser.SignInAsync(result.Profile, result.User.Id!);
-            await _navigationService.NavigateAsync("/");
+            await _navigationService.NavigateAsync("/feed");
         }
         catch (IdentityValidationException ex)
         {

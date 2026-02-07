@@ -64,4 +64,32 @@ public sealed class InMemoryProfileStore : IProfileStore
 
         return Task.CompletedTask;
     }
+
+    /// <inheritdoc />
+    public Task UpdateAsync(ProfileRecord record, CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(record);
+        ArgumentNullException.ThrowIfNull(record.Profile);
+
+        if (string.IsNullOrEmpty(record.Profile.Id))
+            throw new ArgumentException("Profile must have an Id.", nameof(record));
+
+        lock (_lock)
+        {
+            if (!_profilesById.ContainsKey(record.Profile.Id))
+                throw new InvalidOperationException($"Profile with Id '{record.Profile.Id}' not found.");
+
+            // Update handle index if handle changed
+            var existing = _profilesById[record.Profile.Id];
+            if (existing.Profile.Handle.ToLowerInvariant() != record.Profile.Handle.ToLowerInvariant())
+            {
+                _handleIndex.TryRemove(existing.Profile.Handle.ToLowerInvariant(), out _);
+                _handleIndex[record.Profile.Handle.ToLowerInvariant()] = record.Profile.Id;
+            }
+
+            _profilesById[record.Profile.Id] = record;
+        }
+
+        return Task.CompletedTask;
+    }
 }

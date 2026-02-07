@@ -1,44 +1,43 @@
-@* Create Post Component using DevExpress DxCard + DxMemo *@
+@* Create Post Component using MudBlazor *@
 
-<DxCard CssClass="sk-create-post mb-3">
-    <BodyTemplate>
-        <div class="d-flex align-items-start gap-2 p-3">
+<MudCard Class="sk-create-post mb-3" Elevation="2">
+    <MudCardContent>
+        <div class="d-flex align-items-start gap-2">
             <Avatar ImageUrl="@UserAvatar" 
                     Name="@UserName" 
                     Size="AvatarSize.Medium" />
-            <DxMemo @bind-Text="@Text"
-                    Rows="2"
-                    CssClass="flex-grow-1"
-                    NullText="@($"What's on your mind, {FirstName}?")"
-                    Enabled="!IsPosting" />
+            <MudTextField @bind-Value="@Text"
+                          id="post-content"
+                          Lines="2"
+                          Variant="Variant.Outlined"
+                          Placeholder="@($"What's on your mind, {FirstName}?")"
+                          Disabled="@IsPosting"
+                          Class="flex-grow-1" />
         </div>
-        
-        <hr class="my-0" />
-        
-        <div class="d-flex justify-content-between align-items-center p-2 px-3">
-            <div class="d-flex gap-2">
-                <DxButton Text="Photo/Video"
-                          IconCssClass="fas fa-images"
-                          RenderStyle="ButtonRenderStyle.Link"
-                          RenderStyleMode="ButtonRenderStyleMode.Text"
-                          SizeMode="SizeMode.Small"
-                          Enabled="false" />
-                <DxButton Text="Tag"
-                          IconCssClass="fas fa-user-tag"
-                          RenderStyle="ButtonRenderStyle.Link"
-                          RenderStyleMode="ButtonRenderStyleMode.Text"
-                          SizeMode="SizeMode.Small"
-                          Enabled="false" />
-            </div>
-            <DxButton Text="Post"
-                      IconCssClass="fas fa-paper-plane"
-                      RenderStyle="ButtonRenderStyle.Primary"
-                      SizeMode="SizeMode.Small"
-                      Enabled="@CanPost"
-                      Click="HandlePost" />
+    </MudCardContent>
+    
+    <MudDivider />
+    
+    <MudCardActions Class="d-flex justify-content-between px-3">
+        <div class="d-flex gap-2">
+            <MudButton StartIcon="@Icons.Material.Filled.Image"
+                       Variant="Variant.Text"
+                       Size="Size.Small"
+                       Disabled="true">Photo/Video</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.PersonAdd"
+                       Variant="Variant.Text"
+                       Size="Size.Small"
+                       Disabled="true">Tag</MudButton>
         </div>
-    </BodyTemplate>
-</DxCard>
+        <MudButton id="post-button"
+                   StartIcon="@Icons.Material.Filled.Send"
+                   Color="Color.Primary"
+                   Variant="Variant.Filled"
+                   Size="Size.Small"
+                   Disabled="@(!CanPost)"
+                   OnClick="HandlePost">Post</MudButton>
+    </MudCardActions>
+</MudCard>
 
 @code {
     [Parameter] public string? UserAvatar { get; set; }

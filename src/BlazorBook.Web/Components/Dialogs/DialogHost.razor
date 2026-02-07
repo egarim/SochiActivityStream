@@ -1,6 +1,6 @@
 @using Sochi.Navigation.Dialogs
 @rendermode InteractiveServer
-@inject DialogService DialogService
+@inject Sochi.Navigation.Dialogs.DialogService DialogService
 @implements IDisposable
 
 @if (_isVisible)
@@ -16,7 +16,7 @@
                 <div class="card">
                     <div class="card-body">
                         <p>Unknown dialog: @_currentDialogName</p>
-                        <button class="btn btn-secondary" @onclick="() => OnDialogClose(DialogResult.Cancel())">Close</button>
+                        <button class="btn btn-secondary" @onclick="() => OnDialogClose(Sochi.Navigation.Dialogs.DialogResult.Cancel())">Close</button>
                     </div>
                 </div>
             }
@@ -78,7 +78,7 @@
 
     private void OnOverlayClick()
     {
-        DialogService.CloseDialog(DialogResult.Cancel());
+        DialogService.CloseDialog(Sochi.Navigation.Dialogs.DialogResult.Cancel());
     }
 
     public void Dispose()

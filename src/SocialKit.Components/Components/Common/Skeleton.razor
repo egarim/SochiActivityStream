@@ -1,61 +1,57 @@
-@* Skeleton loading placeholder component using DevExpress *@
+@* Skeleton loading placeholder component using MudBlazor *@
 
 @if (Type == SkeletonType.PostCard)
 {
-    <DxCard CssClass="sk-skeleton-card mb-3">
-        <HeaderTemplate>
-            <div class="d-flex align-items-center gap-2 p-3">
-                <div class="sk-skeleton sk-skeleton-circle" style="width:40px;height:40px;"></div>
-                <div class="flex-grow-1">
-                    <div class="sk-skeleton sk-skeleton-line" style="width:40%;height:14px;"></div>
-                    <div class="sk-skeleton sk-skeleton-line mt-1" style="width:25%;height:12px;"></div>
-                </div>
-            </div>
-        </HeaderTemplate>
-        <BodyTemplate>
-            <div class="p-3">
-                <div class="sk-skeleton sk-skeleton-line" style="width:100%;height:14px;"></div>
-                <div class="sk-skeleton sk-skeleton-line mt-2" style="width:90%;height:14px;"></div>
-                <div class="sk-skeleton sk-skeleton-line mt-2" style="width:75%;height:14px;"></div>
-            </div>
-        </BodyTemplate>
-    </DxCard>
+    <MudCard Class="sk-skeleton-card mb-3" Elevation="2">
+        <MudCardHeader>
+            <CardHeaderAvatar>
+                <MudSkeleton SkeletonType="MudBlazor.SkeletonType.Circle" Width="40px" Height="40px" />
+            </CardHeaderAvatar>
+            <CardHeaderContent>
+                <MudSkeleton Width="40%" Height="14px" />
+                <MudSkeleton Width="25%" Height="12px" Class="mt-1" />
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudSkeleton Width="100%" Height="14px" />
+            <MudSkeleton Width="90%" Height="14px" Class="mt-2" />
+            <MudSkeleton Width="75%" Height="14px" Class="mt-2" />
+        </MudCardContent>
+    </MudCard>
 }
 else if (Type == SkeletonType.Avatar)
 {
-    <div class="sk-skeleton sk-skeleton-circle @SizeClass"></div>
+    <MudSkeleton SkeletonType="MudBlazor.SkeletonType.Circle" Width="40px" Height="40px" />
 }
 else if (Type == SkeletonType.Text)
 {
-    <div class="sk-skeleton sk-skeleton-line" style="width:@(Width ?? "100%");height:14px;"></div>
+    <MudSkeleton Width="@(Width ?? "100%")" Height="14px" />
 }
 else if (Type == SkeletonType.Card)
 {
-    <DxCard CssClass="sk-skeleton-card mb-3">
-        <BodyTemplate>
-            <div class="sk-skeleton" style="width:100%;height:200px;"></div>
-            <div class="p-3">
-                <div class="sk-skeleton sk-skeleton-line" style="width:60%;height:14px;"></div>
-                <div class="sk-skeleton sk-skeleton-line mt-2" style="width:40%;height:12px;"></div>
+    <MudCard Class="sk-skeleton-card mb-3" Elevation="2">
+        <MudCardContent>
+            <MudSkeleton Width="100%" Height="200px" />
+            <div class="mt-3">
+                <MudSkeleton Width="60%" Height="14px" />
+                <MudSkeleton Width="40%" Height="12px" Class="mt-2" />
             </div>
-        </BodyTemplate>
-    </DxCard>
+        </MudCardContent>
+    </MudCard>
 }
 else if (Type == SkeletonType.ConversationItem)
 {
     <div class="d-flex align-items-center gap-2 p-2">
-        <div class="sk-skeleton sk-skeleton-circle" style="width:40px;height:40px;"></div>
+        <MudSkeleton SkeletonType="MudBlazor.SkeletonType.Circle" Width="40px" Height="40px" />
         <div class="flex-grow-1">
-            <div class="sk-skeleton sk-skeleton-line" style="width:50%;height:14px;"></div>
-            <div class="sk-skeleton sk-skeleton-line mt-1" style="width:75%;height:12px;"></div>
+            <MudSkeleton Width="50%" Height="14px" />
+            <MudSkeleton Width="75%" Height="12px" Class="mt-1" />
         </div>
     </div>
 }
 
 @code {
-    [Parameter] public SkeletonType Type { get; set; } = SkeletonType.Text;
+    [Parameter] public SocialKit.Components.Components.Common.SkeletonType Type { get; set; } = SocialKit.Components.Components.Common.SkeletonType.Text;
     [Parameter] public string? Width { get; set; }
     [Parameter] public int Count { get; set; } = 1;
-    
-    private string SizeClass => Type == SkeletonType.Avatar ? "sk-avatar-md" : "";
 }

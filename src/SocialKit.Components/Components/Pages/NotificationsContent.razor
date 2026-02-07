@@ -1,0 +1,76 @@
+@* Notifications Content Component - renders inbox items *@
+@using Inbox.Abstractions
+@using SocialKit.Components.ViewModels
+
+<div class="sk-notifications" style="max-width: 640px; margin: 0 auto;">
+    <header class="d-flex align-items-center justify-content-between mb-4">
+        <MudText Typo="Typo.h5">Notifications</MudText>
+        <MudButton StartIcon="@Icons.Material.Filled.Refresh"
+                   Variant="Variant.Outlined"
+                   Size="Size.Small"
+                   OnClick="@(() => ViewModel.LoadNotificationsCommand.ExecuteAsync(null))">
+            Refresh
+        </MudButton>
+    </header>
+
+    @if (ViewModel.IsLoading)
+    {
+        <Skeleton Type="SocialKit.Components.Components.Common.SkeletonType.PostCard" />
+        <Skeleton Type="SocialKit.Components.Components.Common.SkeletonType.PostCard" />
+    }
+    else if (ViewModel.Notifications.Count == 0)
+    {
+        <MudCard Class="text-center p-5" Elevation="2">
+            <MudCardContent>
+                <MudIcon Icon="@Icons.Material.Filled.NotificationsOff" Style="font-size:48px;" Color="Color.Default" />
+                <MudText Typo="Typo.h6" Class="mt-3">You're all caught up</MudText>
+                <MudText Typo="Typo.body2" Class="mud-text-secondary">We'll let you know when new activity arrives.</MudText>
+            </MudCardContent>
+        </MudCard>
+    }
+    else
+    {
+        <MudList T="InboxItemDto">
+            @foreach (var notification in ViewModel.Notifications)
+            {
+                var isUnread = notification.Status == InboxItemStatus.Unread;
+                <MudListItem T="InboxItemDto" OnClick="@(() => ViewModel.OpenNotificationCommand.ExecuteAsync(notification))">
+                    <div class="d-flex align-items-start" style="gap: 12px;">
+                        <div class="flex-shrink-0">
+                            <MudIcon Icon="@Icons.Material.Filled.Notifications" 
+                                     Color="@(isUnread ? Color.Primary : Color.Default)" 
+                                     Size="Size.Medium" />
+                        </div>
+                        <div class="flex-grow-1 text-start">
+                            <div class="d-flex justify-content-between">
+                                <MudText Typo="Typo.subtitle1">@(notification.Title ?? "Notification")</MudText>
+                                <MudText Typo="Typo.caption" Class="mud-text-secondary">@notification.CreatedAt.ToLocalTime().ToString("g")</MudText>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(notification.Body))
+                            {
+                                <MudText Typo="Typo.body2" Class="mud-text-secondary" Style="white-space: pre-line;">@notification.Body</MudText>
+                            }
+                            <div class="d-flex gap-2 mt-1">
+                                @if (isUnread)
+                                {
+                                    <span @onclick:stopPropagation="true">
+                                        <MudButton Variant="Variant.Text"
+                                                   Size="Size.Small"
+                                                   OnClick="@(() => ViewModel.MarkReadCommand.ExecuteAsync(notification))">
+                                            Mark as read
+                                        </MudButton>
+                                    </span>
+                                }
+                                <MudChip T="string" Size="Size.Small" Color="Color.Default">@notification.Kind</MudChip>
+                            </div>
+                        </div>
+                    </div>
+                </MudListItem>
+            }
+        </MudList>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public NotificationsViewModel ViewModel { get; set; } = null!;
+}

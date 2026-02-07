@@ -1,44 +1,44 @@
-@* Friend Card Component using DevExpress DxCard *@
+@* Friend Card Component using MudBlazor *@
 @using SocialKit.Components.ViewModels
 
-<DxCard CssClass="sk-friend-card" @onclick="HandleClick">
-    <BodyTemplate>
+<MudCard Class="sk-friend-card" Elevation="2" @onclick="HandleClick" Style="cursor:pointer;">
+    <MudCardContent>
         <div class="d-flex flex-column align-items-center p-3">
             <Avatar ImageUrl="@User?.AvatarUrl"
                     Name="@User?.DisplayName"
                     Size="AvatarSize.Large"
                     CustomSize="80" />
-            <h6 class="mt-2 mb-1">@(User?.DisplayName ?? "Unknown")</h6>
+            <MudText Typo="Typo.subtitle1" Class="mt-2 mb-1">@(User?.DisplayName ?? "Unknown")</MudText>
             @if (!string.IsNullOrEmpty(Subtitle))
             {
-                <p class="text-muted small mb-2">@Subtitle</p>
+                <MudText Typo="Typo.body2" Class="mud-text-secondary mb-2">@Subtitle</MudText>
             }
             @if (ShowActions)
             {
                 <div class="d-flex flex-column w-100 gap-1">
                     @if (ShowAddFriend)
                     {
-                        <DxButton Text="Add Friend"
-                                  IconCssClass="fas fa-user-plus"
-                                  RenderStyle="ButtonRenderStyle.Primary"
-                                  SizeMode="SizeMode.Small"
-                                  CssClass="w-100"
-                                  Click="HandleAddFriend" />
+                        <MudButton StartIcon="@Icons.Material.Filled.PersonAdd"
+                                   Color="Color.Primary"
+                                   Variant="Variant.Filled"
+                                   Size="Size.Small"
+                                   FullWidth="true"
+                                   OnClick="HandleAddFriend">Add Friend</MudButton>
                     }
                     @if (ShowRemove)
                     {
-                        <DxButton Text="Remove"
-                                  IconCssClass="fas fa-user-times"
-                                  RenderStyle="ButtonRenderStyle.Secondary"
-                                  SizeMode="SizeMode.Small"
-                                  CssClass="w-100"
-                                  Click="HandleRemove" />
+                        <MudButton StartIcon="@Icons.Material.Filled.PersonRemove"
+                                   Color="Color.Default"
+                                   Variant="Variant.Outlined"
+                                   Size="Size.Small"
+                                   FullWidth="true"
+                                   OnClick="HandleRemove">Remove</MudButton>
                     }
                 </div>
             }
         </div>
-    </BodyTemplate>
-</DxCard>
+    </MudCardContent>
+</MudCard>
 
 @code {
     [Parameter] public FriendInfo? User { get; set; }

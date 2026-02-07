@@ -1,38 +1,35 @@
-@* Post Card Component using DevExpress DxCard + DxButton *@
+@* Post Card Component using MudBlazor *@
 @using Content.Abstractions
 
-<DxCard CssClass="sk-post-card mb-3">
-    <HeaderTemplate>
-        <div class="d-flex align-items-center gap-2 p-3 pb-0">
+<MudCard Class="sk-post-card mb-3" Elevation="2">
+    <MudCardHeader>
+        <CardHeaderAvatar>
             <a href="/profile/@Post.Author?.Id" class="text-decoration-none">
                 <Avatar ImageUrl="@Post.Author?.ImageUrl" 
                         Name="@Post.Author?.DisplayName" 
                         Size="AvatarSize.Medium" />
             </a>
-            <div class="flex-grow-1">
-                <a href="/profile/@Post.Author?.Id" class="fw-semibold text-decoration-none text-body">
-                    @(Post.Author?.DisplayName ?? "Unknown User")
-                </a>
-                <div class="text-muted small">@FormatTime(Post.CreatedAt)</div>
-            </div>
-            <DxButton RenderStyle="ButtonRenderStyle.Link"
-                      IconCssClass="fas fa-ellipsis-h"
-                      RenderStyleMode="ButtonRenderStyleMode.Outline"
-                      SizeMode="SizeMode.Small" />
-        </div>
-    </HeaderTemplate>
-    <BodyTemplate>
-        <div class="p-3">
-            <p class="mb-2">@Post.Body</p>
-        </div>
+        </CardHeaderAvatar>
+        <CardHeaderContent>
+            <a href="/profile/@Post.Author?.Id" class="fw-semibold text-decoration-none">
+                @(Post.Author?.DisplayName ?? "Unknown User")
+            </a>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@FormatTime(Post.CreatedAt)</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.MoreHoriz" Size="Size.Small" />
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText>@Post.Body</MudText>
         
         @if (HasReactions || Post.CommentCount > 0)
         {
-            <div class="d-flex justify-content-between px-3 pb-2 text-muted small">
+            <div class="d-flex justify-content-between mt-2 mud-text-secondary">
                 @if (HasReactions)
                 {
                     <span>
-                        <i class="fas fa-thumbs-up text-primary"></i>
+                        <MudIcon Icon="@Icons.Material.Filled.ThumbUp" Size="Size.Small" Color="Color.Primary" />
                         @TotalReactions
                     </span>
                 }
@@ -42,34 +39,32 @@
                 }
             </div>
         }
-        
-        <hr class="my-0" />
-        
-        <div class="d-flex justify-content-around p-1">
-            <DxButton Text="Like"
-                      IconCssClass="@(IsLiked ? "fas fa-thumbs-up" : "far fa-thumbs-up")"
-                      RenderStyle="@(IsLiked ? ButtonRenderStyle.Primary : ButtonRenderStyle.Link)"
-                      RenderStyleMode="ButtonRenderStyleMode.Text"
-                      SizeMode="SizeMode.Small"
-                      CssClass="flex-grow-1"
-                      Enabled="!IsLoading"
-                      Click="OnLikeClick" />
-            <DxButton Text="Comment"
-                      IconCssClass="far fa-comment"
-                      RenderStyle="ButtonRenderStyle.Link"
-                      RenderStyleMode="ButtonRenderStyleMode.Text"
-                      SizeMode="SizeMode.Small"
-                      CssClass="flex-grow-1"
-                      Click="OnCommentClick" />
-            <DxButton Text="Share"
-                      IconCssClass="far fa-share-square"
-                      RenderStyle="ButtonRenderStyle.Link"
-                      RenderStyleMode="ButtonRenderStyleMode.Text"
-                      SizeMode="SizeMode.Small"
-                      CssClass="flex-grow-1" />
-        </div>
-    </BodyTemplate>
-</DxCard>
+    </MudCardContent>
+    
+    <MudDivider />
+    
+    <MudCardActions Class="d-flex justify-content-around">
+        <MudButton id="like-button"
+                   StartIcon="@(IsLiked ? Icons.Material.Filled.ThumbUp : Icons.Material.Outlined.ThumbUp)"
+                   Color="@(IsLiked ? Color.Primary : Color.Default)"
+                   Variant="Variant.Text"
+                   Size="Size.Small"
+                   Class="flex-grow-1"
+                   Disabled="@IsLoading"
+                   OnClick="OnLikeClick">Like</MudButton>
+        <MudButton id="comment-button"
+                   StartIcon="@Icons.Material.Outlined.Comment"
+                   Variant="Variant.Text"
+                   Size="Size.Small"
+                   Class="flex-grow-1"
+                   OnClick="OnCommentClick">Comment</MudButton>
+        <MudButton id="share-button"
+                   StartIcon="@Icons.Material.Outlined.Share"
+                   Variant="Variant.Text"
+                   Size="Size.Small"
+                   Class="flex-grow-1">Share</MudButton>
+    </MudCardActions>
+</MudCard>
 
 @code {
     [Parameter, EditorRequired] public PostDto Post { get; set; } = null!;

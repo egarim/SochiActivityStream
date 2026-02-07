@@ -94,12 +94,13 @@ public class BlazorBookPageTest : PageTest
     {
         await NavigateToAsync("/signup");
         
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Display Name" }).FillAsync(displayName);
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Username" }).FillAsync(username);
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email address" }).FillAsync(email);
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(password);
+        // Use ID-based selectors for MudBlazor components
+        await Page.Locator("#signup-displayname").FillAsync(displayName);
+        await Page.Locator("#signup-username").FillAsync(username);
+        await Page.Locator("#signup-email").FillAsync(email);
+        await Page.Locator("#signup-password").FillAsync(password);
         
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Sign Up" }).ClickAsync();
+        await Page.Locator("#signup-button").ClickAsync();
         await WaitForBlazorAsync();
     }
 
@@ -110,26 +111,25 @@ public class BlazorBookPageTest : PageTest
     {
         await NavigateToAsync("/login");
         
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email address" }).FillAsync(email);
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(password);
+        // Use ID-based selectors for MudBlazor components
+        await Page.Locator("#login-email").FillAsync(email);
+        await Page.Locator("#login-password").FillAsync(password);
         
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Log In" }).ClickAsync();
+        await Page.Locator("#login-button").ClickAsync();
         await WaitForBlazorAsync();
     }
 
     /// <summary>
     /// Creates a new post with the given content.
+    /// MudBlazor components work with Playwright automation.
     /// </summary>
     protected async Task CreatePostAsync(string content)
     {
-        var postBox = Page.GetByRole(AriaRole.Textbox, new() { NameRegex = new System.Text.RegularExpressions.Regex("What's on your mind") });
-        await postBox.FillAsync(content);
+        // MudBlazor MudTextField works with standard Playwright FillAsync
+        await Page.Locator("#post-content").FillAsync(content);
+        await WaitForBlazorAsync(300);
         
-        // Tab out to enable the Post button
-        await Page.Keyboard.PressAsync("Tab");
-        await WaitForBlazorAsync(200);
-        
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Post" }).ClickAsync();
+        await Page.Locator("#post-button").ClickAsync();
         await WaitForBlazorAsync();
     }
 

@@ -2,33 +2,33 @@
 @using SocialKit.Components.ViewModels
 
 <div class="sk-conversation">
-    <DxCard CssClass="h-100" style="min-height:70vh;">
-        <HeaderTemplate>
-            <div class="d-flex align-items-center gap-2 p-3">
-                <DxButton IconCssClass="fas fa-arrow-left"
-                          RenderStyle="ButtonRenderStyle.Link"
-                          RenderStyleMode="ButtonRenderStyleMode.Text"
-                          Click="@(() => ViewModel.GoBackCommand.ExecuteAsync(null))" />
-                <h5 class="mb-0">@ViewModel.Title</h5>
-            </div>
-        </HeaderTemplate>
-        <BodyTemplate>
+    <MudCard Class="h-100" Style="min-height:70vh;" Elevation="2">
+        <MudCardHeader>
+            <CardHeaderAvatar>
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowBack"
+                               OnClick="@(() => ViewModel.GoBackCommand.ExecuteAsync(null))" />
+            </CardHeaderAvatar>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">@ViewModel.Title</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
             @if (ViewModel.IsBusy && ViewModel.Conversation == null)
             {
                 <div class="text-center p-5">
-                    <DxLoadingPanel Visible="true" />
+                    <MudProgressCircular Indeterminate="true" />
                 </div>
             }
             else
             {
-                <div class="d-flex flex-column h-100 p-3" style="min-height:50vh;">
+                <div class="d-flex flex-column h-100" style="min-height:50vh;">
                     <!-- Messages Area -->
                     <div class="flex-grow-1 overflow-auto mb-3">
                         @if (ViewModel.Messages.Count == 0)
                         {
-                            <div class="text-center p-5 text-muted">
-                                <i class="fas fa-comments fa-3x mb-3"></i>
-                                <p>No messages yet. Start the conversation!</p>
+                            <div class="text-center p-5 mud-text-secondary">
+                                <MudIcon Icon="@Icons.Material.Filled.Forum" Style="font-size:48px;" Class="mb-3" />
+                                <MudText>No messages yet. Start the conversation!</MudText>
                             </div>
                         }
                         else
@@ -49,19 +49,23 @@
                     <!-- Message Input -->
                     <div class="border-top pt-3">
                         <div class="d-flex gap-2">
-                            <DxTextBox @bind-Text="@ViewModel.NewMessageText"
-                                       NullText="Type a message..."
-                                       CssClass="flex-grow-1" />
-                            <DxButton IconCssClass="fas fa-paper-plane"
-                                      RenderStyle="ButtonRenderStyle.Primary"
-                                      Enabled="@ViewModel.SendMessageCommand.CanExecute(null)"
-                                      Click="@(() => ViewModel.SendMessageCommand.ExecuteAsync(null))" />
+                            <MudTextField @bind-Value="@ViewModel.NewMessageText"
+                                          id="message-input"
+                                          Placeholder="Type a message..."
+                                          Variant="Variant.Outlined"
+                                          Class="flex-grow-1" />
+                            <MudButton id="send-message"
+                                       StartIcon="@Icons.Material.Filled.Send"
+                                       Color="Color.Primary"
+                                       Variant="Variant.Filled"
+                                       Disabled="@(!ViewModel.SendMessageCommand.CanExecute(null))"
+                                       OnClick="@(() => ViewModel.SendMessageCommand.ExecuteAsync(null))">Send</MudButton>
                         </div>
                     </div>
                 </div>
             }
-        </BodyTemplate>
-    </DxCard>
+        </MudCardContent>
+    </MudCard>
 </div>
 
 @code {

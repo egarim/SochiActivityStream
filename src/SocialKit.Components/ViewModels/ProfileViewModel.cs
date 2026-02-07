@@ -108,6 +108,12 @@ public class ProfileViewModel : ViewModelBase, IInitialize
 
     public async Task InitializeAsync(INavigationParameters parameters)
     {
+        if (!_currentUser.IsAuthenticated)
+        {
+            await _navigationService.NavigateAsync("/login");
+            return;
+        }
+
         string? profileId = null;
         
         if (parameters.TryGetValue<string>("profileId", out var id))

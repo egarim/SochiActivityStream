@@ -97,7 +97,7 @@ public class LoginViewModel : ViewModelBase
             if (profiles != null)
             {
                 await _currentUser.SignInAsync(profiles, session.UserId);
-                await _navigationService.NavigateAsync("/");
+                await _navigationService.NavigateAsync("/feed");
             }
         }
         catch (IdentityValidationException ex)
