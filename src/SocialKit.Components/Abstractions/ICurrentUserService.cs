@@ -15,6 +15,11 @@ public interface ICurrentUserService
     string? DisplayName { get; }
     string? AvatarUrl { get; }
     
+    /// <summary>
+    /// Event raised when authentication state changes (sign in/sign out).
+    /// </summary>
+    event Action? OnAuthStateChanged;
+    
     Task SignInAsync(ProfileDto profile, string userId);
     Task SignOutAsync();
 }

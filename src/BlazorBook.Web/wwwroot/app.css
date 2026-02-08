@@ -95,21 +95,30 @@ html, body {
 .main-content {
     flex: 1;
     padding: 20px;
-    margin-left: 280px;
-    margin-right: 280px;
-    max-width: 700px;
-    margin: 0 auto;
+    margin-left: 300px;
+    margin-right: 300px;
+    width: calc(100% - 600px);
+    min-height: calc(100vh - 56px);
 }
 
 @media (max-width: 1200px) {
+    .right-sidebar {
+        display: none;
+    }
     .main-content {
-        margin-right: 0;
+        margin-right: 20px;
+        width: calc(100% - 320px);
     }
 }
 
 @media (max-width: 992px) {
+    .left-sidebar {
+        display: none;
+    }
     .main-content {
-        margin-left: 0;
+        margin-left: 20px;
+        margin-right: 20px;
+        width: calc(100% - 40px);
         padding: 15px;
     }
 }

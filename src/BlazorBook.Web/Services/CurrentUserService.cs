@@ -15,6 +15,8 @@ public class CurrentUserService : ICurrentUserService
     public string? DisplayName { get; private set; }
     public string? AvatarUrl { get; private set; }
     
+    public event Action? OnAuthStateChanged;
+    
     public Task SignInAsync(ProfileDto profile, string userId)
     {
         UserId = userId;
@@ -22,6 +24,7 @@ public class CurrentUserService : ICurrentUserService
         Handle = profile.Handle;
         DisplayName = profile.DisplayName ?? profile.Handle;
         AvatarUrl = profile.AvatarUrl;
+        OnAuthStateChanged?.Invoke();
         return Task.CompletedTask;
     }
     
@@ -32,6 +35,7 @@ public class CurrentUserService : ICurrentUserService
         Handle = null;
         DisplayName = null;
         AvatarUrl = null;
+        OnAuthStateChanged?.Invoke();
         return Task.CompletedTask;
     }
 }

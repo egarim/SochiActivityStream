@@ -9,7 +9,7 @@
     <div class="main-container">
         @if (CurrentUser.IsAuthenticated)
         {
-            <aside class="left-sidebar d-none d-lg-block">
+            <aside class="left-sidebar">
                 <LeftSidebar />
             </aside>
         }
@@ -20,7 +20,7 @@
         
         @if (CurrentUser.IsAuthenticated)
         {
-            <aside class="right-sidebar d-none d-xl-block">
+            <aside class="right-sidebar">
                 <RightSidebar />
             </aside>
         }

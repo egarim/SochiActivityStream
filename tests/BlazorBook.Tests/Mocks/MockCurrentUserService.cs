@@ -15,6 +15,8 @@ public class MockCurrentUserService : ICurrentUserService
     public string? DisplayName { get; private set; }
     public string? AvatarUrl { get; private set; }
     
+    public event Action? OnAuthStateChanged;
+    
     public Task SignInAsync(ProfileDto profile, string userId)
     {
         UserId = userId;
@@ -22,6 +24,7 @@ public class MockCurrentUserService : ICurrentUserService
         Handle = profile.Handle;
         DisplayName = profile.DisplayName ?? profile.Handle;
         AvatarUrl = profile.AvatarUrl;
+        OnAuthStateChanged?.Invoke();
         return Task.CompletedTask;
     }
     
@@ -32,6 +35,7 @@ public class MockCurrentUserService : ICurrentUserService
         Handle = null;
         DisplayName = null;
         AvatarUrl = null;
+        OnAuthStateChanged?.Invoke();
         return Task.CompletedTask;
     }
     
@@ -45,5 +49,6 @@ public class MockCurrentUserService : ICurrentUserService
         AvatarUrl = avatarUrl;
         Handle = profileId; // Use profileId as handle for simplicity
         UserId = $"user-{profileId}";
+        OnAuthStateChanged?.Invoke();
     }
 }

@@ -1,6 +1,7 @@
 @using SocialKit.Components.Abstractions
 @inject ICurrentUserService CurrentUser
 @inject NavigationManager Navigation
+@implements IDisposable
 
 <nav class="top-nav navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container-fluid">
@@ -73,3 +74,20 @@
         </ul>
     </div>
 </nav>
+
+@code {
+    protected override void OnInitialized()
+    {
+        CurrentUser.OnAuthStateChanged += HandleAuthStateChanged;
+    }
+    
+    private void HandleAuthStateChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+    
+    public void Dispose()
+    {
+        CurrentUser.OnAuthStateChanged -= HandleAuthStateChanged;
+    }
+}
