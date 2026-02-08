@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="7.*" />
+    <PackageReference Include="DevExpress.Blazor" Version="24.*" />
   </ItemGroup>
 
   <ItemGroup>

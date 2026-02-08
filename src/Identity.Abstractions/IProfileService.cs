@@ -25,6 +25,15 @@ public interface IProfileService
     Task<ProfileDto?> GetProfileByIdAsync(string profileId, CancellationToken ct = default);
 
     /// <summary>
+    /// Updates an existing profile.
+    /// </summary>
+    /// <param name="request">Update profile details.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The updated profile.</returns>
+    /// <exception cref="IdentityValidationException">When profile not found.</exception>
+    Task<ProfileDto> UpdateProfileAsync(UpdateProfileRequest request, CancellationToken ct = default);
+
+    /// <summary>
     /// Gets all profiles a user is a member of in a tenant.
     /// </summary>
     /// <param name="tenantId">The tenant to query.</param>

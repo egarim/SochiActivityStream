@@ -98,12 +98,13 @@ public class EFCoreMediaStore : IMediaStore
             queryable = queryable.Where(m => m.Status == query.Status.Value);
         }
 
-        // Order by created date descending
-        queryable = queryable.OrderByDescending(m => m.CreatedAt);
-
-        var items = await queryable
+        // Client-side sorting due to SQLite DateTimeOffset limitation
+        var items = await queryable.ToListAsync(ct);
+        
+        items = items
+            .OrderByDescending(m => m.CreatedAt)
             .Take(query.Limit + 1)
-            .ToListAsync(ct);
+            .ToList();
 
         var hasMore = items.Count > query.Limit;
         var resultItems = items.Take(query.Limit).ToList();

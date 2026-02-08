@@ -64,15 +64,16 @@ public class EFCoreCommentStore : ICommentStore
             queryable = queryable.Where(c => c.ParentCommentId == query.ParentCommentId);
         }
 
-        queryable = queryable
-            .OrderBy(c => c.CreatedAt)
-            .ThenBy(c => c.Id);
-
+        // SQLite doesn't support DateTimeOffset in ORDER BY, so we use client-side sorting
         var offset = DecodeCursor(query.Cursor);
-        var items = await queryable
+        var items = await queryable.ToListAsync(ct);
+        
+        items = items
+            .OrderBy(c => c.CreatedAt)
+            .ThenBy(c => c.Id)
             .Skip(offset)
             .Take(query.Limit + 1)
-            .ToListAsync(ct);
+            .ToList();
 
         var hasMore = items.Count > query.Limit;
         if (hasMore)

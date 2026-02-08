@@ -7,6 +7,7 @@ using Chat.Store.InMemory;
 using Content.Abstractions;
 using Content.Core;
 using Content.Store.InMemory;
+using DevExpress.Blazor;
 using MudBlazor.Services;
 using Identity.Abstractions;
 using Identity.Core;
@@ -132,6 +133,9 @@ builder.Services.AddRazorComponents()
 // MudBlazor
 builder.Services.AddMudServices();
 
+// DevExpress Blazor
+builder.Services.AddDevExpressBlazor();
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // SOCHI.NAVIGATION (MVVM)
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -144,7 +148,7 @@ if (storageMode == "EFCore")
 {
     builder.Services.AddScoped<IUserStore, EFCoreUserStore>();
     builder.Services.AddScoped<IProfileStore, EFCoreProfileStore>();
-    builder.Services.AddScoped<IMembershipStore, InMemoryMembershipStore>();
+    builder.Services.AddScoped<IMembershipStore, EFCoreMembershipStore>();
     builder.Services.AddScoped<ISessionStore, InMemorySessionStore>();
 }
 else
@@ -264,6 +268,7 @@ builder.Services.AddScoped<DemoDataSeeder>();
 // SOCIALKIT (FeedService, ViewModels, etc.)
 // ═══════════════════════════════════════════════════════════════════════════════
 builder.Services.AddSocialKit();
+builder.Services.AddScoped<IMediaUploadService, LocalMediaUploadService>();
 
 var app = builder.Build();
 
@@ -343,15 +348,15 @@ public class AllowAllGovernancePolicy : IEntityGovernancePolicy
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// MOCK STORAGE PROVIDER
+// MOCK STORAGE PROVIDER (LOCAL FILE STORAGE)
 // ═══════════════════════════════════════════════════════════════════════════════
 public class MockStorageProvider : IMediaStorageProvider
 {
     public Task<string> GenerateUploadUrlAsync(string blobPath, string contentType, long maxSizeBytes, TimeSpan expiry, CancellationToken ct = default)
-        => Task.FromResult($"https://blazorbook.local/upload/{blobPath}");
+        => Task.FromResult($"/uploads/{blobPath}");
     
     public Task<string> GenerateDownloadUrlAsync(string blobPath, TimeSpan expiry, CancellationToken ct = default)
-        => Task.FromResult($"https://blazorbook.local/download/{blobPath}");
+        => Task.FromResult($"/uploads/{blobPath}");
     
     public Task<bool> ExistsAsync(string blobPath, CancellationToken ct = default)
         => Task.FromResult(true);

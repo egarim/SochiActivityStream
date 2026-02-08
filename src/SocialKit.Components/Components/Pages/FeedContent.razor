@@ -32,8 +32,24 @@
         {
             <PostCard 
                 Post="@post"
+                CurrentUserId="@ViewModel.CurrentUserId"
+                CurrentUserName="@ViewModel.CurrentUserName"
+                CurrentUserAvatar="@ViewModel.CurrentUserAvatar"
+                Comments="@ViewModel.GetCommentsForPost(post.Id!)"
+                IsLoadingComments="@ViewModel.IsLoadingCommentsForPost(post.Id!)"
+                IsAddingComment="@ViewModel.IsAddingCommentForPost(post.Id!)"
+                GetRepliesForComment="@ViewModel.GetRepliesForComment"
+                IsLoadingRepliesForComment="@ViewModel.IsLoadingRepliesForComment"
+                IsAddingReplyForComment="@ViewModel.IsAddingReplyForComment"
+                IsRepliesExpandedForComment="@ViewModel.AreRepliesExpandedForComment"
                 OnLike="@(async (p) => await ViewModel.LikePostCommand.ExecuteAsync(p))"
-                OnComment="@(p => {})"
+                OnLoadComments="@(async (p) => await ViewModel.LoadCommentsCommand.ExecuteAsync(p))"
+                OnAddComment="@(async (args) => await ViewModel.AddCommentCommand.ExecuteAsync(args))"
+                OnDeleteComment="@(async (args) => await ViewModel.DeleteCommentCommand.ExecuteAsync(args))"
+                OnLikeComment="@(async (args) => await ViewModel.LikeCommentCommand.ExecuteAsync(args))"
+                OnReplyToComment="@(async (args) => await ViewModel.AddReplyCommand.ExecuteAsync(args))"
+                OnLoadReplies="@(async (args) => await ViewModel.LoadRepliesCommand.ExecuteAsync(args))"
+                OnToggleReplies="@((args) => ViewModel.ToggleRepliesExpanded(args.Comment.Id!))"
                 OnShare="@(p => {})" />
         }
     }
@@ -42,9 +58,12 @@
 @code {
     [Parameter, EditorRequired] public FeedViewModel ViewModel { get; set; } = null!;
     
-    private async Task HandleCreatePost(string text)
+    private async Task HandleCreatePost(CreatePost.CreatePostData data)
     {
-        ViewModel.NewPostText = text;
-        await ViewModel.CreatePostCommand.ExecuteAsync(null);
+        var files = data.Files
+            .Select(f => (f.Name, f.ContentType, f.Data))
+            .ToList();
+        
+        await ViewModel.CreatePostWithMediaAsync(data.Text, files);
     }
 }

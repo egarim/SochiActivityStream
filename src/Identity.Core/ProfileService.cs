@@ -97,6 +97,37 @@ public sealed class ProfileService : IProfileService
     }
 
     /// <inheritdoc />
+    public async Task<ProfileDto> UpdateProfileAsync(UpdateProfileRequest request, CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var profileRecord = await _profileStore.GetByIdAsync(request.ProfileId, ct);
+        if (profileRecord is null)
+            throw new IdentityValidationException("NOT_FOUND", "Profile not found.", "ProfileId");
+
+        var profile = profileRecord.Profile;
+
+        if (request.DisplayName != null)
+        {
+            profile.DisplayName = request.DisplayName.Trim();
+        }
+
+        if (request.AvatarUrl != null)
+        {
+            profile.AvatarUrl = request.AvatarUrl;
+        }
+
+        if (request.IsPrivate.HasValue)
+        {
+            profile.IsPrivate = request.IsPrivate.Value;
+        }
+
+        await _profileStore.UpdateAsync(profileRecord, ct);
+
+        return profile;
+    }
+
+    /// <inheritdoc />
     public async Task<IReadOnlyList<ProfileDto>> GetProfilesForUserAsync(string tenantId, string userId, CancellationToken ct = default)
     {
         var normalizedTenantId = IdentityNormalizer.NormalizeTenantId(tenantId);

@@ -20,6 +20,10 @@ public class ReactionConfiguration : IEntityTypeConfiguration<ReactionDto>
             .IsRequired()
             .HasMaxLength(128);
         
+        builder.Property(r => r.ActorId)
+            .IsRequired()
+            .HasMaxLength(128);
+        
         builder.Property(r => r.CreatedAt)
             .IsRequired();
         
@@ -33,7 +37,7 @@ public class ReactionConfiguration : IEntityTypeConfiguration<ReactionDto>
         
         // Indexes
         builder.HasIndex(r => new { r.TenantId, r.TargetId, r.TargetKind });
-        builder.HasIndex(r => new { r.TenantId, r.TargetId, r.TargetKind })
+        builder.HasIndex(r => new { r.TenantId, r.TargetId, r.TargetKind, r.ActorId })
             .HasDatabaseName("IX_Reactions_Unique")
             .IsUnique();
     }

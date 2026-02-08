@@ -15,7 +15,7 @@ namespace BlazorBook.Web.Data;
 /// </summary>
 public class DemoDataSeeder
 {
-    private const string TenantId = "demo-tenant";
+    private const string TenantId = "blazorbook";
     
     private readonly IAuthService _authService;
     private readonly IContentService _contentService;

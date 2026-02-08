@@ -3,6 +3,7 @@ using Content.Abstractions;
 using Identity.Abstractions;
 using RelationshipService.Abstractions;
 using Sochi.Navigation.Commands;
+using Sochi.Navigation.Dialogs;
 using Sochi.Navigation.Mvvm;
 using Sochi.Navigation.Navigation;
 using SocialKit.Components.Abstractions;
@@ -15,6 +16,7 @@ namespace SocialKit.Components.ViewModels;
 public class ProfileViewModel : ViewModelBase, IInitialize
 {
     private readonly INavigationService _navigationService;
+    private readonly IDialogService _dialogService;
     private readonly IProfileService _profileService;
     private readonly IContentService _contentService;
     private readonly IRelationshipService _relationshipService;
@@ -29,12 +31,14 @@ public class ProfileViewModel : ViewModelBase, IInitialize
 
     public ProfileViewModel(
         INavigationService navigationService,
+        IDialogService dialogService,
         IProfileService profileService,
         IContentService contentService,
         IRelationshipService relationshipService,
         ICurrentUserService currentUser)
     {
         _navigationService = navigationService;
+        _dialogService = dialogService;
         _profileService = profileService;
         _contentService = contentService;
         _relationshipService = relationshipService;
@@ -44,9 +48,11 @@ public class ProfileViewModel : ViewModelBase, IInitialize
         
         FollowCommand = new AsyncDelegateCommand(FollowAsync, () => !IsBusy && !IsOwnProfile);
         UnfollowCommand = new AsyncDelegateCommand(UnfollowAsync, () => !IsBusy && !IsOwnProfile && IsFollowing);
+        EditProfileCommand = new AsyncDelegateCommand(EditProfileAsync, () => !IsBusy && IsOwnProfile);
         
         RegisterCommand(FollowCommand);
         RegisterCommand(UnfollowCommand);
+        RegisterCommand(EditProfileCommand);
     }
 
     public ProfileDto? Profile
@@ -105,6 +111,7 @@ public class ProfileViewModel : ViewModelBase, IInitialize
 
     public IAsyncCommand FollowCommand { get; }
     public IAsyncCommand UnfollowCommand { get; }
+    public IAsyncCommand EditProfileCommand { get; }
 
     public async Task InitializeAsync(INavigationParameters parameters)
     {
@@ -257,6 +264,49 @@ public class ProfileViewModel : ViewModelBase, IInitialize
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    private async Task EditProfileAsync()
+    {
+        if (Profile?.Id == null) return;
+
+        var parameters = new DialogParameters();
+        parameters.Add("ProfileId", Profile.Id);
+        parameters.Add("DisplayName", Profile.DisplayName ?? "");
+        parameters.Add("AvatarUrl", Profile.AvatarUrl ?? "");
+        parameters.Add("IsPrivate", Profile.IsPrivate);
+
+        var result = await _dialogService.ShowDialogAsync("EditProfileDialog", parameters);
+        
+        if (result.Result == true)
+        {
+            var profileId = result.Parameters.GetValue<string>("ProfileId");
+            var displayName = result.Parameters.GetValue<string>("DisplayName");
+            var avatarUrl = result.Parameters.GetValue<string>("AvatarUrl");
+            var isPrivate = result.Parameters.GetValue<bool>("IsPrivate");
+            
+            if (!string.IsNullOrEmpty(profileId))
+            {
+                IsBusy = true;
+                try
+                {
+                    var updateRequest = new UpdateProfileRequest
+                    {
+                        ProfileId = profileId,
+                        DisplayName = displayName,
+                        AvatarUrl = string.IsNullOrWhiteSpace(avatarUrl) ? null : avatarUrl,
+                        IsPrivate = isPrivate
+                    };
+                    
+                    var updatedProfile = await _profileService.UpdateProfileAsync(updateRequest);
+                    Profile = updatedProfile;
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }
         }
     }
 }

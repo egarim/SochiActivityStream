@@ -90,19 +90,19 @@ public class EFCoreMessageStore : IMessageStore
             }
         }
 
-        // Order by date
+        // Fetch data first, then sort client-side (SQLite doesn't support DateTimeOffset in ORDER BY)
+        var messages = await queryable.ToListAsync(ct);
+        
         if (query.Direction == MessageQueryDirection.Older)
         {
-            queryable = queryable.OrderByDescending(m => m.CreatedAt);
+            messages = messages.OrderByDescending(m => m.CreatedAt).ToList();
         }
         else
         {
-            queryable = queryable.OrderBy(m => m.CreatedAt);
+            messages = messages.OrderBy(m => m.CreatedAt).ToList();
         }
-
-        var messages = await queryable
-            .Take(query.Limit + 1)
-            .ToListAsync(ct);
+        
+        messages = messages.Take(query.Limit + 1).ToList();
 
         // Filter out messages deleted by the viewer (in memory due to JSON list)
         var filtered = messages
@@ -169,11 +169,13 @@ public class EFCoreMessageStore : IMessageStore
         string conversationId,
         CancellationToken ct = default)
     {
-        return await _context.Messages
+        // Client-side sorting due to SQLite DateTimeOffset limitation
+        var messages = await _context.Messages
             .Where(m => m.TenantId == tenantId && m.ConversationId == conversationId)
             .Where(m => !m.IsDeleted)
-            .OrderByDescending(m => m.CreatedAt)
-            .FirstOrDefaultAsync(ct);
+            .ToListAsync(ct);
+        
+        return messages.OrderByDescending(m => m.CreatedAt).FirstOrDefault();
     }
 
     public async Task<int> CountMessagesAfterAsync(

@@ -1,0 +1,99 @@
+@* Edit Profile Dialog using MudBlazor *@
+@using Sochi.Navigation.Dialogs
+@using Identity.Abstractions
+
+<MudCard Elevation="2" Style="min-width: 400px;">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h5">Edit Profile</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <div class="d-flex flex-column gap-3">
+            <MudTextField @bind-Value="@DisplayName"
+                          Label="Display Name"
+                          Variant="Variant.Outlined"
+                          Placeholder="Your display name" />
+            
+            <MudTextField @bind-Value="@AvatarUrl"
+                          Label="Avatar URL"
+                          Variant="Variant.Outlined"
+                          Placeholder="https://..." />
+            
+            <MudSwitch @bind-Value="@IsPrivate" Color="Color.Primary">
+                Private Profile
+            </MudSwitch>
+            
+            @if (IsPrivate)
+            {
+                <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                    Only approved followers can see your posts.
+                </MudText>
+            }
+        </div>
+    </MudCardContent>
+    <MudCardActions Class="d-flex justify-content-end gap-2">
+        <MudButton id="edit-profile-cancel"
+                   Variant="Variant.Outlined"
+                   OnClick="Cancel">Cancel</MudButton>
+        <MudButton id="edit-profile-save"
+                   Color="Color.Primary"
+                   Variant="Variant.Filled"
+                   Disabled="@IsSaving"
+                   OnClick="Save">
+            @if (IsSaving)
+            {
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+            }
+            Save
+        </MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter] public IDialogParameters? Parameters { get; set; }
+    [Parameter] public EventCallback<IDialogResult> OnClose { get; set; }
+    
+    private string DisplayName { get; set; } = "";
+    private string AvatarUrl { get; set; } = "";
+    private bool IsPrivate { get; set; }
+    private bool IsSaving { get; set; }
+    private string ProfileId { get; set; } = "";
+    
+    protected override void OnParametersSet()
+    {
+        if (Parameters != null)
+        {
+            ProfileId = Parameters.GetValue<string>("ProfileId") ?? "";
+            DisplayName = Parameters.GetValue<string>("DisplayName") ?? "";
+            AvatarUrl = Parameters.GetValue<string>("AvatarUrl") ?? "";
+            IsPrivate = Parameters.GetValue<bool?>("IsPrivate") ?? false;
+        }
+    }
+    
+    private async Task Save()
+    {
+        IsSaving = true;
+        try
+        {
+            var resultParams = new Sochi.Navigation.Dialogs.DialogParameters();
+            resultParams.Add("ProfileId", ProfileId);
+            resultParams.Add("DisplayName", DisplayName);
+            resultParams.Add("AvatarUrl", string.IsNullOrWhiteSpace(AvatarUrl) ? "" : AvatarUrl);
+            resultParams.Add("IsPrivate", IsPrivate);
+            
+            var result = Sochi.Navigation.Dialogs.DialogResult.Ok(resultParams);
+            await OnClose.InvokeAsync(result);
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+    
+    private async Task Cancel()
+    {
+        var result = Sochi.Navigation.Dialogs.DialogResult.Cancel();
+        await OnClose.InvokeAsync(result);
+    }
+}

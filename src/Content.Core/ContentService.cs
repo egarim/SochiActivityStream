@@ -280,6 +280,7 @@ public sealed class ContentService : IContentService
             Id = existing?.Id ?? _idGenerator.NewId(),
             TenantId = request.TenantId,
             Actor = request.Actor,
+            ActorId = request.Actor.Id,
             TargetId = request.TargetId,
             TargetKind = request.TargetKind,
             Type = request.Type,

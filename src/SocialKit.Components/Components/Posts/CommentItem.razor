@@ -1,0 +1,193 @@
+@* Comment Item Component using MudBlazor *@
+@using Content.Abstractions
+
+<div class="d-flex gap-2 py-2">
+    <a href="/profile/@Comment.Author?.Id" class="text-decoration-none">
+        <Avatar ImageUrl="@Comment.Author?.ImageUrl" 
+                Name="@Comment.Author?.DisplayName" 
+                Size="AvatarSize.Small" />
+    </a>
+    <div class="flex-grow-1">
+        <div class="sk-comment-bubble rounded px-3 py-2" style="background-color: var(--mud-palette-background-grey);">
+            <a href="/profile/@Comment.Author?.Id" class="fw-semibold text-decoration-none" style="font-size: 0.875rem;">
+                @(Comment.Author?.DisplayName ?? "Unknown User")
+            </a>
+            <MudText Typo="Typo.body2">@Comment.Body</MudText>
+        </div>
+        <div class="d-flex align-items-center gap-3 mt-1" style="font-size: 0.75rem;">
+            <MudLink Typo="Typo.caption" 
+                     Color="@(IsLiked ? Color.Primary : Color.Secondary)" 
+                     Class="cursor-pointer fw-semibold"
+                     OnClick="@HandleLike">
+                @if (LikeCount > 0)
+                {
+                    <span>Like (@LikeCount)</span>
+                }
+                else
+                {
+                    <span>Like</span>
+                }
+            </MudLink>
+            <MudLink Typo="Typo.caption" Color="Color.Secondary" Class="cursor-pointer" OnClick="@HandleReplyClick">Reply</MudLink>
+            <MudText Typo="Typo.caption" Color="Color.Secondary">@FormatTime(Comment.CreatedAt)</MudText>
+            @if (CanDelete)
+            {
+                <MudLink Typo="Typo.caption" Color="Color.Error" Class="cursor-pointer" OnClick="@HandleDelete">Delete</MudLink>
+            }
+        </div>
+        
+        @* Reply input field *@
+        @if (_showReplyInput)
+        {
+            <div class="d-flex gap-2 mt-2">
+                <Avatar ImageUrl="@CurrentUserAvatar" 
+                        Name="@CurrentUserName" 
+                        Size="AvatarSize.Small" />
+                <MudTextField @bind-Value="_replyText"
+                              Placeholder="Write a reply..."
+                              Variant="Variant.Outlined"
+                              Margin="Margin.Dense"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@Icons.Material.Filled.Send"
+                              AdornmentColor="Color.Primary"
+                              OnAdornmentClick="@HandleSubmitReply"
+                              OnKeyUp="@HandleReplyKeyUp"
+                              Class="flex-grow-1"
+                              Disabled="@IsAddingReply"
+                              Style="font-size: 0.875rem;" />
+            </div>
+        }
+        
+        @* Show reply count and expand/collapse *@
+        @if (Comment.ReplyCount > 0)
+        {
+            <MudLink Typo="Typo.caption" 
+                     Color="Color.Primary" 
+                     Class="cursor-pointer mt-2 d-block"
+                     OnClick="@HandleToggleReplies">
+                @if (IsRepliesExpanded)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.ExpandLess" Size="Size.Small" />
+                    <span>Hide @Comment.ReplyCount @(Comment.ReplyCount == 1 ? "reply" : "replies")</span>
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.SubdirectoryArrowRight" Size="Size.Small" />
+                    <span>View @Comment.ReplyCount @(Comment.ReplyCount == 1 ? "reply" : "replies")</span>
+                }
+            </MudLink>
+        }
+        
+        @* Nested replies *@
+        @if (IsRepliesExpanded && Replies.Count > 0)
+        {
+            <div class="ms-3 mt-2 border-start ps-2" style="border-color: var(--mud-palette-divider) !important;">
+                @foreach (var reply in Replies)
+                {
+                    <CommentItem Comment="@reply" 
+                                 CurrentUserId="@CurrentUserId"
+                                 CurrentUserAvatar="@CurrentUserAvatar"
+                                 CurrentUserName="@CurrentUserName"
+                                 OnDelete="@OnDelete"
+                                 OnLike="@OnLike" />
+                }
+            </div>
+        }
+        
+        @if (IsLoadingReplies)
+        {
+            <div class="ms-3 mt-2">
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public CommentDto Comment { get; set; } = null!;
+    [Parameter] public string? CurrentUserId { get; set; }
+    [Parameter] public string? CurrentUserAvatar { get; set; }
+    [Parameter] public string? CurrentUserName { get; set; }
+    [Parameter] public EventCallback<CommentDto> OnDelete { get; set; }
+    [Parameter] public EventCallback<CommentDto> OnLike { get; set; }
+    [Parameter] public EventCallback<(CommentDto Comment, string Body)> OnReply { get; set; }
+    [Parameter] public EventCallback<CommentDto> OnLoadReplies { get; set; }
+    [Parameter] public EventCallback<CommentDto> OnToggleReplies { get; set; }
+    [Parameter] public List<CommentDto> Replies { get; set; } = new();
+    [Parameter] public bool IsLoadingReplies { get; set; }
+    [Parameter] public bool IsAddingReply { get; set; }
+    [Parameter] public bool IsRepliesExpanded { get; set; }
+    
+    private bool _showReplyInput;
+    private string _replyText = string.Empty;
+    
+    private bool CanDelete => Comment.Author?.Id == CurrentUserId;
+    private bool IsLiked => Comment.ViewerReaction == ReactionType.Like;
+    private int LikeCount => Comment.ReactionCounts.TryGetValue(ReactionType.Like, out var count) ? count : 0;
+    
+    private async Task HandleDelete()
+    {
+        if (OnDelete.HasDelegate)
+            await OnDelete.InvokeAsync(Comment);
+    }
+    
+    private async Task HandleLike()
+    {
+        if (OnLike.HasDelegate)
+            await OnLike.InvokeAsync(Comment);
+    }
+    
+    private void HandleReplyClick()
+    {
+        _showReplyInput = !_showReplyInput;
+        if (!_showReplyInput)
+            _replyText = string.Empty;
+    }
+    
+    private async Task HandleReplyKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(_replyText))
+        {
+            await HandleSubmitReply();
+        }
+    }
+    
+    private async Task HandleSubmitReply()
+    {
+        if (string.IsNullOrWhiteSpace(_replyText)) return;
+        
+        if (OnReply.HasDelegate)
+        {
+            var text = _replyText;
+            _replyText = string.Empty;
+            _showReplyInput = false;
+            StateHasChanged();
+            await OnReply.InvokeAsync((Comment, text));
+        }
+    }
+    
+    private async Task HandleToggleReplies()
+    {
+        if (!IsRepliesExpanded && Replies.Count == 0 && OnLoadReplies.HasDelegate)
+        {
+            await OnLoadReplies.InvokeAsync(Comment);
+        }
+        else if (OnToggleReplies.HasDelegate)
+        {
+            await OnToggleReplies.InvokeAsync(Comment);
+        }
+    }
+    
+    private string FormatTime(DateTimeOffset dateTime)
+    {
+        var diff = DateTimeOffset.UtcNow - dateTime;
+        
+        if (diff.TotalSeconds < 60) return "Just now";
+        if (diff.TotalMinutes < 60) return $"{(int)diff.TotalMinutes}m";
+        if (diff.TotalHours < 24) return $"{(int)diff.TotalHours}h";
+        if (diff.TotalDays < 7) return $"{(int)diff.TotalDays}d";
+        if (diff.TotalDays < 365) return dateTime.ToString("MMM d");
+        
+        return dateTime.ToString("MMM d, yyyy");
+    }
+}

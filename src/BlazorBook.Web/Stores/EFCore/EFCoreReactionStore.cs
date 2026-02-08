@@ -61,15 +61,16 @@ public class EFCoreReactionStore : IReactionStore
             queryable = queryable.Where(r => r.Type == query.Type.Value);
         }
 
-        queryable = queryable
-            .OrderByDescending(r => r.CreatedAt)
-            .ThenBy(r => r.Id);
-
+        // SQLite doesn't support DateTimeOffset in ORDER BY, so we use client-side sorting
         var offset = DecodeCursor(query.Cursor);
-        var items = await queryable
+        var items = await queryable.ToListAsync(ct);
+        
+        items = items
+            .OrderByDescending(r => r.CreatedAt)
+            .ThenBy(r => r.Id)
             .Skip(offset)
             .Take(query.Limit + 1)
-            .ToListAsync(ct);
+            .ToList();
 
         var hasMore = items.Count > query.Limit;
         if (hasMore)

@@ -21,6 +21,11 @@ public sealed class ReactionDto
     public required EntityRefDto Actor { get; set; }
 
     /// <summary>
+    /// Denormalized Actor ID for unique constraint indexing.
+    /// </summary>
+    public string? ActorId { get; set; }
+
+    /// <summary>
     /// The ID of the target (post or comment).
     /// </summary>
     public required string TargetId { get; set; }

@@ -64,4 +64,9 @@ public sealed class PostDto
     /// The current viewer's reaction type (populated per-viewer on read).
     /// </summary>
     public ReactionType? ViewerReaction { get; set; }
+    
+    /// <summary>
+    /// Resolved media URLs (populated after loading, not stored).
+    /// </summary>
+    public List<string>? MediaUrls { get; set; }
 }

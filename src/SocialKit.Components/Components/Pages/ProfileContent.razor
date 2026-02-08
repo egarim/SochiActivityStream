@@ -64,8 +64,9 @@
                     }
                     else
                     {
-                        <MudButton StartIcon="@Icons.Material.Filled.Edit"
-                                   Variant="Variant.Outlined">Edit Profile</MudButton>
+                        <CommandButton Command="@ViewModel.EditProfileCommand">
+                            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="me-2" />Edit Profile
+                        </CommandButton>
                     }
                 </div>
             </MudCardContent>
@@ -98,7 +99,6 @@
                 {
                     <PostCard Post="@post"
                               OnLike="@(async (p) => { })"
-                              OnComment="@(p => { })"
                               OnShare="@(p => { })" />
                 }
             }

@@ -1,0 +1,154 @@
+@* Comments Section Component using MudBlazor *@
+@using Content.Abstractions
+
+<div class="sk-comments-section px-3 pb-3">
+    @if (IsLoading)
+    {
+        <div class="d-flex justify-content-center py-3">
+            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+        </div>
+    }
+    else
+    {
+        @if (Comments.Count > 0)
+        {
+            <div class="sk-comments-list">
+                @foreach (var comment in Comments)
+                {
+                    <CommentItem Comment="@comment" 
+                                 CurrentUserId="@CurrentUserId"
+                                 CurrentUserAvatar="@CurrentUserAvatar"
+                                 CurrentUserName="@CurrentUserName"
+                                 OnDelete="@HandleDeleteComment"
+                                 OnLike="@HandleLikeComment"
+                                 OnReply="@HandleReplyToComment"
+                                 OnLoadReplies="@HandleLoadReplies"
+                                 OnToggleReplies="@HandleToggleReplies"
+                                 Replies="@(GetRepliesForComment?.Invoke(comment.Id ?? string.Empty) ?? new List<CommentDto>())"
+                                 IsLoadingReplies="@(IsLoadingRepliesForComment?.Invoke(comment.Id ?? string.Empty) ?? false)"
+                                 IsAddingReply="@(IsAddingReplyForComment?.Invoke(comment.Id ?? string.Empty) ?? false)"
+                                 IsRepliesExpanded="@(IsRepliesExpandedForComment?.Invoke(comment.Id ?? string.Empty) ?? false)" />
+                }
+            </div>
+            
+            @if (HasMoreComments)
+            {
+                <MudLink Typo="Typo.caption" 
+                         Color="Color.Primary" 
+                         Class="d-block text-center py-2 cursor-pointer"
+                         OnClick="@LoadMoreComments">
+                    View more comments
+                </MudLink>
+            }
+        }
+        else if (!IsAdding)
+        {
+            <MudText Typo="Typo.caption" Color="Color.Secondary" Align="Align.Center" Class="py-2">
+                No comments yet. Be the first to comment!
+            </MudText>
+        }
+    }
+    
+    <!-- Add Comment Input -->
+    <div class="d-flex gap-2 pt-2">
+        <Avatar ImageUrl="@CurrentUserAvatar" 
+                Name="@CurrentUserName" 
+                Size="AvatarSize.Small" />
+        <MudTextField @bind-Value="@NewCommentText"
+                      Placeholder="Write a comment..."
+                      Variant="Variant.Outlined"
+                      Size="Size.Small"
+                      Margin="Margin.Dense"
+                      Disabled="@IsAdding"
+                      OnKeyUp="@HandleKeyUp"
+                      Class="flex-grow-1"
+                      Style="border-radius: 20px;" />
+        <MudIconButton Icon="@Icons.Material.Filled.Send" 
+                       Color="Color.Primary"
+                       Size="Size.Small"
+                       Disabled="@(!CanSubmit)"
+                       OnClick="@HandleSubmitComment" />
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string PostId { get; set; } = null!;
+    [Parameter] public List<CommentDto> Comments { get; set; } = new();
+    [Parameter] public string? CurrentUserId { get; set; }
+    [Parameter] public string? CurrentUserName { get; set; }
+    [Parameter] public string? CurrentUserAvatar { get; set; }
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public bool IsAdding { get; set; }
+    [Parameter] public bool HasMoreComments { get; set; }
+    [Parameter] public EventCallback<string> OnAddComment { get; set; }
+    [Parameter] public EventCallback<CommentDto> OnDeleteComment { get; set; }
+    [Parameter] public EventCallback OnLoadMore { get; set; }
+    [Parameter] public EventCallback<CommentDto> OnLikeComment { get; set; }
+    [Parameter] public EventCallback<(CommentDto Comment, string Body)> OnReplyToComment { get; set; }
+    [Parameter] public EventCallback<CommentDto> OnLoadReplies { get; set; }
+    [Parameter] public EventCallback<CommentDto> OnToggleReplies { get; set; }
+    [Parameter] public Func<string, List<CommentDto>>? GetRepliesForComment { get; set; }
+    [Parameter] public Func<string, bool>? IsLoadingRepliesForComment { get; set; }
+    [Parameter] public Func<string, bool>? IsAddingReplyForComment { get; set; }
+    [Parameter] public Func<string, bool>? IsRepliesExpandedForComment { get; set; }
+    
+    private string NewCommentText { get; set; } = "";
+    
+    private bool CanSubmit => !string.IsNullOrWhiteSpace(NewCommentText) && !IsAdding;
+    
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && CanSubmit)
+        {
+            await HandleSubmitComment();
+        }
+    }
+    
+    private async Task HandleSubmitComment()
+    {
+        if (!CanSubmit) return;
+        
+        var text = NewCommentText;
+        NewCommentText = "";
+        StateHasChanged();
+        
+        if (OnAddComment.HasDelegate)
+            await OnAddComment.InvokeAsync(text);
+    }
+    
+    private async Task HandleDeleteComment(CommentDto comment)
+    {
+        if (OnDeleteComment.HasDelegate)
+            await OnDeleteComment.InvokeAsync(comment);
+    }
+    
+    private async Task HandleLikeComment(CommentDto comment)
+    {
+        if (OnLikeComment.HasDelegate)
+            await OnLikeComment.InvokeAsync(comment);
+    }
+    
+    private async Task HandleReplyToComment((CommentDto Comment, string Body) args)
+    {
+        if (OnReplyToComment.HasDelegate)
+            await OnReplyToComment.InvokeAsync(args);
+    }
+    
+    private async Task HandleLoadReplies(CommentDto comment)
+    {
+        if (OnLoadReplies.HasDelegate)
+            await OnLoadReplies.InvokeAsync(comment);
+    }
+    
+    private async Task HandleToggleReplies(CommentDto comment)
+    {
+        if (OnToggleReplies.HasDelegate)
+            await OnToggleReplies.InvokeAsync(comment);
+    }
+    
+    private async Task LoadMoreComments()
+    {
+        if (OnLoadMore.HasDelegate)
+            await OnLoadMore.InvokeAsync();
+    }
+}

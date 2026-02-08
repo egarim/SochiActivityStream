@@ -42,6 +42,9 @@ public class PostConfiguration : IEntityTypeConfiguration<PostDto>
             .HasConversion(new JsonValueConverter<Dictionary<ReactionType, int>>())
             .HasColumnType("TEXT");
         
+        // MediaUrls is a runtime-computed property, not stored
+        builder.Ignore(p => p.MediaUrls);
+        
         // Global query filter for soft deletes
         builder.HasQueryFilter(p => !p.IsDeleted);
         

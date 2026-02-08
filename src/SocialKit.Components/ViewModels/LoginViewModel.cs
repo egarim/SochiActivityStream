@@ -19,6 +19,7 @@ public class LoginViewModel : ViewModelBase
     private string _email = string.Empty;
     private string _password = string.Empty;
     private string? _errorMessage;
+    private string? _debugMessage;
 
     public LoginViewModel(
         INavigationService navigationService,
@@ -71,6 +72,12 @@ public class LoginViewModel : ViewModelBase
         set => SetProperty(ref _errorMessage, value);
     }
 
+    public string? DebugMessage
+    {
+        get => _debugMessage;
+        set => SetProperty(ref _debugMessage, value);
+    }
+
     public IAsyncCommand LoginCommand { get; }
     public IAsyncCommand NavigateToSignUpCommand { get; }
 
@@ -83,29 +90,41 @@ public class LoginViewModel : ViewModelBase
     {
         IsBusy = true;
         ErrorMessage = null;
+        DebugMessage = "Attempting login...";
         
         try
         {
+            DebugMessage = $"Signing in with email: {Email}, tenant: blazorbook";
             var session = await _authService.SignInAsync("blazorbook", new SignInRequest
             {
                 Login = Email,
                 Password = Password
             });
             
+            DebugMessage = $"Session created. UserId: {session.UserId}. Getting profile...";
+            
             // Get profile for the session
             var profiles = await GetProfileForSession(session);
             if (profiles != null)
             {
+                DebugMessage = $"Profile found: {profiles.DisplayName}. Navigating to feed...";
                 await _currentUser.SignInAsync(profiles, session.UserId);
                 await _navigationService.NavigateAsync("/feed");
+            }
+            else
+            {
+                DebugMessage = "No profile found for this user!";
+                ErrorMessage = "No profile found for this user.";
             }
         }
         catch (IdentityValidationException ex)
         {
+            DebugMessage = $"Validation error: {string.Join(", ", ex.Errors.Select(e => e.Message))}";
             ErrorMessage = ex.Errors.FirstOrDefault()?.Message ?? "Invalid credentials";
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            DebugMessage = $"Exception: {ex.GetType().Name}: {ex.Message}";
             ErrorMessage = "An error occurred. Please try again.";
         }
         finally

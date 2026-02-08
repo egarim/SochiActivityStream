@@ -1,4 +1,4 @@
-@* Post Card Component using MudBlazor *@
+@* Post Card Component using MudBlazor + DevExpress *@
 @using Content.Abstractions
 
 <MudCard Class="sk-post-card mb-3" Elevation="2">
@@ -23,6 +23,35 @@
     <MudCardContent>
         <MudText>@Post.Body</MudText>
         
+        @* Media Gallery with Carousel *@
+        @if (Post.MediaUrls != null && Post.MediaUrls.Count > 0)
+        {
+            <div class="mt-3">
+                @if (Post.MediaUrls.Count == 1)
+                {
+                    <MudImage Src="@Post.MediaUrls[0]" 
+                              Alt="Post image"
+                              ObjectFit="ObjectFit.Contain"
+                              Class="rounded"
+                              Style="width: 100%; max-height: 500px;" />
+                }
+                else
+                {
+                    <DxCarousel Width="100%"
+                                Height="400px"
+                                Data="@GetCarouselData()"
+                                ImageSrcField="Src"
+                                ImageAltField="Alt"
+                                ImageSizeMode="CarouselImageSizeMode.FitProportional"
+                                LoopNavigationEnabled="true"
+                                NavButtonsDisplayMode="CarouselControlsDisplayMode.VisibleOnHover"
+                                PagerDisplayMode="CarouselControlsDisplayMode.AlwaysVisible"
+                                CssClass="rounded">
+                    </DxCarousel>
+                }
+            </div>
+        }
+        
         @if (HasReactions || Post.CommentCount > 0)
         {
             <div class="d-flex justify-content-between mt-2 mud-text-secondary">
@@ -35,7 +64,9 @@
                 }
                 @if (Post.CommentCount > 0)
                 {
-                    <span>@Post.CommentCount comments</span>
+                    <MudLink Typo="Typo.body2" Color="Color.Secondary" OnClick="@ToggleComments" Class="cursor-pointer">
+                        @Post.CommentCount @(Post.CommentCount == 1 ? "comment" : "comments")
+                    </MudLink>
                 }
             </div>
         }
@@ -57,23 +88,62 @@
                    Variant="Variant.Text"
                    Size="Size.Small"
                    Class="flex-grow-1"
-                   OnClick="OnCommentClick">Comment</MudButton>
+                   OnClick="@ToggleComments">Comment</MudButton>
         <MudButton id="share-button"
                    StartIcon="@Icons.Material.Outlined.Share"
                    Variant="Variant.Text"
                    Size="Size.Small"
                    Class="flex-grow-1">Share</MudButton>
     </MudCardActions>
+    
+    @if (ShowComments)
+    {
+        <MudDivider />
+        <CommentSection PostId="@(Post.Id ?? string.Empty)"
+                        Comments="@Comments"
+                        CurrentUserId="@CurrentUserId"
+                        CurrentUserName="@CurrentUserName"
+                        CurrentUserAvatar="@CurrentUserAvatar"
+                        IsLoading="@IsLoadingComments"
+                        IsAdding="@IsAddingComment"
+                        HasMoreComments="@HasMoreComments"
+                        OnAddComment="@HandleAddComment"
+                        OnDeleteComment="@HandleDeleteComment"
+                        OnLoadMore="@HandleLoadMoreComments"
+                        OnLikeComment="@HandleLikeComment"
+                        OnReplyToComment="@HandleReplyToComment"
+                        OnLoadReplies="@HandleLoadReplies"
+                        OnToggleReplies="@HandleToggleReplies"
+                        GetRepliesForComment="@GetRepliesForComment"
+                        IsLoadingRepliesForComment="@IsLoadingRepliesForComment"
+                        IsAddingReplyForComment="@IsAddingReplyForComment"
+                        IsRepliesExpandedForComment="@IsRepliesExpandedForComment" />
+    }
 </MudCard>
 
 @code {
     [Parameter, EditorRequired] public PostDto Post { get; set; } = null!;
+    [Parameter] public string? CurrentUserId { get; set; }
     [Parameter] public string? CurrentUserAvatar { get; set; }
     [Parameter] public string? CurrentUserName { get; set; }
     [Parameter] public EventCallback<PostDto> OnLike { get; set; }
-    [Parameter] public EventCallback<PostDto> OnComment { get; set; }
+    [Parameter] public EventCallback<(PostDto Post, string Body)> OnAddComment { get; set; }
+    [Parameter] public EventCallback<(PostDto Post, CommentDto Comment)> OnDeleteComment { get; set; }
+    [Parameter] public EventCallback<(PostDto Post, CommentDto Comment)> OnLikeComment { get; set; }
+    [Parameter] public EventCallback<(PostDto Post, CommentDto Comment, string Body)> OnReplyToComment { get; set; }
+    [Parameter] public EventCallback<(PostDto Post, CommentDto Comment)> OnLoadReplies { get; set; }
+    [Parameter] public EventCallback<(PostDto Post, CommentDto Comment)> OnToggleReplies { get; set; }
+    [Parameter] public EventCallback<PostDto> OnLoadComments { get; set; }
     [Parameter] public EventCallback<PostDto> OnShare { get; set; }
     [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public List<CommentDto> Comments { get; set; } = new();
+    [Parameter] public bool IsLoadingComments { get; set; }
+    [Parameter] public bool IsAddingComment { get; set; }
+    [Parameter] public bool HasMoreComments { get; set; }
+    [Parameter] public Func<string, List<CommentDto>>? GetRepliesForComment { get; set; }
+    [Parameter] public Func<string, bool>? IsLoadingRepliesForComment { get; set; }
+    [Parameter] public Func<string, bool>? IsAddingReplyForComment { get; set; }
+    [Parameter] public Func<string, bool>? IsRepliesExpandedForComment { get; set; }
     
     private bool ShowComments { get; set; }
     
@@ -88,9 +158,56 @@
             await OnLike.InvokeAsync(Post);
     }
     
-    private void OnCommentClick()
+    private async Task ToggleComments()
     {
         ShowComments = !ShowComments;
+        
+        if (ShowComments && Comments.Count == 0 && OnLoadComments.HasDelegate)
+        {
+            await OnLoadComments.InvokeAsync(Post);
+        }
+    }
+    
+    private async Task HandleAddComment(string body)
+    {
+        if (OnAddComment.HasDelegate)
+            await OnAddComment.InvokeAsync((Post, body));
+    }
+    
+    private async Task HandleDeleteComment(CommentDto comment)
+    {
+        if (OnDeleteComment.HasDelegate)
+            await OnDeleteComment.InvokeAsync((Post, comment));
+    }
+    
+    private async Task HandleLikeComment(CommentDto comment)
+    {
+        if (OnLikeComment.HasDelegate)
+            await OnLikeComment.InvokeAsync((Post, comment));
+    }
+    
+    private async Task HandleReplyToComment((CommentDto Comment, string Body) args)
+    {
+        if (OnReplyToComment.HasDelegate)
+            await OnReplyToComment.InvokeAsync((Post, args.Comment, args.Body));
+    }
+    
+    private async Task HandleLoadReplies(CommentDto comment)
+    {
+        if (OnLoadReplies.HasDelegate)
+            await OnLoadReplies.InvokeAsync((Post, comment));
+    }
+    
+    private async Task HandleToggleReplies(CommentDto comment)
+    {
+        if (OnToggleReplies.HasDelegate)
+            await OnToggleReplies.InvokeAsync((Post, comment));
+    }
+    
+    private async Task HandleLoadMoreComments()
+    {
+        if (OnLoadComments.HasDelegate)
+            await OnLoadComments.InvokeAsync(Post);
     }
     
     private string FormatTime(DateTimeOffset dateTime)
@@ -104,5 +221,21 @@
         if (diff.TotalDays < 365) return dateTime.ToString("MMM d");
         
         return dateTime.ToString("MMM d, yyyy");
+    }
+    
+    private List<CarouselImageData> GetCarouselData()
+    {
+        if (Post.MediaUrls == null) return new();
+        return Post.MediaUrls.Select((url, i) => new CarouselImageData
+        {
+            Src = url,
+            Alt = $"Image {i + 1}"
+        }).ToList();
+    }
+    
+    private class CarouselImageData
+    {
+        public string Src { get; set; } = "";
+        public string Alt { get; set; } = "";
     }
 }

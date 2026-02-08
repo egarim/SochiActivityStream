@@ -16,11 +16,22 @@
                     }
                 </div>
                 
+                <MudAlert Severity="Severity.Info" Class="mb-3" Dense="true">
+                    <strong>Demo:</strong> alice@("@")example.com / Demo123!@("@")#
+                </MudAlert>
+                
                 <EditForm Model="@ViewModel" OnValidSubmit="@(() => ViewModel.LoginCommand.ExecuteAsync(null))">
                     @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
                     {
                         <MudAlert Severity="Severity.Error" Class="mb-3">
                             @ViewModel.ErrorMessage
+                        </MudAlert>
+                    }
+                    
+                    @if (!string.IsNullOrEmpty(ViewModel.DebugMessage))
+                    {
+                        <MudAlert Severity="Severity.Info" Class="mb-3">
+                            <strong>Debug:</strong> @ViewModel.DebugMessage
                         </MudAlert>
                     }
                     
