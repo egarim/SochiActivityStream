@@ -1,24 +1,76 @@
 @* Edit Profile Dialog using MudBlazor *@
 @using Sochi.Navigation.Dialogs
 @using Identity.Abstractions
+@using DevExpress.Blazor
+@using Media.Abstractions
 
 <MudCard Elevation="2" Style="min-width: 400px;">
     <MudCardHeader>
         <CardHeaderContent>
-            <MudText Typo="Typo.h5">Edit Profile</MudText>
+            <MudText id="edit-profile-dialog-title" Typo="Typo.h5">Edit Profile</MudText>
         </CardHeaderContent>
     </MudCardHeader>
     <MudCardContent>
         <div class="d-flex flex-column gap-3">
+            @* Profile Picture Preview and Upload *@
+            <div class="text-center">
+                <div class="mb-2">
+                    @if (!string.IsNullOrWhiteSpace(_previewImageUrl))
+                    {
+                        <img src="@_previewImageUrl" 
+                             alt="Profile preview" 
+                             style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--mud-palette-primary);" />
+                    }
+                    else if (!string.IsNullOrWhiteSpace(AvatarUrl))
+                    {
+                        <img src="@AvatarUrl" 
+                             alt="Current profile picture" 
+                             style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--mud-palette-primary);"
+                             onerror="this.onerror=null; this.src='/img/default-avatar.png';" />
+                    }
+                    else
+                    {
+                        <div style="width: 120px; height: 120px; border-radius: 50%; background: var(--mud-palette-grey-lighten3); display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                            <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Large" />
+                        </div>
+                    }
+                </div>
+                
+                <DxFileInput @ref="_fileInput"
+                             FilesUploading="@OnFileUploading"
+                             AllowMultiFileUpload="false"
+                             MaxFileSize="@(5 * 1024 * 1024)"
+                             AllowedFileExtensions="@(new List<string> { ".jpg", ".jpeg", ".png", ".gif", ".webp" })"
+                             UploadMode="UploadMode.Instant"
+                             Visible="false"
+                             ExternalSelectButtonCssSelector="#upload-profile-pic-btn" />
+                
+                <MudButton Id="upload-profile-pic-btn"
+                           StartIcon="@Icons.Material.Filled.CloudUpload"
+                           Variant="Variant.Text"
+                           Size="Size.Small"
+                           Color="Color.Primary">
+                    Upload Picture
+                </MudButton>
+                
+                @if (_uploadedFile != null)
+                {
+                    <MudText Typo="Typo.caption" Class="text-success">
+                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" /> Picture selected
+                    </MudText>
+                }
+            </div>
+            
             <MudTextField @bind-Value="@DisplayName"
                           Label="Display Name"
                           Variant="Variant.Outlined"
                           Placeholder="Your display name" />
             
             <MudTextField @bind-Value="@AvatarUrl"
-                          Label="Avatar URL"
+                          Label="Avatar URL (optional)"
                           Variant="Variant.Outlined"
-                          Placeholder="https://..." />
+                          Placeholder="https://..."
+                          HelperText="Or upload a picture above" />
             
             <MudSwitch @bind-Value="@IsPrivate" Color="Color.Primary">
                 Private Profile
@@ -54,11 +106,14 @@
     [Parameter] public IDialogParameters? Parameters { get; set; }
     [Parameter] public EventCallback<IDialogResult> OnClose { get; set; }
     
+    private DxFileInput? _fileInput;
     private string DisplayName { get; set; } = "";
     private string AvatarUrl { get; set; } = "";
     private bool IsPrivate { get; set; }
     private bool IsSaving { get; set; }
     private string ProfileId { get; set; } = "";
+    private UploadedFileDto? _uploadedFile;
+    private string? _previewImageUrl;
     
     protected override void OnParametersSet()
     {
@@ -71,19 +126,71 @@
         }
     }
     
+    private async Task OnFileUploading(FilesUploadingEventArgs args)
+    {
+        var file = args.Files.FirstOrDefault();
+        if (file == null) return;
+        
+        if (file.Size > 5 * 1024 * 1024)
+        {
+            Console.WriteLine("[EditProfileDialog] File too large");
+            return;
+        }
+        
+        try
+        {
+            // Read file data
+            using var stream = new MemoryStream();
+            await file.OpenReadStream(file.Size).CopyToAsync(stream);
+            var buffer = stream.ToArray();
+            var base64 = Convert.ToBase64String(buffer);
+            _previewImageUrl = $"data:{file.Type};base64,{base64}";
+            
+            _uploadedFile = new UploadedFileDto
+            {
+                Name = file.Name,
+                ContentType = file.Type,
+                Data = buffer
+            };
+            
+            Console.WriteLine($"[EditProfileDialog] File uploaded: {file.Name}, {file.Size} bytes");
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[EditProfileDialog] Upload error: {ex.Message}");
+        }
+    }
+    
     private async Task Save()
     {
         IsSaving = true;
         try
         {
+            Console.WriteLine($"[EditProfileDialog] Saving profile: {ProfileId}, {DisplayName}");
+            
             var resultParams = new Sochi.Navigation.Dialogs.DialogParameters();
             resultParams.Add("ProfileId", ProfileId);
             resultParams.Add("DisplayName", DisplayName);
             resultParams.Add("AvatarUrl", string.IsNullOrWhiteSpace(AvatarUrl) ? "" : AvatarUrl);
             resultParams.Add("IsPrivate", IsPrivate);
             
+            // Pass uploaded file data if present
+            if (_uploadedFile != null)
+            {
+                resultParams.Add("UploadedFile", _uploadedFile);
+            }
+            
             var result = Sochi.Navigation.Dialogs.DialogResult.Ok(resultParams);
+            
+            Console.WriteLine($"[EditProfileDialog] Invoking OnClose callback");
             await OnClose.InvokeAsync(result);
+            Console.WriteLine($"[EditProfileDialog] OnClose callback completed");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[EditProfileDialog] ERROR: {ex.Message}");
+            Console.WriteLine($"[EditProfileDialog] Stack: {ex.StackTrace}");
         }
         finally
         {

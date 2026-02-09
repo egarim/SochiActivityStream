@@ -72,4 +72,16 @@ public interface IMediaService
         string tenantId,
         CleanupOptions? options = null,
         CancellationToken ct = default);
+
+    /// <summary>
+    /// Upload media directly from bytes (simplified server-side upload).
+    /// Creates media record and uploads data in one operation.
+    /// </summary>
+    Task<MediaDto> UploadFromBytesAsync(
+        string tenantId,
+        EntityRefDto owner,
+        string fileName,
+        string contentType,
+        byte[] data,
+        CancellationToken ct = default);
 }

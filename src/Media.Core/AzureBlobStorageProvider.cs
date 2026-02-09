@@ -119,4 +119,25 @@ public sealed class AzureBlobStorageProvider : IMediaStorageProvider
 
         await destBlob.StartCopyFromUriAsync(sourceBlob.Uri, cancellationToken: ct);
     }
+
+    /// <inheritdoc />
+    public async Task UploadBytesAsync(
+        string blobPath,
+        byte[] data,
+        string contentType,
+        CancellationToken ct = default)
+    {
+        var blob = _container.GetBlobClient(blobPath);
+        using var stream = new MemoryStream(data);
+        
+        var uploadOptions = new Azure.Storage.Blobs.Models.BlobUploadOptions
+        {
+            HttpHeaders = new Azure.Storage.Blobs.Models.BlobHttpHeaders
+            {
+                ContentType = contentType
+            }
+        };
+        
+        await blob.UploadAsync(stream, uploadOptions, cancellationToken: ct);
+    }
 }

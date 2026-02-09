@@ -42,7 +42,31 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 
+using Serilog;
+using Serilog.Events;
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SERILOG CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════════════
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("logs/blazorbook-.txt", 
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
+
+try
+{
+    Log.Information("Starting BlazorBook.Web application");
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Use Serilog for logging
+builder.Host.UseSerilog();
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // DATABASE CONTEXT (EF Core + SQLite)
@@ -209,7 +233,16 @@ else
 {
     builder.Services.AddScoped<IMediaStore, InMemoryMediaStore>();
 }
-builder.Services.AddSingleton<IMediaStorageProvider, MockStorageProvider>();
+builder.Services.AddSingleton<IMediaStorageProvider>(sp =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("AzureStorage") ?? "UseDevelopmentStorage=true";
+    return new Media.Core.AzureBlobStorageProvider(new Media.Core.AzureBlobStorageOptions
+    {
+        ConnectionString = connectionString,
+        ContainerName = "blazorbook-media",
+        CreateContainerIfNotExists = true
+    });
+});
 builder.Services.AddScoped<ActivityStream.Abstractions.IIdGenerator, ActivityStream.Core.UlidIdGenerator>();
 builder.Services.AddScoped<IMediaService, MediaService>();
 
@@ -251,10 +284,16 @@ builder.Services.AddScoped<ITextAnalyzer, SimpleTextAnalyzer>();
 if (storageMode == "EFCore")
 {
     builder.Services.AddScoped<ISearchIndex, EFCoreSearchIndex>();
+    // Register interfaces that ISearchIndex implements
+    builder.Services.AddScoped<ISearchService>(sp => sp.GetRequiredService<ISearchIndex>());
+    builder.Services.AddScoped<ISearchIndexer>(sp => sp.GetRequiredService<ISearchIndex>());
 }
 else
 {
     builder.Services.AddScoped<ISearchIndex, InMemorySearchIndex>();
+    // Register interfaces that ISearchIndex implements
+    builder.Services.AddScoped<ISearchService>(sp => sp.GetRequiredService<ISearchIndex>());
+    builder.Services.AddScoped<ISearchIndexer>(sp => sp.GetRequiredService<ISearchIndex>());
 }
 // Note: SearchValidator is a static class, no DI registration needed
 
@@ -320,6 +359,15 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // GOVERNANCE POLICY (Demo Implementation)
@@ -369,4 +417,11 @@ public class MockStorageProvider : IMediaStorageProvider
     
     public Task CopyAsync(string sourcePath, string destPath, CancellationToken ct = default)
         => Task.CompletedTask;
+    
+    public Task UploadBytesAsync(string blobPath, byte[] data, string contentType, CancellationToken ct = default)
+    {
+        // Mock implementation - in real app would save to disk or blob storage
+        Console.WriteLine($"[MockStorageProvider] Upload: {blobPath} ({data.Length} bytes, {contentType})");
+        return Task.CompletedTask;
+    }
 }

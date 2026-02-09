@@ -178,4 +178,7 @@ public class TestStorageProvider : IMediaStorageProvider
     
     public Task CopyAsync(string sourcePath, string destPath, CancellationToken ct = default)
         => Task.CompletedTask;
+    
+    public Task UploadBytesAsync(string blobPath, byte[] data, string contentType, CancellationToken ct = default)
+        => Task.CompletedTask;
 }

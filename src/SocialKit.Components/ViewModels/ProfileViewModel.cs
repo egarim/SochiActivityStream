@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using Content.Abstractions;
 using Identity.Abstractions;
+using Media.Abstractions;
 using RelationshipService.Abstractions;
 using Sochi.Navigation.Commands;
 using Sochi.Navigation.Dialogs;
@@ -20,6 +21,7 @@ public class ProfileViewModel : ViewModelBase, IInitialize
     private readonly IProfileService _profileService;
     private readonly IContentService _contentService;
     private readonly IRelationshipService _relationshipService;
+    private readonly IMediaService _mediaService;
     private readonly ICurrentUserService _currentUser;
     
     private ProfileDto? _profile;
@@ -35,6 +37,7 @@ public class ProfileViewModel : ViewModelBase, IInitialize
         IProfileService profileService,
         IContentService contentService,
         IRelationshipService relationshipService,
+        IMediaService mediaService,
         ICurrentUserService currentUser)
     {
         _navigationService = navigationService;
@@ -42,6 +45,7 @@ public class ProfileViewModel : ViewModelBase, IInitialize
         _profileService = profileService;
         _contentService = contentService;
         _relationshipService = relationshipService;
+        _mediaService = mediaService;
         _currentUser = currentUser;
         
         Title = "Profile";
@@ -164,6 +168,20 @@ public class ProfileViewModel : ViewModelBase, IInitialize
         };
         
         var result = await _contentService.QueryPostsAsync(query);
+        
+        // Enrich posts with author profile data from loaded profile
+        if (Profile != null)
+        {
+            foreach (var post in result.Items)
+            {
+                if (post.Author?.Id == Profile.Id)
+                {
+                    post.Author.DisplayName = Profile.DisplayName ?? Profile.Handle;
+                    post.Author.ImageUrl = Profile.AvatarUrl;
+                }
+            }
+        }
+        
         Posts = new ObservableCollection<PostDto>(result.Items);
     }
 
@@ -271,26 +289,65 @@ public class ProfileViewModel : ViewModelBase, IInitialize
     {
         if (Profile?.Id == null) return;
 
+        Console.WriteLine($"[ProfileViewModel] Starting edit profile for {Profile.Id}");
+
         var parameters = new DialogParameters();
         parameters.Add("ProfileId", Profile.Id);
         parameters.Add("DisplayName", Profile.DisplayName ?? "");
         parameters.Add("AvatarUrl", Profile.AvatarUrl ?? "");
         parameters.Add("IsPrivate", Profile.IsPrivate);
 
+        Console.WriteLine($"[ProfileViewModel] Showing EditProfileDialog");
         var result = await _dialogService.ShowDialogAsync("EditProfileDialog", parameters);
         
+        Console.WriteLine($"[ProfileViewModel] Dialog closed with result: {result.Result}");
+
         if (result.Result == true)
         {
             var profileId = result.Parameters.GetValue<string>("ProfileId");
             var displayName = result.Parameters.GetValue<string>("DisplayName");
             var avatarUrl = result.Parameters.GetValue<string>("AvatarUrl");
             var isPrivate = result.Parameters.GetValue<bool>("IsPrivate");
+            var uploadedFile = result.Parameters.GetValue<UploadedFileDto>("UploadedFile");
             
+            Console.WriteLine($"[ProfileViewModel] Updating profile: {profileId}, {displayName}");
+
             if (!string.IsNullOrEmpty(profileId))
             {
                 IsBusy = true;
                 try
                 {
+                    // If user uploaded a file, upload it to blob storage first
+                    if (uploadedFile != null)
+                    {
+                        Console.WriteLine($"[ProfileViewModel] Processing uploaded file");
+                        
+                        byte[] fileData = uploadedFile.Data;
+                        string fileName = uploadedFile.Name;
+                        string contentType = uploadedFile.ContentType;
+                        
+                        Console.WriteLine($"[ProfileViewModel] Uploading to blob storage: {fileName} ({fileData.Length} bytes)");
+                        
+                        // Upload to blob storage and get media record
+                        var media = await _mediaService.UploadFromBytesAsync(
+                            "blazorbook",
+                            new ActivityStream.Abstractions.EntityRefDto
+                            {
+                                Kind = "Profile",
+                                Type = "Profile",
+                                Id = profileId,
+                                Display = displayName
+                            },
+                            fileName,
+                            contentType,
+                            fileData
+                        );
+                        
+                        // Use the generated download URL as the avatar URL
+                        avatarUrl = media.Url;
+                        Console.WriteLine($"[ProfileViewModel] Upload successful, URL: {avatarUrl}");
+                    }
+                    
                     var updateRequest = new UpdateProfileRequest
                     {
                         ProfileId = profileId,
@@ -299,8 +356,15 @@ public class ProfileViewModel : ViewModelBase, IInitialize
                         IsPrivate = isPrivate
                     };
                     
+                    Console.WriteLine($"[ProfileViewModel] Calling UpdateProfileAsync");
                     var updatedProfile = await _profileService.UpdateProfileAsync(updateRequest);
                     Profile = updatedProfile;
+                    Console.WriteLine($"[ProfileViewModel] Profile updated successfully, new avatar URL: {updatedProfile.AvatarUrl}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ProfileViewModel] ERROR: {ex.Message}");
+                    Console.WriteLine($"[ProfileViewModel] Stack: {ex.StackTrace}");
                 }
                 finally
                 {

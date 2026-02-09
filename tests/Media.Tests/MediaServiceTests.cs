@@ -509,5 +509,13 @@ public class MediaServiceTests
         {
             return Task.CompletedTask;
         }
+        
+        public Task UploadBytesAsync(string blobPath, byte[] data, string contentType, CancellationToken ct = default)
+        {
+            _blobExists = true;
+            _blobSize = data.Length;
+            _blobContentType = contentType;
+            return Task.CompletedTask;
+        }
     }
 }

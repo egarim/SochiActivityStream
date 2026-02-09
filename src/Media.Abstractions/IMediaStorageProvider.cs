@@ -42,4 +42,13 @@ public interface IMediaStorageProvider
     /// Copy a blob (for thumbnail generation workflow).
     /// </summary>
     Task CopyAsync(string sourcePath, string destPath, CancellationToken ct = default);
+
+    /// <summary>
+    /// Upload blob content directly from bytes (for server-side uploads).
+    /// </summary>
+    Task UploadBytesAsync(
+        string blobPath,
+        byte[] data,
+        string contentType,
+        CancellationToken ct = default);
 }

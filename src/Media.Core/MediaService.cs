@@ -452,4 +452,67 @@ public sealed class MediaService : IMediaService
     }
 
     #endregion
+
+    /// <inheritdoc />
+    public async Task<MediaDto> UploadFromBytesAsync(
+        string tenantId,
+        EntityRefDto owner,
+        string fileName,
+        string contentType,
+        byte[] data,
+        CancellationToken ct = default)
+    {
+        // 1. Validate inputs
+        if (string.IsNullOrWhiteSpace(tenantId))
+            throw new ArgumentException("Tenant ID is required", nameof(tenantId));
+        if (string.IsNullOrWhiteSpace(fileName))
+            throw new ArgumentException("File name is required", nameof(fileName));
+        if (string.IsNullOrWhiteSpace(contentType))
+            throw new ArgumentException("Content type is required", nameof(contentType));
+        if (data == null || data.Length == 0)
+            throw new ArgumentException("Data is required", nameof(data));
+
+        if (!IsContentTypeAllowed(contentType))
+            throw new MediaValidationException(MediaValidationError.ContentTypeNotAllowed);
+
+        // 2. Validate size
+        var mediaType = DetermineMediaType(contentType);
+        var maxSize = _options.GetMaxSize(mediaType);
+        if (data.Length > maxSize)
+            throw new MediaValidationException(MediaValidationError.FileTooLarge);
+
+        // 3. Generate ID and blob path
+        var mediaId = _idGenerator.NewId();
+        var now = _timeProvider.GetUtcNow();
+        var blobPath = GenerateBlobPath(tenantId, mediaId, fileName, now);
+
+        // 4. Upload to blob storage
+        await _storage.UploadBytesAsync(blobPath, data, contentType, ct);
+
+        // 5. Create media record
+        var media = new MediaDto
+        {
+            Id = mediaId,
+            TenantId = tenantId,
+            Owner = owner,
+            Type = mediaType,
+            FileName = SanitizeFileName(fileName),
+            ContentType = contentType,
+            SizeBytes = data.Length,
+            BlobPath = blobPath,
+            Status = MediaStatus.Ready,
+            CreatedAt = now,
+            ConfirmedAt = now
+        };
+
+        await _store.UpsertAsync(media, ct);
+
+        // 6. Generate download URL
+        media.Url = await _storage.GenerateDownloadUrlAsync(
+            blobPath,
+            _options.DownloadUrlExpiry,
+            ct);
+
+        return media;
+    }
 }

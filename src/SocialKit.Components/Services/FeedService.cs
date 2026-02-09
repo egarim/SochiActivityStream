@@ -1,5 +1,6 @@
 using Content.Abstractions;
 using Media.Abstractions;
+using Identity.Abstractions;
 using SocialKit.Components.Abstractions;
 
 namespace SocialKit.Components.Services;
@@ -12,12 +13,14 @@ public class FeedService : IFeedService
 {
     private readonly IContentService _contentService;
     private readonly IMediaService? _mediaService;
+    private readonly IProfileService? _profileService;
     private const string TenantId = "blazorbook";
 
-    public FeedService(IContentService contentService, IMediaService? mediaService = null)
+    public FeedService(IContentService contentService, IMediaService? mediaService = null, IProfileService? profileService = null)
     {
         _contentService = contentService;
         _mediaService = mediaService;
+        _profileService = profileService;
     }
 
     public async Task<IReadOnlyList<PostDto>> GetFeedAsync(string profileId, int limit = 20, string? cursor = null)
@@ -31,6 +34,39 @@ public class FeedService : IFeedService
         };
         
         var result = await _contentService.QueryPostsAsync(query);
+        
+        // Enrich posts with author profile data
+        if (_profileService != null)
+        {
+            var authorIds = result.Items
+                .Select(p => p.Author?.Id)
+                .Where(id => !string.IsNullOrEmpty(id))
+                .Distinct()
+                .ToList();
+            
+            if (authorIds.Any())
+            {
+                var profiles = new Dictionary<string, ProfileDto>();
+                foreach (var authorId in authorIds)
+                {
+                    var profile = await _profileService.GetProfileByIdAsync(authorId!);
+                    if (profile != null)
+                    {
+                        profiles[authorId!] = profile;
+                    }
+                }
+                
+                // Update posts with profile data
+                foreach (var post in result.Items)
+                {
+                    if (post.Author?.Id != null && profiles.TryGetValue(post.Author.Id, out var profile))
+                    {
+                        post.Author.DisplayName = profile.DisplayName ?? profile.Handle;
+                        post.Author.ImageUrl = profile.AvatarUrl;
+                    }
+                }
+            }
+        }
         
         // Populate media URLs for posts that have media
         if (_mediaService != null)
@@ -101,6 +137,40 @@ public class FeedService : IFeedService
         };
         
         var result = await _contentService.QueryCommentsAsync(query);
+        
+        // Enrich comments with author profile data
+        if (_profileService != null)
+        {
+            var authorIds = result.Items
+                .Select(c => c.Author?.Id)
+                .Where(id => !string.IsNullOrEmpty(id))
+                .Distinct()
+                .ToList();
+            
+            if (authorIds.Any())
+            {
+                var profiles = new Dictionary<string, ProfileDto>();
+                foreach (var authorId in authorIds)
+                {
+                    var profile = await _profileService.GetProfileByIdAsync(authorId!);
+                    if (profile != null)
+                    {
+                        profiles[authorId!] = profile;
+                    }
+                }
+                
+                // Update comments with profile data
+                foreach (var comment in result.Items)
+                {
+                    if (comment.Author?.Id != null && profiles.TryGetValue(comment.Author.Id, out var profile))
+                    {
+                        comment.Author.DisplayName = profile.DisplayName ?? profile.Handle;
+                        comment.Author.ImageUrl = profile.AvatarUrl;
+                    }
+                }
+            }
+        }
+        
         return result.Items;
     }
 
