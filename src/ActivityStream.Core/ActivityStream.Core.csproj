@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ActivityStream.Abstractions\ActivityStream.Abstractions.csproj" />
+    <ProjectReference Include="..\Content.Core\Content.Core.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

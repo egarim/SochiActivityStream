@@ -35,10 +35,12 @@ public class NotificationsViewModel : ViewModelBase, IInitialize
         LoadNotificationsCommand = new AsyncDelegateCommand(LoadNotificationsAsync);
         MarkReadCommand = new AsyncDelegateCommand<InboxItemDto>(MarkReadAsync);
         OpenNotificationCommand = new AsyncDelegateCommand<InboxItemDto>(OpenNotificationAsync);
+        LoadArchivedNotificationsCommand = new AsyncDelegateCommand(LoadArchivedNotificationsAsync);
 
         RegisterCommand(LoadNotificationsCommand);
         RegisterCommand(MarkReadCommand);
         RegisterCommand(OpenNotificationCommand);
+        RegisterCommand(LoadArchivedNotificationsCommand);
     }
 
     public ObservableCollection<InboxItemDto> Notifications
@@ -56,6 +58,7 @@ public class NotificationsViewModel : ViewModelBase, IInitialize
     public IAsyncCommand LoadNotificationsCommand { get; }
     public IAsyncCommand MarkReadCommand { get; }
     public IAsyncCommand OpenNotificationCommand { get; }
+    public IAsyncCommand LoadArchivedNotificationsCommand { get; }
 
     public async Task InitializeAsync(INavigationParameters parameters)
     {
@@ -92,6 +95,42 @@ public class NotificationsViewModel : ViewModelBase, IInitialize
                         Display = _currentUser.DisplayName
                     }
                 }
+            };
+
+            var result = await _inboxService.QueryInboxAsync(query);
+            Notifications = new ObservableCollection<InboxItemDto>(result.Items);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task LoadArchivedNotificationsAsync()
+    {
+        if (_currentUser.ProfileId == null)
+        {
+            return;
+        }
+
+        IsLoading = true;
+        try
+        {
+            var query = new InboxQuery
+            {
+                TenantId = "blazorbook",
+                Limit = 50,
+                Recipients =
+                {
+                    new EntityRefDto
+                    {
+                        Kind = "Profile",
+                        Type = "Profile",
+                        Id = _currentUser.ProfileId,
+                        Display = _currentUser.DisplayName
+                    }
+                },
+                Archived = true
             };
 
             var result = await _inboxService.QueryInboxAsync(query);

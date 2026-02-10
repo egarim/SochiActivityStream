@@ -1,4 +1,4 @@
-using Content.Abstractions;
+using ActivityStream.Abstractions;
 using Content.Core;
 using Content.Store.InMemory;
 using Xunit;

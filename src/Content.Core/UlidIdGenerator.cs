@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
-using Content.Abstractions;
+using ActivityStream.Abstractions;
+using ActivityStream.Abstractions;
 
 namespace Content.Core;
 

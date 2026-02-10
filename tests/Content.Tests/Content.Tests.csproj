@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Content.Abstractions\Content.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\ActivityStream.Abstractions\ActivityStream.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Content.Core\Content.Core.csproj" />
     <ProjectReference Include="..\..\src\Content.Store.InMemory\Content.Store.InMemory.csproj" />
   </ItemGroup>

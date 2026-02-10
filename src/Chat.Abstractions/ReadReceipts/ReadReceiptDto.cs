@@ -6,7 +6,7 @@ namespace Chat.Abstractions;
 public sealed class ReadReceiptDto
 {
     /// <summary>The participant who read.</summary>
-    public required EntityRefDto Profile { get; set; }
+    public required ActivityStream.Abstractions.EntityRefDto Profile { get; set; }
 
     /// <summary>Last message ID they read up to.</summary>
     public required string LastReadMessageId { get; set; }

@@ -15,8 +15,8 @@ public interface IChatService
     /// </summary>
     Task<ConversationDto> GetOrCreateDirectConversationAsync(
         string tenantId,
-        EntityRefDto user1,
-        EntityRefDto user2,
+        ActivityStream.Abstractions.EntityRefDto user1,
+        ActivityStream.Abstractions.EntityRefDto user2,
         CancellationToken ct = default);
 
     /// <summary>
@@ -32,7 +32,7 @@ public interface IChatService
     Task<ConversationDto?> GetConversationAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto viewer,
+        ActivityStream.Abstractions.EntityRefDto viewer,
         CancellationToken ct = default);
 
     /// <summary>
@@ -69,7 +69,7 @@ public interface IChatService
     Task LeaveConversationAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto participant,
+        ActivityStream.Abstractions.EntityRefDto participant,
         CancellationToken ct = default);
 
     /// <summary>
@@ -78,7 +78,7 @@ public interface IChatService
     Task SetArchivedAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto participant,
+        ActivityStream.Abstractions.EntityRefDto participant,
         bool archived,
         CancellationToken ct = default);
 
@@ -88,7 +88,7 @@ public interface IChatService
     Task SetMutedAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto participant,
+        ActivityStream.Abstractions.EntityRefDto participant,
         bool muted,
         CancellationToken ct = default);
 
@@ -131,7 +131,7 @@ public interface IChatService
         string tenantId,
         string conversationId,
         string messageId,
-        EntityRefDto viewer,
+        ActivityStream.Abstractions.EntityRefDto viewer,
         CancellationToken ct = default);
 
     // ─────────────────────────────────────────────────────────────────
@@ -150,7 +150,7 @@ public interface IChatService
     /// </summary>
     Task<int> GetTotalUnreadCountAsync(
         string tenantId,
-        EntityRefDto participant,
+        ActivityStream.Abstractions.EntityRefDto participant,
         CancellationToken ct = default);
 
     /// <summary>

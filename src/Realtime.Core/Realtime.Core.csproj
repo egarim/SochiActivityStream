@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ActivityStream.Abstractions\ActivityStream.Abstractions.csproj" />
     <ProjectReference Include="..\Realtime.Abstractions\Realtime.Abstractions.csproj" />
   </ItemGroup>
 

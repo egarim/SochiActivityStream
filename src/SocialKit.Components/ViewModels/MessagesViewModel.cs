@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using Chat.Abstractions;
+using ActivityStream.Abstractions;
 using Sochi.Navigation.Commands;
 using Sochi.Navigation.Mvvm;
 using Sochi.Navigation.Navigation;
@@ -76,7 +77,7 @@ public class MessagesViewModel : ViewModelBase, IInitialize
             var result = await _chatService.GetConversationsAsync(new ConversationQuery
             {
                 TenantId = "blazorbook",
-                Participant = Chat.Abstractions.EntityRefDto.Profile(
+                Participant = ActivityStream.Abstractions.EntityRefDto.Profile(
                     _currentUser.ProfileId,
                     _currentUser.DisplayName ?? "User"),
                 Limit = 50

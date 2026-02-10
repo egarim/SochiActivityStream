@@ -1,4 +1,4 @@
-using Content.Abstractions;
+using ActivityStream.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using BlazorBook.Web.Data;
 

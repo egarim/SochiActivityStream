@@ -8,7 +8,7 @@ public sealed class ConversationQuery
     public required string TenantId { get; set; }
 
     /// <summary>Filter to conversations this profile is a participant of.</summary>
-    public required EntityRefDto Participant { get; set; }
+    public required ActivityStream.Abstractions.EntityRefDto Participant { get; set; }
 
     /// <summary>Filter by conversation type.</summary>
     public ConversationType? Type { get; set; }

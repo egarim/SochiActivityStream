@@ -91,9 +91,12 @@ public class EFCoreConversationStore : IConversationStore
 
         // Load all matching conversations to filter by participant in memory
         // (complex JSON filtering needs to be done in memory)
-        var conversations = await queryable
+        // SQLite doesn't support DateTimeOffset in ORDER BY, so we use client-side sorting
+        var conversations = await queryable.ToListAsync(ct);
+        
+        conversations = conversations
             .OrderByDescending(c => c.UpdatedAt)
-            .ToListAsync(ct);
+            .ToList();
 
         // Filter by participant
         var filtered = conversations

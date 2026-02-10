@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using Chat.Abstractions;
+using ActivityStream.Abstractions;
 using Sochi.Navigation.Commands;
 using Sochi.Navigation.Mvvm;
 using Sochi.Navigation.Navigation;
@@ -106,7 +107,7 @@ public class ConversationViewModel : ViewModelBase, IInitialize
         IsBusy = true;
         try
         {
-            var viewer = Chat.Abstractions.EntityRefDto.Profile(
+            var viewer = ActivityStream.Abstractions.EntityRefDto.Profile(
                 _currentUser.ProfileId!,
                 _currentUser.DisplayName ?? "User");
             Conversation = await _chatService.GetConversationAsync("blazorbook", conversationId, viewer);
@@ -126,7 +127,7 @@ public class ConversationViewModel : ViewModelBase, IInitialize
         {
             TenantId = "blazorbook",
             ConversationId = Conversation.Id,
-            Viewer = Chat.Abstractions.EntityRefDto.Profile(
+            Viewer = ActivityStream.Abstractions.EntityRefDto.Profile(
                 _currentUser.ProfileId,
                 _currentUser.DisplayName ?? "User"),
             Limit = 100
@@ -153,7 +154,7 @@ public class ConversationViewModel : ViewModelBase, IInitialize
             {
                 TenantId = "blazorbook",
                 ConversationId = Conversation.Id,
-                Sender = Chat.Abstractions.EntityRefDto.Profile(
+                Sender = ActivityStream.Abstractions.EntityRefDto.Profile(
                     _currentUser.ProfileId,
                     _currentUser.DisplayName ?? "User"),
                 Body = NewMessageText

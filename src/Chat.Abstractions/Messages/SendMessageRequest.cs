@@ -7,7 +7,7 @@ public sealed class SendMessageRequest
 {
     public required string TenantId { get; set; }
     public required string ConversationId { get; set; }
-    public required EntityRefDto Sender { get; set; }
+    public required ActivityStream.Abstractions.EntityRefDto Sender { get; set; }
     public required string Body { get; set; }
     public List<MediaRefDto>? Media { get; set; }
     public string? ReplyToMessageId { get; set; }

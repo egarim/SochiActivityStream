@@ -1,10 +1,10 @@
 using Identity.Abstractions;
-using Content.Abstractions;
+using ActivityStream.Abstractions;
 using RelationshipService.Abstractions;
 using Chat.Abstractions;
 using Search.Abstractions;
-using ContentEntityRef = Content.Abstractions.EntityRefDto;
-using ChatEntityRef = Chat.Abstractions.EntityRefDto;
+using ContentEntityRef = ActivityStream.Abstractions.EntityRefDto;
+using ChatEntityRef = ActivityStream.Abstractions.EntityRefDto;
 using RelEntityRef = ActivityStream.Abstractions.EntityRefDto;
 
 namespace BlazorBook.Web.Data;
@@ -170,8 +170,8 @@ public class DemoDataSeeder
                     await _relationshipService.UpsertAsync(new RelationshipEdgeDto
                     {
                         TenantId = TenantId,
-                        From = new RelEntityRef { Kind = "user", Type = "Profile", Id = follower.Id! },
-                        To = new RelEntityRef { Kind = "user", Type = "Profile", Id = followed.Id! },
+                        From = new RelEntityRef { Kind = "user", Type = "Profile", Id = follower.Id!, Display = followerName },
+                        To = new RelEntityRef { Kind = "user", Type = "Profile", Id = followed.Id!, Display = followedName },
                         Kind = RelationshipKind.Follow,
                         IsActive = true
                     });

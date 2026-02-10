@@ -15,7 +15,7 @@ public sealed class MessageDto
     public required string ConversationId { get; set; }
 
     /// <summary>Message author.</summary>
-    public required EntityRefDto Sender { get; set; }
+    public required ActivityStream.Abstractions.EntityRefDto Sender { get; set; }
 
     /// <summary>Message content (text).</summary>
     public required string Body { get; set; }

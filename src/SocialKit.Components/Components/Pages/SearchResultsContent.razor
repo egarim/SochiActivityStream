@@ -10,6 +10,7 @@
                           Placeholder="Search people, posts, and more..."
                           Variant="Variant.Outlined"
                           Immediate="true"
+                          OnKeyDown="@HandleKeyDown"
                           Class="flex-grow-1" />
             <MudButton id="search-button"
                        StartIcon="@Icons.Material.Filled.Search"
@@ -18,6 +19,12 @@
                        Disabled="@(!ViewModel.PerformSearchCommand.CanExecute(null))"
                        OnClick="@HandleSubmit">Search</MudButton>
         </div>
+        @if (ViewModel.TotalCount > 0)
+        {
+            <MudText Typo="Typo.body2" Class="mud-text-secondary mt-2">
+                Found @ViewModel.TotalCount result@(ViewModel.TotalCount == 1 ? "" : "s")
+            </MudText>
+        }
     </header>
 
     @if (ViewModel.IsLoading)
@@ -40,14 +47,38 @@
             @foreach (var item in ViewModel.Results)
             {
                 <MudListItem T="object" Href="@item.Route">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <MudText Typo="Typo.subtitle1">@item.Title</MudText>
-                        <MudChip T="string" Size="Size.Small" Color="Color.Default">Result</MudChip>
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="flex-shrink-0">
+                            @if (item.Type.Equals("Profile", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <MudAvatar Size="Size.Large" Color="Color.Primary">
+                                    <MudIcon Icon="@Icons.Material.Filled.Person" />
+                                </MudAvatar>
+                            }
+                            else if (item.Type.Equals("Post", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <MudAvatar Size="Size.Large" Color="Color.Secondary">
+                                    <MudIcon Icon="@Icons.Material.Filled.Article" />
+                                </MudAvatar>
+                            }
+                            else
+                            {
+                                <MudAvatar Size="Size.Large" Color="Color.Default">
+                                    <MudIcon Icon="@Icons.Material.Filled.Search" />
+                                </MudAvatar>
+                            }
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <MudText Typo="Typo.subtitle1">@((MarkupString)item.Title)</MudText>
+                                <MudChip T="string" Size="Size.Small" Color="@GetTypeColor(item.Type)">@GetTypeLabel(item.Type)</MudChip>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(item.Description))
+                            {
+                                <MudText Typo="Typo.body2" Class="mud-text-secondary">@((MarkupString)TruncateDescription(item.Description))</MudText>
+                            }
+                        </div>
                     </div>
-                    @if (!string.IsNullOrWhiteSpace(item.Description))
-                    {
-                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@item.Description</MudText>
-                    }
                 </MudListItem>
             }
         </MudList>
@@ -60,5 +91,35 @@
     private async Task HandleSubmit()
     {
         await ViewModel.PerformSearchCommand.ExecuteAsync(null);
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && ViewModel.PerformSearchCommand.CanExecute(null))
+        {
+            await HandleSubmit();
+        }
+    }
+
+    private Color GetTypeColor(string type) => type.ToLowerInvariant() switch
+    {
+        "profile" => Color.Primary,
+        "post" => Color.Secondary,
+        _ => Color.Default
+    };
+
+    private string GetTypeLabel(string type) => type.ToLowerInvariant() switch
+    {
+        "profile" => "Person",
+        "post" => "Post",
+        _ => type
+    };
+
+    private string TruncateDescription(string description)
+    {
+        const int maxLength = 150;
+        if (description.Length <= maxLength)
+            return description;
+        return description.Substring(0, maxLength) + "...";
     }
 }

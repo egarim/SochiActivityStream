@@ -1,0 +1,29 @@
+- generic [ref=e40]:
+  - navigation "Primary navigation" [ref=e41]:
+    - generic [ref=e42]:
+      - link " BlazorBook" [ref=e43] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e44]: 
+        - generic [ref=e45]: BlazorBook
+      - search [ref=e46]
+      - generic [ref=e48]:
+        - link "Log In" [ref=e49] [cursor=pointer]:
+          - /url: /login
+        - link "Sign Up" [ref=e50] [cursor=pointer]:
+          - /url: /signup
+  - main [ref=e52]:
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - heading "BlazorBook" [level=3] [ref=e55]:
+          - img [ref=e56]
+          - text: BlazorBook
+        - paragraph [ref=e66]: Connect with friends and the world around you.
+      - generic [ref=e69]:
+        - heading "Welcome Back" [level=5] [ref=e70]
+        - generic [ref=e71]:
+          - button "Log In" [ref=e72] [cursor=pointer]:
+            - generic [ref=e73]: Log In
+          - separator [ref=e74]
+          - button "Create New Account" [ref=e75] [cursor=pointer]:
+            - generic [ref=e76]: Create New Account
+      - generic [ref=e78]: Demo social network powered by Sochi.Navigation MVVM

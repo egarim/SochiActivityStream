@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ActivityStream.Abstractions\ActivityStream.Abstractions.csproj" />
     <ProjectReference Include="..\Chat.Abstractions\Chat.Abstractions.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Content.Abstractions;
-using EntityRefDto = Content.Abstractions.EntityRefDto;
+using ActivityStream.Abstractions;
+using Search.Abstractions;
+using EntityRefDto = ActivityStream.Abstractions.EntityRefDto;
 
 namespace BlazorBook.Web.Controllers;
 
@@ -11,13 +12,16 @@ namespace BlazorBook.Web.Controllers;
 public class PostsController : ControllerBase
 {
     private readonly IContentService _contentService;
+    private readonly ISearchIndexer _searchIndexer;
     private readonly ILogger<PostsController> _logger;
 
     public PostsController(
         IContentService contentService,
+        ISearchIndexer searchIndexer,
         ILogger<PostsController> logger)
     {
         _contentService = contentService ?? throw new ArgumentNullException(nameof(contentService));
+        _searchIndexer = searchIndexer ?? throw new ArgumentNullException(nameof(searchIndexer));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -100,7 +104,7 @@ public class PostsController : ControllerBase
                 return Unauthorized(new { error = "Profile not found in token" });
             }
 
-            var createRequest = new Content.Abstractions.CreatePostRequest
+            var createRequest = new CreatePostRequest
             {
                 TenantId = tenantId,
                 Author = new EntityRefDto
@@ -114,6 +118,17 @@ public class PostsController : ControllerBase
             };
 
             var post = await _contentService.CreatePostAsync(createRequest);
+
+            // Index post for search
+            try
+            {
+                await IndexPostAsync(post, tenantId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to index post {PostId} for search", post.Id);
+                // Don't fail the request if indexing fails
+            }
 
             return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
         }
@@ -137,7 +152,7 @@ public class PostsController : ControllerBase
                 return Unauthorized(new { error = "Profile not found in token" });
             }
 
-            var updateRequest = new Content.Abstractions.UpdatePostRequest
+            var updateRequest = new UpdatePostRequest
             {
                 TenantId = tenantId,
                 PostId = id,
@@ -155,6 +170,16 @@ public class PostsController : ControllerBase
             if (post == null)
             {
                 return NotFound(new { error = "Post not found" });
+            }
+
+            // Re-index post for search
+            try
+            {
+                await IndexPostAsync(post, tenantId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to re-index post {PostId} for search", post.Id);
             }
 
             return Ok(post);
@@ -179,7 +204,7 @@ public class PostsController : ControllerBase
                 return Unauthorized(new { error = "Profile not found in token" });
             }
 
-            var deleteRequest = new Content.Abstractions.DeletePostRequest
+            var deleteRequest = new DeletePostRequest
             {
                 TenantId = tenantId,
                 PostId = id,
@@ -199,6 +224,33 @@ public class PostsController : ControllerBase
             _logger.LogError(ex, "Error deleting post {PostId}", id);
             return StatusCode(500, new { error = "Internal server error" });
         }
+    }
+
+    private async Task IndexPostAsync(PostDto post, string tenantId)
+    {
+        var doc = new SearchDocument
+        {
+            Id = post.Id,
+            DocumentType = "Post",
+            TenantId = tenantId,
+            TextFields = new Dictionary<string, string>
+            {
+                ["body"] = post.Body ?? string.Empty,
+                ["authorName"] = post.Author?.DisplayName ?? "Unknown"
+            },
+            KeywordFields = new Dictionary<string, List<string>>
+            {
+                ["authorId"] = new List<string> { post.Author?.Id ?? string.Empty },
+                ["visibility"] = new List<string> { post.Visibility.ToString() }
+            },
+            DateFields = new Dictionary<string, DateTimeOffset>
+            {
+                ["createdAt"] = post.CreatedAt
+            },
+            Boost = 1.0
+        };
+
+        await _searchIndexer.IndexAsync(doc);
     }
 }
 

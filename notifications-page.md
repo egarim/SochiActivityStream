@@ -1,0 +1,33 @@
+- generic [ref=e31]:
+  - navigation "Primary navigation" [ref=e32]:
+    - generic [ref=e33]:
+      - link " BlazorBook" [ref=e34] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e35]: 
+        - generic [ref=e36]: BlazorBook
+      - search [ref=e37]
+      - generic [ref=e39]:
+        - link "Log In" [ref=e40] [cursor=pointer]:
+          - /url: /login
+        - link "Sign Up" [ref=e41] [cursor=pointer]:
+          - /url: /signup
+  - main [ref=e43]:
+    - generic [ref=e47]:
+      - heading " BlazorBook" [active] [level=1] [ref=e49]:
+        - generic [ref=e50]: 
+        - text: BlazorBook
+      - generic [ref=e52]:
+        - img [ref=e54]
+        - generic [ref=e57]:
+          - strong [ref=e58]: "Demo:"
+          - text: alice@example.com / Demo123!@#
+      - generic [ref=e59]:
+        - textbox "Email address" [ref=e63]
+        - textbox "Password" [ref=e67]
+        - button "Log In" [ref=e68] [cursor=pointer]:
+          - generic [ref=e69]: Log In
+      - separator [ref=e70]
+      - generic [ref=e71]:
+        - paragraph [ref=e72]: Don't have an account?
+        - button "Create New Account" [ref=e73] [cursor=pointer]:
+          - generic [ref=e74]: Create New Account

@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using ActivityStream.Abstractions;
 using Chat.Abstractions;
 
 namespace Chat.Store.InMemory;

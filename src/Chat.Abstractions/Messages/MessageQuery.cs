@@ -9,7 +9,7 @@ public sealed class MessageQuery
     public required string ConversationId { get; set; }
 
     /// <summary>Viewer context (for delete filtering).</summary>
-    public required EntityRefDto Viewer { get; set; }
+    public required ActivityStream.Abstractions.EntityRefDto Viewer { get; set; }
 
     /// <summary>Cursor for pagination (message ID).</summary>
     public string? Cursor { get; set; }

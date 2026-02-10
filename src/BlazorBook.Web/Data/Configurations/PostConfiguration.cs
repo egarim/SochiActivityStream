@@ -1,4 +1,4 @@
-using Content.Abstractions;
+using ActivityStream.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BlazorBook.Web.Data.ValueConverters;
@@ -28,6 +28,10 @@ public class PostConfiguration : IEntityTypeConfiguration<PostDto>
         builder.OwnsOne(p => p.Author, a =>
         {
             a.ToJson();
+            a.Ignore(e => e.Meta);
+            a.Ignore(e => e.AvatarUrl);
+            a.Ignore(e => e.Display);
+            a.Ignore(e => e.Kind);
             a.Property(e => e.Type).IsRequired();
             a.Property(e => e.Id).IsRequired();
         });

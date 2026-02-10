@@ -25,6 +25,9 @@
                 <MudIcon Icon="@Icons.Material.Filled.NotificationsOff" Style="font-size:48px;" Color="Color.Default" />
                 <MudText Typo="Typo.h6" Class="mt-3">You're all caught up</MudText>
                 <MudText Typo="Typo.body2" Class="mud-text-secondary">We'll let you know when new activity arrives.</MudText>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="@(() => ViewModel.LoadArchivedNotificationsCommand.ExecuteAsync(null))">
+                    View Past Notifications
+                </MudButton>
             </MudCardContent>
         </MudCard>
     }

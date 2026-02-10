@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Identity.Abstractions;
+using Search.Abstractions;
 
 namespace BlazorBook.Web.Controllers;
 
@@ -11,15 +12,18 @@ public class ProfilesController : ControllerBase
 {
     private readonly IProfileService _profileService;
     private readonly IProfileStore _profileStore;
+    private readonly ISearchIndexer _searchIndexer;
     private readonly ILogger<ProfilesController> _logger;
 
     public ProfilesController(
         IProfileService profileService,
         IProfileStore profileStore,
+        ISearchIndexer searchIndexer,
         ILogger<ProfilesController> logger)
     {
         _profileService = profileService ?? throw new ArgumentNullException(nameof(profileService));
         _profileStore = profileStore ?? throw new ArgumentNullException(nameof(profileStore));
+        _searchIndexer = searchIndexer ?? throw new ArgumentNullException(nameof(searchIndexer));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -143,6 +147,16 @@ public class ProfilesController : ControllerBase
 
             await _profileStore.UpdateAsync(new ProfileRecord { Profile = updatedProfile });
 
+            // Index profile for search
+            try
+            {
+                await IndexProfileAsync(updatedProfile, "blazorbook");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to index profile {ProfileId} for search", updatedProfile.Id);
+            }
+
             return Ok(updatedProfile);
         }
         catch (Exception ex)
@@ -205,6 +219,16 @@ public class ProfilesController : ControllerBase
             {
                 existingRecord.Profile.AvatarUrl = avatarUrl;
                 await _profileStore.UpdateAsync(existingRecord);
+
+                // Re-index profile for search
+                try
+                {
+                    await IndexProfileAsync(existingRecord.Profile, "blazorbook");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to re-index profile after avatar upload");
+                }
             }
 
             return Ok(new { avatarUrl });
@@ -214,6 +238,33 @@ public class ProfilesController : ControllerBase
             _logger.LogError(ex, "Error uploading avatar");
             return StatusCode(500, new { error = "Internal server error" });
         }
+    }
+
+    private async Task IndexProfileAsync(ProfileDto profile, string tenantId)
+    {
+        var doc = new SearchDocument
+        {
+            Id = profile.Id,
+            DocumentType = "Profile",
+            TenantId = tenantId,
+            TextFields = new Dictionary<string, string>
+            {
+                ["displayName"] = profile.DisplayName ?? string.Empty,
+                ["username"] = profile.Handle ?? string.Empty,
+                ["bio"] = string.Empty // Bio field would be added if ProfileDto has it
+            },
+            KeywordFields = new Dictionary<string, List<string>>
+            {
+                ["handle"] = new List<string> { profile.Handle ?? string.Empty }
+            },
+            DateFields = new Dictionary<string, DateTimeOffset>
+            {
+                ["createdAt"] = profile.CreatedAt
+            },
+            Boost = 1.5 // Profiles are slightly more important than posts
+        };
+
+        await _searchIndexer.IndexAsync(doc);
     }
 }
 

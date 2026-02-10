@@ -69,9 +69,16 @@
                     <MudButton id="create-account-button"
                                Color="Color.Success"
                                Variant="Variant.Filled"
+                               FullWidth="true"
+                               Size="Size.Large"
+                               Class="mb-3"
                                OnClick="@(() => ViewModel.NavigateToSignUpCommand.ExecuteAsync(null))">
                         Create New Account
                     </MudButton>
+
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary mt-2">
+                        <a href="/forgot-password" class="mud-link">Forgot Password?</a>
+                    </MudText>
                 </div>
             </div>
         </MudCardContent>

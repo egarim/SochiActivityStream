@@ -25,31 +25,31 @@ public static class ChatValidator
             throw new ChatValidationException(ChatValidationError.MessageIdRequired);
     }
 
-    public static void ValidateSender(EntityRefDto? sender)
+    public static void ValidateSender(ActivityStream.Abstractions.EntityRefDto? sender)
     {
         if (sender == null || string.IsNullOrWhiteSpace(sender.Id))
             throw new ChatValidationException(ChatValidationError.SenderRequired);
     }
 
-    public static void ValidateActor(EntityRefDto? actor)
+    public static void ValidateActor(ActivityStream.Abstractions.EntityRefDto? actor)
     {
         if (actor == null || string.IsNullOrWhiteSpace(actor.Id))
             throw new ChatValidationException(ChatValidationError.ActorRequired);
     }
 
-    public static void ValidateProfile(EntityRefDto? profile)
+    public static void ValidateProfile(ActivityStream.Abstractions.EntityRefDto? profile)
     {
         if (profile == null || string.IsNullOrWhiteSpace(profile.Id))
             throw new ChatValidationException(ChatValidationError.ProfileRequired);
     }
 
-    public static void ValidateParticipant(EntityRefDto? participant)
+    public static void ValidateParticipant(ActivityStream.Abstractions.EntityRefDto? participant)
     {
         if (participant == null || string.IsNullOrWhiteSpace(participant.Id))
             throw new ChatValidationException(ChatValidationError.ParticipantRequired);
     }
 
-    public static void ValidateNewParticipant(EntityRefDto? participant)
+    public static void ValidateNewParticipant(ActivityStream.Abstractions.EntityRefDto? participant)
     {
         if (participant == null || string.IsNullOrWhiteSpace(participant.Id))
             throw new ChatValidationException(ChatValidationError.NewParticipantRequired);
@@ -73,7 +73,7 @@ public static class ChatValidator
             throw new ChatValidationException(ChatValidationError.TitleTooLong);
     }
 
-    public static void ValidateParticipants(List<EntityRefDto>? participants, ChatServiceOptions options)
+    public static void ValidateParticipants(List<ActivityStream.Abstractions.EntityRefDto>? participants, ChatServiceOptions options)
     {
         if (participants == null || participants.Count == 0)
             throw new ChatValidationException(ChatValidationError.ParticipantsRequired);

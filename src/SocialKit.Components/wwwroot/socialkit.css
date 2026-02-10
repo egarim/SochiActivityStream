@@ -1,6 +1,30 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   SocialKit.Components — Shared CSS (minimal, works with DevExpress themes)
+   SocialKit.Components — Facebook-Style Shared CSS
    ═══════════════════════════════════════════════════════════════════════ */
+
+.sk-card,
+.sk-create-post,
+.sk-post-card,
+.sk-friend-card,
+.sk-auth-card {
+    background: var(--bb-bg-surface, #ffffff);
+    border: 1px solid var(--bb-border-color, #e4e6eb);
+    border-radius: var(--bb-radius, 8px);
+    box-shadow: var(--bb-shadow-soft, 0 1px 2px rgba(0, 0, 0, 0.1));
+    color: var(--bb-text-primary, #050505);
+}
+
+.sk-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--bb-accent-soft, rgba(24, 119, 242, 0.1));
+    color: var(--bb-accent, #1877f2);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
 
 /* Avatar */
 .sk-avatar {
@@ -148,13 +172,12 @@
 
 /* Friend Card */
 .sk-friend-card {
-    transition: transform 0.15s, box-shadow 0.15s;
+    transition: box-shadow 0.2s;
     cursor: pointer;
 }
 
 .sk-friend-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Post Card */
@@ -165,24 +188,29 @@
 /* Auth Container */
 .sk-auth-container {
     padding: 24px 16px;
-    background-color: #f0f2f5;
+    background-color: var(--bb-bg-base, #f0f2f5);
     min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .sk-auth-card {
     background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: var(--bb-radius, 8px);
+    box-shadow: var(--bb-shadow-medium, 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1));
+    max-width: 396px;
+    width: 100%;
 }
 
 .sk-auth-card .auth-logo {
-    color: #1877f2;
-    font-size: 2rem;
+    color: var(--bb-accent, #1877f2);
+    font-size: 3rem;
     font-weight: bold;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
 }
 
 /* Profile */
 .sk-profile-cover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--bb-accent, #1877f2) 0%, #166fe5 100%);
 }

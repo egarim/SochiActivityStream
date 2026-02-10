@@ -3,24 +3,24 @@
 @inherits LayoutComponentBase
 @inject ICurrentUserService CurrentUser
 
-<div class="blazorbook-layout">
+<div class="x-shell">
     <TopNav />
-    
-    <div class="main-container">
+
+    <div class="x-shell__body">
         @if (CurrentUser.IsAuthenticated)
         {
-            <aside class="left-sidebar">
+            <aside class="x-shell__rail x-shell__rail--left" aria-label="Primary navigation">
                 <LeftSidebar />
             </aside>
         }
-        
-        <main class="main-content">
+
+        <main class="x-shell__feed" role="main">
             @Body
         </main>
-        
+
         @if (CurrentUser.IsAuthenticated)
         {
-            <aside class="right-sidebar">
+            <aside class="x-shell__rail x-shell__rail--right" aria-label="Activity highlights">
                 <RightSidebar />
             </aside>
         }

@@ -1,4 +1,5 @@
-using Content.Abstractions;
+using ActivityStream.Abstractions;
+using ContentEntityRef = ActivityStream.Abstractions.EntityRefDto;
 
 namespace Content.Core;
 
@@ -49,7 +50,7 @@ public sealed class ContentService : IContentService
     }
 
     /// <inheritdoc />
-    public async Task<PostDto?> GetPostAsync(string tenantId, string postId, EntityRefDto? viewer = null, CancellationToken ct = default)
+    public async Task<PostDto?> GetPostAsync(string tenantId, string postId, ContentEntityRef? viewer = null, CancellationToken ct = default)
     {
         var post = await _postStore.GetByIdAsync(tenantId, postId, ct);
         if (post == null) return null;
@@ -172,7 +173,7 @@ public sealed class ContentService : IContentService
     }
 
     /// <inheritdoc />
-    public async Task<CommentDto?> GetCommentAsync(string tenantId, string commentId, EntityRefDto? viewer = null, CancellationToken ct = default)
+    public async Task<CommentDto?> GetCommentAsync(string tenantId, string commentId, ContentEntityRef? viewer = null, CancellationToken ct = default)
     {
         var comment = await _commentStore.GetByIdAsync(tenantId, commentId, ct);
         if (comment == null) return null;

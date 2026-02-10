@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Identity.Abstractions;
-using Content.Abstractions;
+using ActivityStream.Abstractions;
 using Chat.Abstractions;
 using RelationshipService.Abstractions;
 using ActivityStream.Abstractions;

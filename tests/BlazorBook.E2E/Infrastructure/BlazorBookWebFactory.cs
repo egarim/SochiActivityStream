@@ -72,7 +72,7 @@ public class BlazorBookWebFactory : IDisposable
         return projectPath;
     }
 
-    private async Task WaitForApplicationReadyAsync(int timeoutSeconds = 60)
+    private async Task WaitForApplicationReadyAsync(int timeoutSeconds = 120)
     {
         using var httpClient = new HttpClient();
         var startTime = DateTime.UtcNow;
@@ -85,7 +85,7 @@ public class BlazorBookWebFactory : IDisposable
                 if (response.IsSuccessStatusCode)
                 {
                     // Give it a bit more time to fully initialize
-                    await Task.Delay(1000);
+                    await Task.Delay(2000);
                     return;
                 }
             }
@@ -94,7 +94,7 @@ public class BlazorBookWebFactory : IDisposable
                 // Application not ready yet
             }
             
-            await Task.Delay(500);
+            await Task.Delay(1000);
         }
         
         throw new TimeoutException($"BlazorBook.Web did not start within {timeoutSeconds} seconds");

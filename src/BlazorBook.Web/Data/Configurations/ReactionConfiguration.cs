@@ -1,4 +1,4 @@
-using Content.Abstractions;
+using ActivityStream.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -31,6 +31,10 @@ public class ReactionConfiguration : IEntityTypeConfiguration<ReactionDto>
         builder.OwnsOne(r => r.Actor, actorBuilder =>
         {
             actorBuilder.ToJson();
+            actorBuilder.Ignore(e => e.Meta);
+            actorBuilder.Ignore(e => e.AvatarUrl);
+            actorBuilder.Ignore(e => e.Display);
+            actorBuilder.Ignore(e => e.Kind);
             actorBuilder.Property(e => e.Type).IsRequired();
             actorBuilder.Property(e => e.Id).IsRequired();
         });

@@ -1,4 +1,4 @@
-using Content.Abstractions;
+using ActivityStream.Abstractions;
 using Media.Abstractions;
 using Identity.Abstractions;
 using SocialKit.Components.Abstractions;

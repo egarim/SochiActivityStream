@@ -4,9 +4,9 @@ using ActivityStream.Store.InMemory;
 using Chat.Abstractions;
 using Chat.Core;
 using Chat.Store.InMemory;
-using Content.Abstractions;
+using ActivityStream.Abstractions;
 using Content.Core;
-using Content.Store.InMemory;
+using ActivityStream.Store.InMemory;
 using Identity.Abstractions;
 using Identity.Core;
 using Identity.Store.InMemory;
@@ -46,7 +46,7 @@ builder.Services.AddSingleton<IProfileService, ProfileService>();
 builder.Services.AddSingleton<IPostStore, InMemoryPostStore>();
 builder.Services.AddSingleton<ICommentStore, InMemoryCommentStore>();
 builder.Services.AddSingleton<IReactionStore, InMemoryReactionStore>();
-builder.Services.AddSingleton<Content.Abstractions.IIdGenerator, Content.Core.UlidIdGenerator>();
+    builder.Services.AddSingleton<ActivityStream.Abstractions.IIdGenerator, Content.Core.UlidIdGenerator>();
 builder.Services.AddSingleton<IContentService, ContentService>();
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -169,7 +169,7 @@ postGroup.MapPost("/", async (CreatePostApiRequest request, IContentService cont
     var post = await content.CreatePostAsync(new CreatePostRequest
     {
         TenantId = "blazorbook",
-        Author = new Content.Abstractions.EntityRefDto 
+        Author = new EntityRefDto 
         { 
             Type = "Profile", 
             Id = request.AuthorId, 
@@ -183,8 +183,8 @@ postGroup.MapPost("/", async (CreatePostApiRequest request, IContentService cont
 
 postGroup.MapGet("/{postId}", async (string postId, string? viewerId, IContentService content) =>
 {
-    Content.Abstractions.EntityRefDto? viewer = viewerId is not null 
-        ? new Content.Abstractions.EntityRefDto { Type = "Profile", Id = viewerId } 
+    EntityRefDto? viewer = viewerId is not null 
+        ? new EntityRefDto { Type = "Profile", Id = viewerId } 
         : null;
     var post = await content.GetPostAsync("blazorbook", postId, viewer);
     return post is not null ? Results.Ok(post) : Results.NotFound();
@@ -195,7 +195,7 @@ postGroup.MapGet("/", async (string? authorId, int? limit, IContentService conte
     var query = new PostQuery
     {
         TenantId = "blazorbook",
-        Author = authorId is not null ? new Content.Abstractions.EntityRefDto { Type = "Profile", Id = authorId } : null,
+        Author = authorId is not null ? new EntityRefDto { Type = "Profile", Id = authorId } : null,
         Limit = limit ?? 20
     };
     var result = await content.QueryPostsAsync(query);
@@ -208,7 +208,7 @@ postGroup.MapDelete("/{postId}", async (string postId, string actorId, IContentS
     {
         TenantId = "blazorbook",
         PostId = postId,
-        Actor = new Content.Abstractions.EntityRefDto { Type = "Profile", Id = actorId }
+        Actor = new EntityRefDto { Type = "Profile", Id = actorId }
     });
     return Results.NoContent();
 }).WithName("DeletePost").WithOpenApi();
@@ -225,7 +225,7 @@ commentGroup.MapPost("/", async (CreateCommentApiRequest request, IContentServic
         TenantId = "blazorbook",
         PostId = request.PostId,
         ParentCommentId = request.ParentCommentId,
-        Author = new Content.Abstractions.EntityRefDto 
+        Author = new EntityRefDto 
         { 
             Type = "Profile", 
             Id = request.AuthorId, 
@@ -258,7 +258,7 @@ reactionGroup.MapPost("/", async (ReactApiRequest request, IContentService conte
     var reaction = await content.ReactAsync(new ReactRequest
     {
         TenantId = "blazorbook",
-        Actor = new Content.Abstractions.EntityRefDto 
+        Actor = new EntityRefDto 
         { 
             Type = "Profile", 
             Id = request.ActorId, 
@@ -282,7 +282,7 @@ reactionGroup.MapDelete("/{targetId}", async (
         TenantId = "blazorbook",
         TargetId = targetId,
         TargetKind = targetKind,
-        Actor = new Content.Abstractions.EntityRefDto { Type = "Profile", Id = actorId }
+        Actor = new EntityRefDto { Type = "Profile", Id = actorId }
     });
     return Results.NoContent();
 }).WithName("RemoveReaction").WithOpenApi();
@@ -359,8 +359,8 @@ chatGroup.MapPost("/conversations/direct", async (DirectConversationApiRequest r
 {
     var conv = await chat.GetOrCreateDirectConversationAsync(
         "blazorbook",
-        Chat.Abstractions.EntityRefDto.Profile(request.User1Id, request.User1Name),
-        Chat.Abstractions.EntityRefDto.Profile(request.User2Id, request.User2Name));
+        ActivityStream.Abstractions.EntityRefDto.Profile(request.User1Id, request.User1Name),
+        ActivityStream.Abstractions.EntityRefDto.Profile(request.User2Id, request.User2Name));
     return Results.Ok(conv);
 }).WithName("GetOrCreateDirectConversation").WithOpenApi();
 
@@ -370,9 +370,9 @@ chatGroup.MapPost("/conversations/group", async (CreateGroupConversationApiReque
     {
         TenantId = "blazorbook",
         Title = request.Title,
-        Creator = Chat.Abstractions.EntityRefDto.Profile(request.CreatorId, request.CreatorName),
+        Creator = ActivityStream.Abstractions.EntityRefDto.Profile(request.CreatorId, request.CreatorName),
         Participants = request.Participants.Select(p => 
-            Chat.Abstractions.EntityRefDto.Profile(p.Id, p.Name)).ToList()
+            ActivityStream.Abstractions.EntityRefDto.Profile(p.Id, p.Name)).ToList()
     });
     return Results.Created($"/api/chat/conversations/{conv.Id}", conv);
 }).WithName("CreateGroupConversation").WithOpenApi();
@@ -385,7 +385,7 @@ chatGroup.MapGet("/conversations/{conversationId}", async (
     var conv = await chat.GetConversationAsync(
         "blazorbook", 
         conversationId, 
-        Chat.Abstractions.EntityRefDto.Profile(viewerId, ""));
+        ActivityStream.Abstractions.EntityRefDto.Profile(viewerId, ""));
     return conv is not null ? Results.Ok(conv) : Results.NotFound();
 }).WithName("GetConversation").WithOpenApi();
 
@@ -394,7 +394,7 @@ chatGroup.MapGet("/conversations", async (string participantId, int? limit, ICha
     var result = await chat.GetConversationsAsync(new ConversationQuery
     {
         TenantId = "blazorbook",
-        Participant = Chat.Abstractions.EntityRefDto.Profile(participantId, ""),
+        Participant = ActivityStream.Abstractions.EntityRefDto.Profile(participantId, ""),
         Limit = limit ?? 20
     });
     return Results.Ok(result);
@@ -406,7 +406,7 @@ chatGroup.MapPost("/messages", async (SendMessageApiRequest request, IChatServic
     {
         TenantId = "blazorbook",
         ConversationId = request.ConversationId,
-        Sender = Chat.Abstractions.EntityRefDto.Profile(request.SenderId, request.SenderName),
+        Sender = ActivityStream.Abstractions.EntityRefDto.Profile(request.SenderId, request.SenderName),
         Body = request.Body
     });
     return Results.Created($"/api/chat/messages/{msg.Id}", msg);
@@ -422,7 +422,7 @@ chatGroup.MapGet("/messages/{conversationId}", async (
     {
         TenantId = "blazorbook",
         ConversationId = conversationId,
-        Viewer = Chat.Abstractions.EntityRefDto.Profile(viewerId, ""),
+        Viewer = ActivityStream.Abstractions.EntityRefDto.Profile(viewerId, ""),
         Limit = limit ?? 50
     });
     return Results.Ok(result);
@@ -434,7 +434,7 @@ chatGroup.MapPost("/read", async (MarkReadApiRequest request, IChatService chat)
     {
         TenantId = "blazorbook",
         ConversationId = request.ConversationId,
-        Profile = Chat.Abstractions.EntityRefDto.Profile(request.ParticipantId, ""),
+        Profile = ActivityStream.Abstractions.EntityRefDto.Profile(request.ParticipantId, ""),
         MessageId = request.MessageId
     });
     return Results.Ok(new { Message = "Marked as read" });
@@ -615,4 +615,10 @@ public sealed class MockStorageProvider : IMediaStorageProvider
 
     public Task CopyAsync(string sourcePath, string destPath, CancellationToken ct = default)
         => Task.CompletedTask;
+    
+    public Task UploadBytesAsync(string blobPath, byte[] data, string contentType, CancellationToken ct = default)
+    {
+        Console.WriteLine($"[MockStorageProvider] Upload: {blobPath} ({data.Length} bytes, {contentType})");
+        return Task.CompletedTask;
+    }
 }

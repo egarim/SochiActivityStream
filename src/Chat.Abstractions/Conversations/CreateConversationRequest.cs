@@ -9,7 +9,7 @@ public sealed class CreateConversationRequest
     public required string TenantId { get; set; }
 
     /// <summary>User creating the conversation.</summary>
-    public required EntityRefDto Creator { get; set; }
+    public required ActivityStream.Abstractions.EntityRefDto Creator { get; set; }
 
     /// <summary>Direct or Group.</summary>
     public ConversationType Type { get; set; }

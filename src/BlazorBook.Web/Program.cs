@@ -4,7 +4,6 @@ using ActivityStream.Store.InMemory;
 using Chat.Abstractions;
 using Chat.Core;
 using Chat.Store.InMemory;
-using Content.Abstractions;
 using Content.Core;
 using Content.Store.InMemory;
 using DevExpress.Blazor;
@@ -198,11 +197,11 @@ if (storageMode == "EFCore")
 }
 else
 {
-    builder.Services.AddScoped<IPostStore, InMemoryPostStore>();
-    builder.Services.AddScoped<ICommentStore, InMemoryCommentStore>();
-    builder.Services.AddScoped<IReactionStore, InMemoryReactionStore>();
+    builder.Services.AddScoped<IPostStore, ActivityStream.Store.InMemory.InMemoryPostStore>();
+    builder.Services.AddScoped<ICommentStore, ActivityStream.Store.InMemory.InMemoryCommentStore>();
+    builder.Services.AddScoped<IReactionStore, ActivityStream.Store.InMemory.InMemoryReactionStore>();
 }
-builder.Services.AddScoped<Content.Abstractions.IIdGenerator, Content.Core.UlidIdGenerator>();
+builder.Services.AddScoped<ActivityStream.Abstractions.IIdGenerator, Content.Core.UlidIdGenerator>();
 builder.Services.AddScoped<IContentService, ContentService>();
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -219,7 +218,7 @@ else
     builder.Services.AddScoped<IMessageStore, InMemoryMessageStore>();
 }
 builder.Services.AddScoped<IChatNotifier, NullChatNotifier>();
-builder.Services.AddScoped<Chat.Abstractions.IIdGenerator, Chat.Core.UlidIdGenerator>();
+builder.Services.AddScoped<ActivityStream.Abstractions.IIdGenerator, Chat.Core.UlidIdGenerator>();
 builder.Services.AddScoped<IChatService, ChatService>();
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -307,7 +306,15 @@ builder.Services.AddScoped<DemoDataSeeder>();
 // SOCIALKIT (FeedService, ViewModels, etc.)
 // ═══════════════════════════════════════════════════════════════════════════════
 builder.Services.AddSocialKit();
-builder.Services.AddScoped<IMediaUploadService, LocalMediaUploadService>();
+builder.Services.AddScoped<IMediaUploadService>(sp =>
+{
+    var mediaService = sp.GetRequiredService<IMediaService>();
+    var storageProvider = sp.GetRequiredService<IMediaStorageProvider>();
+    var environment = sp.GetRequiredService<IWebHostEnvironment>();
+    var currentUser = sp.GetRequiredService<ICurrentUserService>();
+    var logger = sp.GetRequiredService<ILogger<LocalMediaUploadService>>();
+    return new LocalMediaUploadService(mediaService, storageProvider, environment, currentUser, logger);
+});
 
 var app = builder.Build();
 

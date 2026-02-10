@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using Content.Abstractions;
+using ActivityStream.Abstractions;
 
 namespace Content.Store.InMemory;
 

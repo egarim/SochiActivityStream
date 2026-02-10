@@ -11,7 +11,7 @@ public sealed class TestChatNotifier : IChatNotifier
     public List<(ConversationDto Conversation, MessageDto Message)> MessagesEdited { get; } = [];
     public List<(string TenantId, string ConversationId, string MessageId)> MessagesDeleted { get; } = [];
     public List<(string TenantId, string ConversationId, ReadReceiptDto Receipt)> ReadReceipts { get; } = [];
-    public List<(string TenantId, string ConversationId, EntityRefDto Profile, bool IsTyping)> TypingIndicators { get; } = [];
+    public List<(string TenantId, string ConversationId, ActivityStream.Abstractions.EntityRefDto Profile, bool IsTyping)> TypingIndicators { get; } = [];
     public List<ConversationDto> ConversationsUpdated { get; } = [];
 
     public Task NotifyMessageReceivedAsync(
@@ -55,7 +55,7 @@ public sealed class TestChatNotifier : IChatNotifier
     public Task NotifyTypingAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto profile,
+        ActivityStream.Abstractions.EntityRefDto profile,
         bool isTyping,
         CancellationToken ct = default)
     {

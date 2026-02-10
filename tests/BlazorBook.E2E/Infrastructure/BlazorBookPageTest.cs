@@ -95,8 +95,10 @@ public class BlazorBookPageTest : PageTest
         await NavigateToAsync("/signup");
         
         // Use ID-based selectors for MudBlazor components
-        await Page.Locator("#signup-displayname").FillAsync(displayName);
+        // IMPORTANT: Fill username BEFORE displayname because DisplayName setter
+        // auto-generates Handle if empty. We want explicit username, not auto-generated.
         await Page.Locator("#signup-username").FillAsync(username);
+        await Page.Locator("#signup-displayname").FillAsync(displayName);
         await Page.Locator("#signup-email").FillAsync(email);
         await Page.Locator("#signup-password").FillAsync(password);
         

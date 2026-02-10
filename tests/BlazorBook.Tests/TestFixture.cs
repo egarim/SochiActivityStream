@@ -6,7 +6,6 @@ using ActivityStream.Store.InMemory;
 using Chat.Abstractions;
 using Chat.Core;
 using Chat.Store.InMemory;
-using Content.Abstractions;
 using Content.Core;
 using Content.Store.InMemory;
 using Identity.Abstractions;
@@ -86,7 +85,7 @@ public class TestFixture : IDisposable
         services.AddSingleton<IPostStore, InMemoryPostStore>();
         services.AddSingleton<ICommentStore, InMemoryCommentStore>();
         services.AddSingleton<IReactionStore, InMemoryReactionStore>();
-        services.AddSingleton<Content.Abstractions.IIdGenerator, Content.Core.UlidIdGenerator>();
+        services.AddSingleton<ActivityStream.Abstractions.IIdGenerator, Content.Core.UlidIdGenerator>();
         services.AddSingleton<IContentService, ContentService>();
 
         // ═══════════════════════════════════════════════════════════════════════

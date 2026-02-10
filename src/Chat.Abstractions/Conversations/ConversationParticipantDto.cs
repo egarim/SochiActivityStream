@@ -6,7 +6,7 @@ namespace Chat.Abstractions;
 public sealed class ConversationParticipantDto
 {
     /// <summary>The participant's profile.</summary>
-    public required EntityRefDto Profile { get; set; }
+    public required ActivityStream.Abstractions.EntityRefDto Profile { get; set; }
 
     /// <summary>Role in the conversation (member, admin).</summary>
     public ParticipantRole Role { get; set; }

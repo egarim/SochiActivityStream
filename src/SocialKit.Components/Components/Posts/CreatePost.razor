@@ -6,7 +6,7 @@
             <Avatar ImageUrl="@UserAvatar" 
                     Name="@UserName" 
                     Size="AvatarSize.Medium" />
-            <MudTextField @bind-Value="@Text"
+            <MudTextField @bind-Value="Text"
                           id="post-content"
                           Lines="2"
                           Variant="Variant.Outlined"
@@ -25,7 +25,11 @@
                         <div class="position-relative" style="width: 100px; height: 100px;">
                             <img src="@file.PreviewUrl" 
                                  alt="@file.Name"
-                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;" />
+                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <div style="display:none; width: 100%; height: 100%; align-items: center; justify-content: center; background: #f5f5f5; border-radius: 8px; border: 1px solid #ddd;">
+                                <span style="color: #999; font-size: 12px;">Preview failed</span>
+                            </div>
                             <MudIconButton Icon="@Icons.Material.Filled.Close"
                                            Size="Size.Small"
                                            Color="Color.Error"
@@ -61,10 +65,6 @@
                        Disabled="@IsPosting">
                 Photo/Video
             </MudButton>
-            <MudButton StartIcon="@Icons.Material.Filled.PersonAdd"
-                       Variant="Variant.Text"
-                       Size="Size.Small"
-                       Disabled="true">Tag</MudButton>
         </div>
         <MudButton id="post-button"
                    StartIcon="@Icons.Material.Filled.Send"
@@ -154,6 +154,12 @@
         
         if (OnPost.HasDelegate)
             await OnPost.InvokeAsync(postData);
+    }
+    
+    private void OnTextChanged(ChangeEventArgs e)
+    {
+        Text = e.Value?.ToString();
+        StateHasChanged();
     }
     
     public class SelectedFile

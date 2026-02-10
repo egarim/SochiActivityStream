@@ -3,49 +3,9 @@
     <Project Path="src/ActivityStream.Abstractions/ActivityStream.Abstractions.csproj" />
     <Project Path="src/ActivityStream.Core/ActivityStream.Core.csproj" />
     <Project Path="src/ActivityStream.Store.InMemory/ActivityStream.Store.InMemory.csproj" />
-    <Project Path="src/Chat.Abstractions/Chat.Abstractions.csproj" />
-    <Project Path="src/Chat.Core/Chat.Core.csproj" />
-    <Project Path="src/Chat.Store.InMemory/Chat.Store.InMemory.csproj" />
-    <Project Path="src/Content.Abstractions/Content.Abstractions.csproj" />
-    <Project Path="src/Content.Core/Content.Core.csproj" />
-    <Project Path="src/Content.Store.InMemory/Content.Store.InMemory.csproj" />
-    <Project Path="src/Identity.Abstractions/Identity.Abstractions.csproj" />
-    <Project Path="src/Identity.Core/Identity.Core.csproj" />
-    <Project Path="src/Identity.Store.InMemory/Identity.Store.InMemory.csproj" />
-    <Project Path="src/Inbox.Abstractions/Inbox.Abstractions.csproj" />
-    <Project Path="src/Inbox.Core/Inbox.Core.csproj" />
-    <Project Path="src/Inbox.Store.InMemory/Inbox.Store.InMemory.csproj" />
-    <Project Path="src/Media.Abstractions/Media.Abstractions.csproj" />
-    <Project Path="src/Media.Core/Media.Core.csproj" />
-    <Project Path="src/Media.Store.InMemory/Media.Store.InMemory.csproj" />
-    <Project Path="src/Realtime.Abstractions/Realtime.Abstractions.csproj" />
-    <Project Path="src/Realtime.Core/Realtime.Core.csproj" />
-    <Project Path="src/Realtime.Transport.InMemory/Realtime.Transport.InMemory.csproj" />
-    <Project Path="src/RelationshipService.Abstractions/RelationshipService.Abstractions.csproj" />
-    <Project Path="src/RelationshipService.Core/RelationshipService.Core.csproj" />
-    <Project Path="src/RelationshipService.Store.InMemory/RelationshipService.Store.InMemory.csproj" />
-    <Project Path="src/Search.Abstractions/Search.Abstractions.csproj" />
-    <Project Path="src/Search.Core/Search.Core.csproj" />
-    <Project Path="src/Search.Index.InMemory/Search.Index.InMemory.csproj" />
-    <Project Path="src/Sochi.Navigation/Sochi.Navigation.csproj" />
     <Project Path="src/SocialKit.Components/SocialKit.Components.csproj" />
-  </Folder>
-  <Folder Name="/samples/">
-    <Project Path="src/BlazorBook/BlazorBook.csproj" />
-    <Project Path="src/BlazorBook.Web/BlazorBook.Web.csproj" />
-    <Project Path="src/Sochi.Navigation.Sample/Sochi.Navigation.Sample.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/ActivityStream.Tests/ActivityStream.Tests.csproj" />
-    <Project Path="tests/BlazorBook.Tests/BlazorBook.Tests.csproj" />
-    <Project Path="tests/Chat.Tests/Chat.Tests.csproj" />
-    <Project Path="tests/Content.Tests/Content.Tests.csproj" />
-    <Project Path="tests/Identity.Tests/Identity.Tests.csproj" />
-    <Project Path="tests/Inbox.Tests/Inbox.Tests.csproj" />
-    <Project Path="tests/Media.Tests/Media.Tests.csproj" />
-    <Project Path="tests/Realtime.Tests/Realtime.Tests.csproj" />
-    <Project Path="tests/RelationshipService.Tests/RelationshipService.Tests.csproj" />
-    <Project Path="tests/Search.Tests/Search.Tests.csproj" />
-    <Project Path="tests/Sochi.Navigation.Tests/Sochi.Navigation.Tests.csproj" />
   </Folder>
 </Solution>

@@ -2,7 +2,7 @@ using NUnit.Framework;
 using Sochi.Navigation.Navigation;
 using SocialKit.Components.ViewModels;
 using Chat.Abstractions;
-using ChatEntityRefDto = Chat.Abstractions.EntityRefDto;
+using ChatEntityRefDto = ActivityStream.Abstractions.EntityRefDto;
 
 namespace BlazorBook.Tests.ViewModels;
 

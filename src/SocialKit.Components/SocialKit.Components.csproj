@@ -22,7 +22,7 @@
     
     <!-- Service Abstractions -->
     <ProjectReference Include="..\Identity.Abstractions\Identity.Abstractions.csproj" />
-    <ProjectReference Include="..\Content.Abstractions\Content.Abstractions.csproj" />
+    <ProjectReference Include="..\ActivityStream.Abstractions\ActivityStream.Abstractions.csproj" />
     <ProjectReference Include="..\Chat.Abstractions\Chat.Abstractions.csproj" />
     <ProjectReference Include="..\RelationshipService.Abstractions\RelationshipService.Abstractions.csproj" />
     <ProjectReference Include="..\ActivityStream.Abstractions\ActivityStream.Abstractions.csproj" />

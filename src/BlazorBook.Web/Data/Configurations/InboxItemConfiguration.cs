@@ -37,10 +37,12 @@ public class InboxItemConfiguration : IEntityTypeConfiguration<InboxItemDto>
         builder.OwnsOne(i => i.Recipient, recipientBuilder =>
         {
             recipientBuilder.ToJson();
-            recipientBuilder.Property(e => e.Kind).IsRequired();
+            recipientBuilder.Ignore(e => e.Meta);
+            recipientBuilder.Ignore(e => e.AvatarUrl);
+            recipientBuilder.Ignore(e => e.Display);
+            recipientBuilder.Ignore(e => e.Kind);
             recipientBuilder.Property(e => e.Type).IsRequired();
             recipientBuilder.Property(e => e.Id).IsRequired();
-            recipientBuilder.Ignore(e => e.Meta);
         });
         
         // Event as owned entity (JSON)

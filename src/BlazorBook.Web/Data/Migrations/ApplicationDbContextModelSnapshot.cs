@@ -837,7 +837,7 @@ namespace BlazorBook.Web.Data.Migrations
 
             modelBuilder.Entity("Chat.Abstractions.MessageDto", b =>
                 {
-                    b.OwnsOne("Chat.Abstractions.EntityRefDto", "Sender", b1 =>
+                    b.OwnsOne("ActivityStream.Abstractions.EntityRefDto", "Sender", b1 =>
                         {
                             b1.Property<string>("MessageDtoId")
                                 .HasColumnType("TEXT");

@@ -38,6 +38,11 @@ public sealed class InboxQuery
     public DateTimeOffset? To { get; set; }
 
     /// <summary>
+    /// Filter archived notifications.
+    /// </summary>
+    public bool? Archived { get; set; }
+
+    /// <summary>
     /// Maximum number of items to return. Default 50.
     /// </summary>
     public int Limit { get; set; } = 50;

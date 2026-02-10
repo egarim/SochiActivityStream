@@ -2,7 +2,7 @@ using Chat.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BlazorBook.Web.Data.ValueConverters;
-using EntityRefDto = Content.Abstractions.EntityRefDto;
+using EntityRefDto = ActivityStream.Abstractions.EntityRefDto;
 
 namespace BlazorBook.Web.Data.Configurations;
 
@@ -36,6 +36,10 @@ public class MessageConfiguration : IEntityTypeConfiguration<MessageDto>
         builder.OwnsOne(m => m.Sender, s =>
         {
             s.ToJson();
+            s.Ignore(e => e.Meta);
+            s.Ignore(e => e.AvatarUrl);
+            s.Ignore(e => e.Display);
+            s.Ignore(e => e.Kind);
             s.Property(e => e.Type).IsRequired();
             s.Property(e => e.Id).IsRequired();
         });

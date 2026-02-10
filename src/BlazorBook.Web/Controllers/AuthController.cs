@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Identity.Abstractions;
 using BlazorBook.Web.Services;
+using Search.Abstractions;
 
 namespace BlazorBook.Web.Controllers;
 
@@ -10,15 +11,18 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly JwtTokenService _jwtService;
+    private readonly ISearchIndexer _searchIndexer;
     private readonly ILogger<AuthController> _logger;
 
     public AuthController(
         IAuthService authService,
         JwtTokenService jwtService,
+        ISearchIndexer searchIndexer,
         ILogger<AuthController> logger)
     {
         _authService = authService ?? throw new ArgumentNullException(nameof(authService));
         _jwtService = jwtService ?? throw new ArgumentNullException(nameof(jwtService));
+        _searchIndexer = searchIndexer ?? throw new ArgumentNullException(nameof(searchIndexer));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -36,6 +40,39 @@ public class AuthController : ControllerBase
             };
 
             var result = await _authService.SignUpAsync(request.TenantId, signUpRequest);
+            
+            // Index the new profile for search
+            try
+            {
+                var doc = new SearchDocument
+                {
+                    Id = result.Profile.Id!,
+                    TenantId = request.TenantId,
+                    DocumentType = "Profile",
+                    TextFields = new Dictionary<string, string>
+                    {
+                        ["displayName"] = result.Profile.DisplayName ?? "",
+                        ["handle"] = result.Profile.Handle ?? ""
+                    },
+                    KeywordFields = new Dictionary<string, List<string>>
+                    {
+                        ["profileId"] = new() { result.Profile.Id! }
+                    },
+                    DateFields = new Dictionary<string, DateTimeOffset>
+                    {
+                        ["createdAt"] = result.Profile.CreatedAt
+                    },
+                    Boost = 1.0,
+                    SourceEntity = result.Profile
+                };
+
+                await _searchIndexer.IndexAsync(doc);
+            }
+            catch (Exception indexEx)
+            {
+                _logger.LogWarning(indexEx, "Failed to index profile {ProfileId} for search", result.Profile.Id);
+                // Don't fail signup if indexing fails
+            }
             
             // Create session for the new user
             var signInRequest = new SignInRequest

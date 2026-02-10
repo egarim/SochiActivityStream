@@ -34,19 +34,23 @@ public class ActivityConfiguration : IEntityTypeConfiguration<ActivityDto>
         builder.OwnsOne(a => a.Actor, actor =>
         {
             actor.ToJson();
-            actor.Property(e => e.Kind).IsRequired();
+            actor.Ignore(e => e.Meta);
+            actor.Ignore(e => e.AvatarUrl);
+            actor.Ignore(e => e.Display);
+            actor.Ignore(e => e.Kind);
             actor.Property(e => e.Type).IsRequired();
             actor.Property(e => e.Id).IsRequired();
-            actor.Ignore(e => e.Meta);
         });
         
         builder.OwnsOne(a => a.Owner, owner =>
         {
             owner.ToJson();
-            owner.Property(e => e.Kind).IsRequired();
+            owner.Ignore(e => e.Meta);
+            owner.Ignore(e => e.AvatarUrl);
+            owner.Ignore(e => e.Display);
+            owner.Ignore(e => e.Kind);
             owner.Property(e => e.Type).IsRequired();
             owner.Property(e => e.Id).IsRequired();
-            owner.Ignore(e => e.Meta);
         });
         
         // Source as owned entity (JSON)

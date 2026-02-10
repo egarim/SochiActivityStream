@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RelationshipService.Abstractions\RelationshipService.Abstractions.csproj" />
+    <ProjectReference Include="..\ActivityStream.Abstractions\ActivityStream.Abstractions.csproj" />
     <ProjectReference Include="..\RelationshipService.Core\RelationshipService.Core.csproj" />
   </ItemGroup>
 

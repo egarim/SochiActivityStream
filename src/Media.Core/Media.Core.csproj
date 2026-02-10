@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Media.Abstractions\Media.Abstractions.csproj" />
     <ProjectReference Include="..\ActivityStream.Abstractions\ActivityStream.Abstractions.csproj" />
+    <ProjectReference Include="..\Media.Abstractions\Media.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,81 +1,59 @@
 @using SocialKit.Components.Abstractions
+@using SocialKit.Components.Components.Common
 @inject ICurrentUserService CurrentUser
 @inject NavigationManager Navigation
 @implements IDisposable
 
-<nav class="top-nav navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-    <div class="container-fluid">
-        <a class="navbar-brand text-primary fw-bold" href="/">
-            <i class="fas fa-book-open me-2"></i>BlazorBook
-        </a>
-        
-        @if (CurrentUser.IsAuthenticated)
-        {
-            <div class="search-container mx-auto d-none d-md-block">
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-0">
-                        <i class="fas fa-search text-muted"></i>
-                    </span>
-                    <input type="text" class="form-control bg-light border-0" 
-                           placeholder="Search BlazorBook..." />
-                </div>
-            </div>
-        }
-        
-        <ul class="navbar-nav ms-auto">
+<nav class="x-top-nav" aria-label="Primary navigation">
+        <div class="x-top-nav__content">
+            <a class="x-top-nav__brand" href="/">
+                <i class="fas fa-bolt"></i>
+                <span>BlazorBook</span>
+            </a>
+
             @if (CurrentUser.IsAuthenticated)
             {
-                <li class="nav-item">
-                    <a class="nav-link" href="/" title="Home">
-                        <i class="fas fa-home fa-lg"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/friends" title="Friends">
-                        <i class="fas fa-user-friends fa-lg"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/messages" title="Messages">
-                        <i class="fas fa-comment-dots fa-lg"></i>
-                    </a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" 
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="@(CurrentUser.AvatarUrl ?? "/img/default-avatar.png")" 
-                             alt="@CurrentUser.DisplayName" 
-                             class="rounded-circle" width="32" height="32" />
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li>
-                            <a class="dropdown-item" href="/profile/@CurrentUser.ProfileId">
-                                <i class="fas fa-user me-2"></i>My Profile
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <li>
-                            <a class="dropdown-item text-danger" href="/logout">
-                                <i class="fas fa-sign-out-alt me-2"></i>Log Out
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                <div class="x-top-nav__search" role="search">
+                    <input type="text" 
+                           @bind="searchQuery" 
+                           @bind:event="oninput"
+                           @onkeydown="HandleSearchKeyDown"
+                           placeholder="Search topics, people, or posts" 
+                           aria-label="Search" />
+                </div>
             }
-            else
-            {
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-success btn-sm text-white ms-2" href="/signup">Sign Up</a>
-                </li>
-            }
-        </ul>
-    </div>
-</nav>
+
+            <div class="x-top-nav__actions">
+                @if (CurrentUser.IsAuthenticated)
+                {
+                    <a class="x-top-nav__action" href="/" aria-label="Home">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a class="x-top-nav__action" href="/friends" aria-label="Friends">
+                        <i class="fas fa-user-friends"></i>
+                    </a>
+                    <a class="x-top-nav__action" href="/messages" aria-label="Messages">
+                        <i class="fas fa-comment-dots"></i>
+                    </a>
+                    <a class="x-top-nav__action x-top-nav__avatar" href="/profile/@CurrentUser.ProfileId" aria-label="My profile">
+                        <Avatar ImageUrl="@CurrentUser.AvatarUrl"
+                                Name="@CurrentUser.DisplayName"
+                                Size="AvatarSize.Medium" />
+                    </a>
+                    <a class="x-top-nav__cta x-top-nav__cta--ghost" href="/logout">Log Out</a>
+                }
+                else
+                {
+                    <a class="x-top-nav__cta x-top-nav__cta--ghost" href="/login">Log In</a>
+                    <a class="x-top-nav__cta" href="/signup">Sign Up</a>
+                }
+            </div>
+        </div>
+    </nav>
 
 @code {
+    private string searchQuery = string.Empty;
+
     protected override void OnInitialized()
     {
         CurrentUser.OnAuthStateChanged += HandleAuthStateChanged;
@@ -85,9 +63,19 @@
     {
         InvokeAsync(StateHasChanged);
     }
+
+    private void HandleSearchKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(searchQuery))
+        {
+            Navigation.NavigateTo($"/search?q={Uri.EscapeDataString(searchQuery)}");
+            searchQuery = string.Empty;
+        }
+    }
     
     public void Dispose()
     {
         CurrentUser.OnAuthStateChanged -= HandleAuthStateChanged;
     }
 }
+

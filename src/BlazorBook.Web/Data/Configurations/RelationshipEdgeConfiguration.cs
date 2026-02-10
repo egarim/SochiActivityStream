@@ -26,19 +26,23 @@ public class RelationshipEdgeConfiguration : IEntityTypeConfiguration<Relationsh
         builder.OwnsOne(r => r.From, f =>
         {
             f.ToJson();
-            f.Property(e => e.Kind).IsRequired();
+            f.Ignore(e => e.Meta);
+            f.Ignore(e => e.AvatarUrl);
+            f.Ignore(e => e.Display);
+            f.Ignore(e => e.Kind);
             f.Property(e => e.Type).IsRequired();
             f.Property(e => e.Id).IsRequired();
-            f.Ignore(e => e.Meta);
         });
         
         builder.OwnsOne(r => r.To, t =>
         {
             t.ToJson();
-            t.Property(e => e.Kind).IsRequired();
+            t.Ignore(e => e.Meta);
+            t.Ignore(e => e.AvatarUrl);
+            t.Ignore(e => e.Display);
+            t.Ignore(e => e.Kind);
             t.Property(e => e.Type).IsRequired();
             t.Property(e => e.Id).IsRequired();
-            t.Ignore(e => e.Meta);
         });
         
         // Composite unique index for relationship uniqueness

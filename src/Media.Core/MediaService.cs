@@ -86,7 +86,8 @@ public sealed class MediaService : IMediaService
             UploadUrl = uploadUrl,
             ExpiresAt = now.Add(_options.UploadUrlExpiry),
             MaxSizeBytes = maxSize,
-            AllowedContentTypes = _options.AllowedContentTypes[mediaType]
+            AllowedContentTypes = _options.AllowedContentTypes[mediaType],
+            BlobPath = blobPath
         };
     }
 

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ActivityStream.Abstractions;
 using Chat.Abstractions;
 
 namespace BlazorBook.Web.Controllers;

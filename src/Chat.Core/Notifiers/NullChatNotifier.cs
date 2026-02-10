@@ -32,7 +32,7 @@ public sealed class NullChatNotifier : IChatNotifier
     public Task NotifyTypingAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto profile,
+        ActivityStream.Abstractions.EntityRefDto profile,
         bool isTyping,
         CancellationToken ct = default) => Task.CompletedTask;
 

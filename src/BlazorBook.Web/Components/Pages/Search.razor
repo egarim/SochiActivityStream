@@ -1,7 +1,25 @@
 @page "/search"
 @inherits MvvmComponentBase<SearchViewModel>
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 
 <PageTitle>Search - BlazorBook</PageTitle>
 
 <SearchResultsContent ViewModel="@VM" />
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = new Uri(Navigation.Uri);
+        var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var searchQuery = queryParams["q"];
+
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            VM.Query = searchQuery;
+            await VM.PerformSearchCommand.ExecuteAsync(null);
+        }
+
+        await base.OnInitializedAsync();
+    }
+}

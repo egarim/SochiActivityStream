@@ -34,28 +34,34 @@ public class FollowRequestConfiguration : IEntityTypeConfiguration<FollowRequest
         builder.OwnsOne(f => f.Requester, r =>
         {
             r.ToJson();
-            r.Property(e => e.Kind).IsRequired();
+            r.Ignore(e => e.Meta);
+            r.Ignore(e => e.AvatarUrl);
+            r.Ignore(e => e.Display);
+            r.Ignore(e => e.Kind);
             r.Property(e => e.Type).IsRequired();
             r.Property(e => e.Id).IsRequired();
-            r.Ignore(e => e.Meta);
         });
         
         builder.OwnsOne(f => f.Target, t =>
         {
             t.ToJson();
-            t.Property(e => e.Kind).IsRequired();
+            t.Ignore(e => e.Meta);
+            t.Ignore(e => e.AvatarUrl);
+            t.Ignore(e => e.Display);
+            t.Ignore(e => e.Kind);
             t.Property(e => e.Type).IsRequired();
             t.Property(e => e.Id).IsRequired();
-            t.Ignore(e => e.Meta);
         });
         
         builder.OwnsOne(f => f.DecidedBy, d =>
         {
             d.ToJson();
-            d.Property(e => e.Kind).IsRequired();
+            d.Ignore(e => e.Meta);
+            d.Ignore(e => e.AvatarUrl);
+            d.Ignore(e => e.Display);
+            d.Ignore(e => e.Kind);
             d.Property(e => e.Type).IsRequired();
             d.Property(e => e.Id).IsRequired();
-            d.Ignore(e => e.Meta);
         });
         
         // Indexes

@@ -46,7 +46,7 @@ public interface IChatNotifier
     Task NotifyTypingAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto profile,
+        ActivityStream.Abstractions.EntityRefDto profile,
         bool isTyping,
         CancellationToken ct = default);
 

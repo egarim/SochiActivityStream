@@ -1,5 +1,5 @@
 using System.Collections.ObjectModel;
-using Content.Abstractions;
+using ActivityStream.Abstractions;
 using Identity.Abstractions;
 using Media.Abstractions;
 using RelationshipService.Abstractions;

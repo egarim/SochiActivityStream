@@ -29,4 +29,9 @@ public sealed class UploadUrlResult
     /// Allowed content types for this upload.
     /// </summary>
     public List<string> AllowedContentTypes { get; set; } = new();
+
+    /// <summary>
+    /// The blob storage path where the file should be uploaded.
+    /// </summary>
+    public required string BlobPath { get; set; }
 }

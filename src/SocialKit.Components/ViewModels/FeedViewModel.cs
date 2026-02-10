@@ -1,5 +1,5 @@
 using System.Collections.ObjectModel;
-using Content.Abstractions;
+using ActivityStream.Abstractions;
 using Sochi.Navigation.Commands;
 using Sochi.Navigation.Mvvm;
 using Sochi.Navigation.Navigation;

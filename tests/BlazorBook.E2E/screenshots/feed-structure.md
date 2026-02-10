@@ -1,0 +1,636 @@
+- generic [ref=e2]:
+  - navigation "Primary navigation" [ref=e3]:
+    - generic [ref=e4]:
+      - link " BlazorBook" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: 
+        - generic [ref=e7]: BlazorBook
+      - search [ref=e8]:
+        - textbox "Search" [ref=e72]:
+          - /placeholder: Search topics, people, or posts
+      - generic [ref=e10]:
+        - link "Home" [ref=e73] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e74]: 
+        - link "Friends" [ref=e75] [cursor=pointer]:
+          - /url: /friends
+          - generic [ref=e76]: 
+        - link "Messages" [ref=e77] [cursor=pointer]:
+          - /url: /messages
+          - generic [ref=e78]: 
+        - link "My profile" [ref=e79] [cursor=pointer]:
+          - /url: /profile/01KH0XYBM2BJ7JPE9QYMB74DFQ
+          - img "Test User QA" [ref=e80]
+        - link "Log Out" [ref=e81] [cursor=pointer]:
+          - /url: /logout
+  - generic [ref=e13]:
+    - complementary "Primary navigation" [ref=e82]:
+      - generic [ref=e83]:
+        - link "Test User QA Test User QA" [ref=e84] [cursor=pointer]:
+          - /url: /profile/01KH0XYBM2BJ7JPE9QYMB74DFQ
+          - img "Test User QA" [ref=e85]
+          - generic [ref=e86]: Test User QA
+        - generic [ref=e87]: Primary
+        - navigation "Primary shortcuts" [ref=e88]:
+          - link " Friends" [ref=e89] [cursor=pointer]:
+            - /url: /friends
+            - generic [ref=e90]: 
+            - text: Friends
+          - link " Messages" [ref=e91] [cursor=pointer]:
+            - /url: /messages
+            - generic [ref=e92]: 
+            - text: Messages
+          - link " News Feed" [ref=e93] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e94]: 
+            - text: News Feed
+        - separator [ref=e95]
+        - generic [ref=e96]: Shortcuts
+        - navigation "Secondary shortcuts" [ref=e97]:
+          - link " Saved" [ref=e98] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e99]: 
+            - text: Saved
+          - link " Events" [ref=e100] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e101]: 
+            - text: Events
+    - main [ref=e14]:
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - generic [ref=e105]:
+            - generic [ref=e107]: TQ
+            - textbox "What's on your mind, Test?" [ref=e111]
+          - separator [ref=e112]
+          - generic [ref=e113]:
+            - generic [ref=e114]:
+              - button "Photo/Video" [ref=e115] [cursor=pointer]:
+                - generic [ref=e116]:
+                  - img [ref=e118]
+                  - text: Photo/Video
+              - button "Tag" [disabled]:
+                - generic:
+                  - generic:
+                    - img
+                  - text: Tag
+            - button "Post" [disabled]:
+              - generic:
+                - generic:
+                  - img
+                - generic: Post
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - link "AA" [ref=e124] [cursor=pointer]:
+              - /url: /profile/01KGYE0P3YYK02D3R1H0CCTK4R
+              - generic [ref=e126]: AA
+            - generic [ref=e127]:
+              - link "Alice Anderson" [ref=e128] [cursor=pointer]:
+                - /url: /profile/01KGYE0P3YYK02D3R1H0CCTK4R
+              - paragraph [ref=e129]: 2h
+            - button [ref=e131] [cursor=pointer]:
+              - img [ref=e133]
+          - generic [ref=e136]:
+            - paragraph [ref=e137]: bla bla bla
+            - img "Post image" [ref=e139]
+          - separator [ref=e140]
+          - generic [ref=e141]:
+            - button "Like" [ref=e142] [cursor=pointer]:
+              - generic [ref=e143]:
+                - img [ref=e145]
+                - text: Like
+            - button "Comment" [ref=e148] [cursor=pointer]:
+              - generic [ref=e149]:
+                - img [ref=e151]
+                - text: Comment
+            - button "Share" [ref=e154] [cursor=pointer]:
+              - generic [ref=e155]:
+                - img [ref=e157]
+                - text: Share
+        - generic [ref=e160]:
+          - generic [ref=e161]:
+            - link "HH" [ref=e163] [cursor=pointer]:
+              - /url: /profile/01KGYE0PA85AB74DQT1HH1E4RF
+              - generic [ref=e165]: HH
+            - generic [ref=e166]:
+              - link "Henry Harris" [ref=e167] [cursor=pointer]:
+                - /url: /profile/01KGYE0PA85AB74DQT1HH1E4RF
+              - paragraph [ref=e168]: 23h
+            - button [ref=e170] [cursor=pointer]:
+              - img [ref=e172]
+          - paragraph [ref=e176]: Learning in public is the fastest way to grow. Don't be afraid to share!
+          - separator [ref=e177]
+          - generic [ref=e178]:
+            - button "Like" [ref=e179] [cursor=pointer]:
+              - generic [ref=e180]:
+                - img [ref=e182]
+                - text: Like
+            - button "Comment" [ref=e185] [cursor=pointer]:
+              - generic [ref=e186]:
+                - img [ref=e188]
+                - text: Comment
+            - button "Share" [ref=e191] [cursor=pointer]:
+              - generic [ref=e192]:
+                - img [ref=e194]
+                - text: Share
+        - generic [ref=e197]:
+          - generic [ref=e198]:
+            - link "CC" [ref=e200] [cursor=pointer]:
+              - /url: /profile/01KGYE0P65Y5CN7EB2YYD2C5BW
+              - generic [ref=e202]: CC
+            - generic [ref=e203]:
+              - link "Charlie Chen" [ref=e204] [cursor=pointer]:
+                - /url: /profile/01KGYE0P65Y5CN7EB2YYD2C5BW
+              - paragraph [ref=e205]: 23h
+            - button [ref=e207] [cursor=pointer]:
+              - img [ref=e209]
+          - paragraph [ref=e213]: The codebase is finally well-documented. Is this what happiness feels like?
+          - separator [ref=e214]
+          - generic [ref=e215]:
+            - button "Like" [ref=e216] [cursor=pointer]:
+              - generic [ref=e217]:
+                - img [ref=e219]
+                - text: Like
+            - button "Comment" [ref=e222] [cursor=pointer]:
+              - generic [ref=e223]:
+                - img [ref=e225]
+                - text: Comment
+            - button "Share" [ref=e228] [cursor=pointer]:
+              - generic [ref=e229]:
+                - img [ref=e231]
+                - text: Share
+        - generic [ref=e234]:
+          - generic [ref=e235]:
+            - link "BB" [ref=e237] [cursor=pointer]:
+              - /url: /profile/01KGYE0P5A1EZ5FJYXA8DCFYEQ
+              - generic [ref=e239]: BB
+            - generic [ref=e240]:
+              - link "Bob Builder" [ref=e241] [cursor=pointer]:
+                - /url: /profile/01KGYE0P5A1EZ5FJYXA8DCFYEQ
+              - paragraph [ref=e242]: 23h
+            - button [ref=e244] [cursor=pointer]:
+              - img [ref=e246]
+          - paragraph [ref=e250]: OSS maintainers deserve more appreciation. Thank you for your free labor!
+          - separator [ref=e251]
+          - generic [ref=e252]:
+            - button "Like" [ref=e253] [cursor=pointer]:
+              - generic [ref=e254]:
+                - img [ref=e256]
+                - text: Like
+            - button "Comment" [ref=e259] [cursor=pointer]:
+              - generic [ref=e260]:
+                - img [ref=e262]
+                - text: Comment
+            - button "Share" [ref=e265] [cursor=pointer]:
+              - generic [ref=e266]:
+                - img [ref=e268]
+                - text: Share
+        - generic [ref=e271]:
+          - generic [ref=e272]:
+            - link "GG" [ref=e274] [cursor=pointer]:
+              - /url: /profile/01KGYE0P93551Q3HZBF28E7D0G
+              - generic [ref=e276]: GG
+            - generic [ref=e277]:
+              - link "Grace Green" [ref=e278] [cursor=pointer]:
+                - /url: /profile/01KGYE0P93551Q3HZBF28E7D0G
+              - paragraph [ref=e279]: 23h
+            - button [ref=e281] [cursor=pointer]:
+              - img [ref=e283]
+          - paragraph [ref=e287]: Just hit inbox zero for the first time this year. It won't last, but let me enjoy this.
+          - separator [ref=e288]
+          - generic [ref=e289]:
+            - button "Like" [ref=e290] [cursor=pointer]:
+              - generic [ref=e291]:
+                - img [ref=e293]
+                - text: Like
+            - button "Comment" [ref=e296] [cursor=pointer]:
+              - generic [ref=e297]:
+                - img [ref=e299]
+                - text: Comment
+            - button "Share" [ref=e302] [cursor=pointer]:
+              - generic [ref=e303]:
+                - img [ref=e305]
+                - text: Share
+        - generic [ref=e308]:
+          - generic [ref=e309]:
+            - link "HH" [ref=e311] [cursor=pointer]:
+              - /url: /profile/01KGYE0PA85AB74DQT1HH1E4RF
+              - generic [ref=e313]: HH
+            - generic [ref=e314]:
+              - link "Henry Harris" [ref=e315] [cursor=pointer]:
+                - /url: /profile/01KGYE0PA85AB74DQT1HH1E4RF
+              - paragraph [ref=e316]: 23h
+            - button [ref=e318] [cursor=pointer]:
+              - img [ref=e320]
+          - paragraph [ref=e324]: Feature flags saved us from a production disaster today. Always have a kill switch!
+          - separator [ref=e325]
+          - generic [ref=e326]:
+            - button "Like" [ref=e327] [cursor=pointer]:
+              - generic [ref=e328]:
+                - img [ref=e330]
+                - text: Like
+            - button "Comment" [ref=e333] [cursor=pointer]:
+              - generic [ref=e334]:
+                - img [ref=e336]
+                - text: Comment
+            - button "Share" [ref=e339] [cursor=pointer]:
+              - generic [ref=e340]:
+                - img [ref=e342]
+                - text: Share
+        - generic [ref=e345]:
+          - generic [ref=e346]:
+            - link "AA" [ref=e348] [cursor=pointer]:
+              - /url: /profile/01KGYE0P3YYK02D3R1H0CCTK4R
+              - generic [ref=e350]: AA
+            - generic [ref=e351]:
+              - link "Alice Anderson" [ref=e352] [cursor=pointer]:
+                - /url: /profile/01KGYE0P3YYK02D3R1H0CCTK4R
+              - paragraph [ref=e353]: 23h
+            - button [ref=e355] [cursor=pointer]:
+              - img [ref=e357]
+          - generic [ref=e360]:
+            - paragraph [ref=e361]: The debugger is your friend. Console.log is your anxious friend. Both help.
+            - button "3 comments" [ref=e363] [cursor=pointer]
+          - separator [ref=e364]
+          - generic [ref=e365]:
+            - button "Like" [ref=e366] [cursor=pointer]:
+              - generic [ref=e367]:
+                - img [ref=e369]
+                - text: Like
+            - button "Comment" [ref=e372] [cursor=pointer]:
+              - generic [ref=e373]:
+                - img [ref=e375]
+                - text: Comment
+            - button "Share" [ref=e378] [cursor=pointer]:
+              - generic [ref=e379]:
+                - img [ref=e381]
+                - text: Share
+        - generic [ref=e384]:
+          - generic [ref=e385]:
+            - link "AA" [ref=e387] [cursor=pointer]:
+              - /url: /profile/01KGYE0P3YYK02D3R1H0CCTK4R
+              - generic [ref=e389]: AA
+            - generic [ref=e390]:
+              - link "Alice Anderson" [ref=e391] [cursor=pointer]:
+                - /url: /profile/01KGYE0P3YYK02D3R1H0CCTK4R
+              - paragraph [ref=e392]: 23h
+            - button [ref=e394] [cursor=pointer]:
+              - img [ref=e396]
+          - generic [ref=e399]:
+            - paragraph [ref=e400]: "Remember: A 10x engineer makes everyone around them 2x. Lift others up!"
+            - button "5 comments" [ref=e402] [cursor=pointer]
+          - separator [ref=e403]
+          - generic [ref=e404]:
+            - button "Like" [ref=e405] [cursor=pointer]:
+              - generic [ref=e406]:
+                - img [ref=e408]
+                - text: Like
+            - button "Comment" [ref=e411] [cursor=pointer]:
+              - generic [ref=e412]:
+                - img [ref=e414]
+                - text: Comment
+            - button "Share" [ref=e417] [cursor=pointer]:
+              - generic [ref=e418]:
+                - img [ref=e420]
+                - text: Share
+        - generic [ref=e423]:
+          - generic [ref=e424]:
+            - link "BB" [ref=e426] [cursor=pointer]:
+              - /url: /profile/01KGYE0P5A1EZ5FJYXA8DCFYEQ
+              - generic [ref=e428]: BB
+            - generic [ref=e429]:
+              - link "Bob Builder" [ref=e430] [cursor=pointer]:
+                - /url: /profile/01KGYE0P5A1EZ5FJYXA8DCFYEQ
+              - paragraph [ref=e431]: 23h
+            - button [ref=e433] [cursor=pointer]:
+              - img [ref=e435]
+          - generic [ref=e438]:
+            - paragraph [ref=e439]: Just deployed to production with zero downtime. Blue-green deployments rock!
+            - button "3 comments" [ref=e441] [cursor=pointer]
+          - separator [ref=e442]
+          - generic [ref=e443]:
+            - button "Like" [ref=e444] [cursor=pointer]:
+              - generic [ref=e445]:
+                - img [ref=e447]
+                - text: Like
+            - button "Comment" [ref=e450] [cursor=pointer]:
+              - generic [ref=e451]:
+                - img [ref=e453]
+                - text: Comment
+            - button "Share" [ref=e456] [cursor=pointer]:
+              - generic [ref=e457]:
+                - img [ref=e459]
+                - text: Share
+        - generic [ref=e462]:
+          - generic [ref=e463]:
+            - link "DD" [ref=e465] [cursor=pointer]:
+              - /url: /profile/01KGYE0P6SGBTQYVSMP18S7ZCB
+              - generic [ref=e467]: DD
+            - generic [ref=e468]:
+              - link "Diana Davis" [ref=e469] [cursor=pointer]:
+                - /url: /profile/01KGYE0P6SGBTQYVSMP18S7ZCB
+              - paragraph [ref=e470]: 23h
+            - button [ref=e472] [cursor=pointer]:
+              - img [ref=e474]
+          - generic [ref=e477]:
+            - paragraph [ref=e478]: Sprint retrospective done. We're getting better every iteration!
+            - button "4 comments" [ref=e480] [cursor=pointer]
+          - separator [ref=e481]
+          - generic [ref=e482]:
+            - button "Like" [ref=e483] [cursor=pointer]:
+              - generic [ref=e484]:
+                - img [ref=e486]
+                - text: Like
+            - button "Comment" [ref=e489] [cursor=pointer]:
+              - generic [ref=e490]:
+                - img [ref=e492]
+                - text: Comment
+            - button "Share" [ref=e495] [cursor=pointer]:
+              - generic [ref=e496]:
+                - img [ref=e498]
+                - text: Share
+        - generic [ref=e501]:
+          - generic [ref=e502]:
+            - link "HH" [ref=e504] [cursor=pointer]:
+              - /url: /profile/01KGYE0PA85AB74DQT1HH1E4RF
+              - generic [ref=e506]: HH
+            - generic [ref=e507]:
+              - link "Henry Harris" [ref=e508] [cursor=pointer]:
+                - /url: /profile/01KGYE0PA85AB74DQT1HH1E4RF
+              - paragraph [ref=e509]: 23h
+            - button [ref=e511] [cursor=pointer]:
+              - img [ref=e513]
+          - generic [ref=e516]:
+            - paragraph [ref=e517]: The best code is code you don't have to write. Embrace good abstractions.
+            - button "5 comments" [ref=e519] [cursor=pointer]
+          - separator [ref=e520]
+          - generic [ref=e521]:
+            - button "Like" [ref=e522] [cursor=pointer]:
+              - generic [ref=e523]:
+                - img [ref=e525]
+                - text: Like
+            - button "Comment" [ref=e528] [cursor=pointer]:
+              - generic [ref=e529]:
+                - img [ref=e531]
+                - text: Comment
+            - button "Share" [ref=e534] [cursor=pointer]:
+              - generic [ref=e535]:
+                - img [ref=e537]
+                - text: Share
+        - generic [ref=e540]:
+          - generic [ref=e541]:
+            - link "II" [ref=e543] [cursor=pointer]:
+              - /url: /profile/01KGYE0PAXZCWDAT0YA72XAD65
+              - generic [ref=e545]: II
+            - generic [ref=e546]:
+              - link "Iris Ivanov" [ref=e547] [cursor=pointer]:
+                - /url: /profile/01KGYE0PAXZCWDAT0YA72XAD65
+              - paragraph [ref=e548]: 23h
+            - button [ref=e550] [cursor=pointer]:
+              - img [ref=e552]
+          - generic [ref=e555]:
+            - paragraph [ref=e556]: Reading about AI/ML for the first time as a backend dev. Fascinating stuff!
+            - button "8 comments" [ref=e558] [cursor=pointer]
+          - separator [ref=e559]
+          - generic [ref=e560]:
+            - button "Like" [ref=e561] [cursor=pointer]:
+              - generic [ref=e562]:
+                - img [ref=e564]
+                - text: Like
+            - button "Comment" [ref=e567] [cursor=pointer]:
+              - generic [ref=e568]:
+                - img [ref=e570]
+                - text: Comment
+            - button "Share" [ref=e573] [cursor=pointer]:
+              - generic [ref=e574]:
+                - img [ref=e576]
+                - text: Share
+        - generic [ref=e579]:
+          - generic [ref=e580]:
+            - link "FF" [ref=e582] [cursor=pointer]:
+              - /url: /profile/01KGYE0P8EETTBQ9GR1QP02N6B
+              - generic [ref=e584]: FF
+            - generic [ref=e585]:
+              - link "Frank Foster" [ref=e586] [cursor=pointer]:
+                - /url: /profile/01KGYE0P8EETTBQ9GR1QP02N6B
+              - paragraph [ref=e587]: 23h
+            - button [ref=e589] [cursor=pointer]:
+              - img [ref=e591]
+          - generic [ref=e594]:
+            - paragraph [ref=e595]: Just automated a 2-hour manual process into a 30-second script. Automation FTW!
+            - button "2 comments" [ref=e597] [cursor=pointer]
+          - separator [ref=e598]
+          - generic [ref=e599]:
+            - button "Like" [ref=e600] [cursor=pointer]:
+              - generic [ref=e601]:
+                - img [ref=e603]
+                - text: Like
+            - button "Comment" [ref=e606] [cursor=pointer]:
+              - generic [ref=e607]:
+                - img [ref=e609]
+                - text: Comment
+            - button "Share" [ref=e612] [cursor=pointer]:
+              - generic [ref=e613]:
+                - img [ref=e615]
+                - text: Share
+        - generic [ref=e618]:
+          - generic [ref=e619]:
+            - link "AA" [ref=e621] [cursor=pointer]:
+              - /url: /profile/01KGYE0P3YYK02D3R1H0CCTK4R
+              - generic [ref=e623]: AA
+            - generic [ref=e624]:
+              - link "Alice Anderson" [ref=e625] [cursor=pointer]:
+                - /url: /profile/01KGYE0P3YYK02D3R1H0CCTK4R
+              - paragraph [ref=e626]: 23h
+            - button [ref=e628] [cursor=pointer]:
+              - img [ref=e630]
+          - generic [ref=e633]:
+            - paragraph [ref=e634]: Working from a coffee shop today. Productivity +100%, coffee bill +1000%.
+            - button "8 comments" [ref=e636] [cursor=pointer]
+          - separator [ref=e637]
+          - generic [ref=e638]:
+            - button "Like" [ref=e639] [cursor=pointer]:
+              - generic [ref=e640]:
+                - img [ref=e642]
+                - text: Like
+            - button "Comment" [ref=e645] [cursor=pointer]:
+              - generic [ref=e646]:
+                - img [ref=e648]
+                - text: Comment
+            - button "Share" [ref=e651] [cursor=pointer]:
+              - generic [ref=e652]:
+                - img [ref=e654]
+                - text: Share
+        - generic [ref=e657]:
+          - generic [ref=e658]:
+            - link "II" [ref=e660] [cursor=pointer]:
+              - /url: /profile/01KGYE0PAXZCWDAT0YA72XAD65
+              - generic [ref=e662]: II
+            - generic [ref=e663]:
+              - link "Iris Ivanov" [ref=e664] [cursor=pointer]:
+                - /url: /profile/01KGYE0PAXZCWDAT0YA72XAD65
+              - paragraph [ref=e665]: 23h
+            - button [ref=e667] [cursor=pointer]:
+              - img [ref=e669]
+          - generic [ref=e672]:
+            - paragraph [ref=e673]: The dopamine hit when all tests pass on the first try > everything else.
+            - button "8 comments" [ref=e675] [cursor=pointer]
+          - separator [ref=e676]
+          - generic [ref=e677]:
+            - button "Like" [ref=e678] [cursor=pointer]:
+              - generic [ref=e679]:
+                - img [ref=e681]
+                - text: Like
+            - button "Comment" [ref=e684] [cursor=pointer]:
+              - generic [ref=e685]:
+                - img [ref=e687]
+                - text: Comment
+            - button "Share" [ref=e690] [cursor=pointer]:
+              - generic [ref=e691]:
+                - img [ref=e693]
+                - text: Share
+        - generic [ref=e696]:
+          - generic [ref=e697]:
+            - link "FF" [ref=e699] [cursor=pointer]:
+              - /url: /profile/01KGYE0P8EETTBQ9GR1QP02N6B
+              - generic [ref=e701]: FF
+            - generic [ref=e702]:
+              - link "Frank Foster" [ref=e703] [cursor=pointer]:
+                - /url: /profile/01KGYE0P8EETTBQ9GR1QP02N6B
+              - paragraph [ref=e704]: 23h
+            - button [ref=e706] [cursor=pointer]:
+              - img [ref=e708]
+          - generic [ref=e711]:
+            - paragraph [ref=e712]: Accessibility is not an afterthought. Build inclusively from day one.
+            - button "8 comments" [ref=e714] [cursor=pointer]
+          - separator [ref=e715]
+          - generic [ref=e716]:
+            - button "Like" [ref=e717] [cursor=pointer]:
+              - generic [ref=e718]:
+                - img [ref=e720]
+                - text: Like
+            - button "Comment" [ref=e723] [cursor=pointer]:
+              - generic [ref=e724]:
+                - img [ref=e726]
+                - text: Comment
+            - button "Share" [ref=e729] [cursor=pointer]:
+              - generic [ref=e730]:
+                - img [ref=e732]
+                - text: Share
+        - generic [ref=e735]:
+          - generic [ref=e736]:
+            - link "DD" [ref=e738] [cursor=pointer]:
+              - /url: /profile/01KGYE0P6SGBTQYVSMP18S7ZCB
+              - generic [ref=e740]: DD
+            - generic [ref=e741]:
+              - link "Diana Davis" [ref=e742] [cursor=pointer]:
+                - /url: /profile/01KGYE0P6SGBTQYVSMP18S7ZCB
+              - paragraph [ref=e743]: 23h
+            - button [ref=e745] [cursor=pointer]:
+              - img [ref=e747]
+          - generic [ref=e750]:
+            - paragraph [ref=e751]: Our incident response improved 70% after we started doing blameless postmortems.
+            - button "2 comments" [ref=e753] [cursor=pointer]
+          - separator [ref=e754]
+          - generic [ref=e755]:
+            - button "Like" [ref=e756] [cursor=pointer]:
+              - generic [ref=e757]:
+                - img [ref=e759]
+                - text: Like
+            - button "Comment" [ref=e762] [cursor=pointer]:
+              - generic [ref=e763]:
+                - img [ref=e765]
+                - text: Comment
+            - button "Share" [ref=e768] [cursor=pointer]:
+              - generic [ref=e769]:
+                - img [ref=e771]
+                - text: Share
+        - generic [ref=e774]:
+          - generic [ref=e775]:
+            - link "AA" [ref=e777] [cursor=pointer]:
+              - /url: /profile/01KGYE0P3YYK02D3R1H0CCTK4R
+              - generic [ref=e779]: AA
+            - generic [ref=e780]:
+              - link "Alice Anderson" [ref=e781] [cursor=pointer]:
+                - /url: /profile/01KGYE0P3YYK02D3R1H0CCTK4R
+              - paragraph [ref=e782]: 23h
+            - button [ref=e784] [cursor=pointer]:
+              - img [ref=e786]
+          - generic [ref=e789]:
+            - paragraph [ref=e790]: "Performance optimization tip: Profile before you optimize. Always."
+            - button "8 comments" [ref=e792] [cursor=pointer]
+          - separator [ref=e793]
+          - generic [ref=e794]:
+            - button "Like" [ref=e795] [cursor=pointer]:
+              - generic [ref=e796]:
+                - img [ref=e798]
+                - text: Like
+            - button "Comment" [ref=e801] [cursor=pointer]:
+              - generic [ref=e802]:
+                - img [ref=e804]
+                - text: Comment
+            - button "Share" [ref=e807] [cursor=pointer]:
+              - generic [ref=e808]:
+                - img [ref=e810]
+                - text: Share
+        - generic [ref=e813]:
+          - generic [ref=e814]:
+            - link "BB" [ref=e816] [cursor=pointer]:
+              - /url: /profile/01KGYE0P5A1EZ5FJYXA8DCFYEQ
+              - generic [ref=e818]: BB
+            - generic [ref=e819]:
+              - link "Bob Builder" [ref=e820] [cursor=pointer]:
+                - /url: /profile/01KGYE0P5A1EZ5FJYXA8DCFYEQ
+              - paragraph [ref=e821]: 23h
+            - button [ref=e823] [cursor=pointer]:
+              - img [ref=e825]
+          - generic [ref=e828]:
+            - paragraph [ref=e829]: Kubernetes is not as scary as I thought. Famous last words?
+            - button "5 comments" [ref=e831] [cursor=pointer]
+          - separator [ref=e832]
+          - generic [ref=e833]:
+            - button "Like" [ref=e834] [cursor=pointer]:
+              - generic [ref=e835]:
+                - img [ref=e837]
+                - text: Like
+            - button "Comment" [ref=e840] [cursor=pointer]:
+              - generic [ref=e841]:
+                - img [ref=e843]
+                - text: Comment
+            - button "Share" [ref=e846] [cursor=pointer]:
+              - generic [ref=e847]:
+                - img [ref=e849]
+                - text: Share
+        - generic [ref=e852]:
+          - generic [ref=e853]:
+            - link "FF" [ref=e855] [cursor=pointer]:
+              - /url: /profile/01KGYE0P8EETTBQ9GR1QP02N6B
+              - generic [ref=e857]: FF
+            - generic [ref=e858]:
+              - link "Frank Foster" [ref=e859] [cursor=pointer]:
+                - /url: /profile/01KGYE0P8EETTBQ9GR1QP02N6B
+              - paragraph [ref=e860]: 23h
+            - button [ref=e862] [cursor=pointer]:
+              - img [ref=e864]
+          - generic [ref=e867]:
+            - paragraph [ref=e868]: Just mentored a junior dev through their first PR. Proud moment!
+            - button "3 comments" [ref=e870] [cursor=pointer]
+          - separator [ref=e871]
+          - generic [ref=e872]:
+            - button "Like" [ref=e873] [cursor=pointer]:
+              - generic [ref=e874]:
+                - img [ref=e876]
+                - text: Like
+            - button "Comment" [ref=e879] [cursor=pointer]:
+              - generic [ref=e880]:
+                - img [ref=e882]
+                - text: Comment
+            - button "Share" [ref=e885] [cursor=pointer]:
+              - generic [ref=e886]:
+                - img [ref=e888]
+                - text: Share
+    - complementary "Activity highlights" [ref=e891]:
+      - generic [ref=e892]:
+        - generic [ref=e893]: Contacts
+        - generic [ref=e894]:
+          - generic [ref=e895]: 
+          - paragraph [ref=e896]: Connect with friends to see them here

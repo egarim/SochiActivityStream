@@ -38,10 +38,12 @@ public class MediaConfiguration : IEntityTypeConfiguration<MediaDto>
         builder.OwnsOne(m => m.Owner, o =>
         {
             o.ToJson();
-            o.Property(e => e.Kind).IsRequired();
+            o.Ignore(e => e.Meta);
+            o.Ignore(e => e.AvatarUrl);
+            o.Ignore(e => e.Display);
+            o.Ignore(e => e.Kind);
             o.Property(e => e.Type).IsRequired();
             o.Property(e => e.Id).IsRequired();
-            o.Ignore(e => e.Meta);
         });
         
         // Metadata as JSON

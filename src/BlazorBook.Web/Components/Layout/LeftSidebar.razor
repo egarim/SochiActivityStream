@@ -1,33 +1,24 @@
 @inject ICurrentUserService CurrentUser
 
-<div class="left-sidebar-content p-3">
-    <nav class="nav flex-column">
-        <a class="nav-link sidebar-link" href="/profile/@CurrentUser.ProfileId">
-            <img src="@(CurrentUser.AvatarUrl ?? "/img/default-avatar.png")" 
-                 alt="@CurrentUser.DisplayName" 
-                 class="rounded-circle me-2" width="24" height="24" />
-            @CurrentUser.DisplayName
+<div class="x-shell__rail-content">
+    <a class="x-shell__rail-link" href="/profile/@CurrentUser.ProfileId">
+        <img src="@(CurrentUser.AvatarUrl ?? "/img/default-avatar.png")" 
+             alt="@CurrentUser.DisplayName" 
+             class="rounded-circle" width="32" height="32"
+             onerror="this.onerror=null; this.src='/img/default-avatar.png';" />
+        <span>@CurrentUser.DisplayName</span>
+    </a>
+
+    <div class="x-shell__rail-heading">Primary</div>
+    <nav class="x-shell__rail-nav" aria-label="Primary shortcuts">
+        <a class="x-shell__rail-link" href="/friends">
+            <i class="fas fa-user-friends"></i>Friends
         </a>
-        <a class="nav-link sidebar-link" href="/friends">
-            <i class="fas fa-user-friends me-2 text-primary"></i> Friends
+        <a class="x-shell__rail-link" href="/messages">
+            <i class="fas fa-comment-dots"></i>Messages
         </a>
-        <a class="nav-link sidebar-link" href="/messages">
-            <i class="fas fa-comment-dots me-2 text-info"></i> Messages
-        </a>
-        <a class="nav-link sidebar-link" href="/">
-            <i class="fas fa-newspaper me-2 text-warning"></i> News Feed
-        </a>
-    </nav>
-    
-    <hr class="my-3" />
-    
-    <h6 class="text-muted px-3 mb-2">Shortcuts</h6>
-    <nav class="nav flex-column">
-        <a class="nav-link sidebar-link" href="#">
-            <i class="fas fa-bookmark me-2"></i> Saved
-        </a>
-        <a class="nav-link sidebar-link" href="#">
-            <i class="fas fa-calendar me-2"></i> Events
+        <a class="x-shell__rail-link" href="/">
+            <i class="fas fa-newspaper"></i>News Feed
         </a>
     </nav>
 </div>

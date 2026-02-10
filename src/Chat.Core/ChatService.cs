@@ -1,3 +1,4 @@
+using ActivityStream.Abstractions;
 using Chat.Abstractions;
 
 namespace Chat.Core;
@@ -33,8 +34,8 @@ public sealed class ChatService : IChatService
 
     public async Task<ConversationDto> GetOrCreateDirectConversationAsync(
         string tenantId,
-        EntityRefDto user1,
-        EntityRefDto user2,
+        ActivityStream.Abstractions.EntityRefDto user1,
+        ActivityStream.Abstractions.EntityRefDto user2,
         CancellationToken ct = default)
     {
         ChatValidator.ValidateTenantId(tenantId);
@@ -110,7 +111,7 @@ public sealed class ChatService : IChatService
     public async Task<ConversationDto?> GetConversationAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto viewer,
+        ActivityStream.Abstractions.EntityRefDto viewer,
         CancellationToken ct = default)
     {
         ChatValidator.ValidateTenantId(tenantId);
@@ -314,7 +315,7 @@ public sealed class ChatService : IChatService
     public async Task LeaveConversationAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto participant,
+        ActivityStream.Abstractions.EntityRefDto participant,
         CancellationToken ct = default)
     {
         await RemoveParticipantAsync(new RemoveParticipantRequest
@@ -329,7 +330,7 @@ public sealed class ChatService : IChatService
     public async Task SetArchivedAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto participant,
+        ActivityStream.Abstractions.EntityRefDto participant,
         bool archived,
         CancellationToken ct = default)
     {
@@ -346,7 +347,7 @@ public sealed class ChatService : IChatService
     public async Task SetMutedAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto participant,
+        ActivityStream.Abstractions.EntityRefDto participant,
         bool muted,
         CancellationToken ct = default)
     {
@@ -529,7 +530,7 @@ public sealed class ChatService : IChatService
         string tenantId,
         string conversationId,
         string messageId,
-        EntityRefDto viewer,
+        ActivityStream.Abstractions.EntityRefDto viewer,
         CancellationToken ct = default)
     {
         ChatValidator.ValidateTenantId(tenantId);
@@ -600,7 +601,7 @@ public sealed class ChatService : IChatService
     private async Task MarkReadInternalAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto profile,
+        ActivityStream.Abstractions.EntityRefDto profile,
         string messageId,
         DateTimeOffset readAt,
         CancellationToken ct)
@@ -695,7 +696,7 @@ public sealed class ChatService : IChatService
     private async Task<ConversationDto> GetAndVerifyParticipantAsync(
         string tenantId,
         string conversationId,
-        EntityRefDto profile,
+        ActivityStream.Abstractions.EntityRefDto profile,
         CancellationToken ct)
     {
         var conversation = await _conversationStore.GetByIdAsync(tenantId, conversationId, ct);
