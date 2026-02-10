@@ -4,8 +4,10 @@
     <Project Path="src/ActivityStream.Core/ActivityStream.Core.csproj" />
     <Project Path="src/ActivityStream.Store.InMemory/ActivityStream.Store.InMemory.csproj" />
     <Project Path="src/SocialKit.Components/SocialKit.Components.csproj" />
+    <Project Path="src/BlazorBook.Web/BlazorBook.Web.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/ActivityStream.Tests/ActivityStream.Tests.csproj" />
+    <Project Path="tests/BlazorBook.E2E/BlazorBook.E2E.csproj" />
   </Folder>
 </Solution>
