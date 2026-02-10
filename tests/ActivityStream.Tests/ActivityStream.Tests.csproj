@@ -11,9 +11,11 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="xunit" Version="2.5.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4" />
+    <PackageReference Include="NUnit" Version="4.3.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +26,31 @@
     <ProjectReference Include="..\..\src\ActivityStream.Abstractions\ActivityStream.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\ActivityStream.Core\ActivityStream.Core.csproj" />
     <ProjectReference Include="..\..\src\ActivityStream.Store.InMemory\ActivityStream.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Chat.Abstractions\Chat.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Chat.Core\Chat.Core.csproj" />
+    <ProjectReference Include="..\..\src\Chat.Store.InMemory\Chat.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Content.Abstractions\Content.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Content.Core\Content.Core.csproj" />
+    <ProjectReference Include="..\..\src\Content.Store.InMemory\Content.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Identity.Abstractions\Identity.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Identity.Core\Identity.Core.csproj" />
+    <ProjectReference Include="..\..\src\Identity.Store.InMemory\Identity.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Inbox.Abstractions\Inbox.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Inbox.Core\Inbox.Core.csproj" />
+    <ProjectReference Include="..\..\src\Inbox.Store.InMemory\Inbox.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Media.Abstractions\Media.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Media.Core\Media.Core.csproj" />
+    <ProjectReference Include="..\..\src\Media.Store.InMemory\Media.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Realtime.Abstractions\Realtime.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Realtime.Core\Realtime.Core.csproj" />
+    <ProjectReference Include="..\..\src\Realtime.Transport.InMemory\Realtime.Transport.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\RelationshipService.Abstractions\RelationshipService.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\RelationshipService.Core\RelationshipService.Core.csproj" />
+    <ProjectReference Include="..\..\src\RelationshipService.Store.InMemory\RelationshipService.Store.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Search.Abstractions\Search.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Search.Core\Search.Core.csproj" />
+    <ProjectReference Include="..\..\src\Search.Index.InMemory\Search.Index.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\Sochi.Navigation\Sochi.Navigation.csproj" />
   </ItemGroup>
 
 </Project>
